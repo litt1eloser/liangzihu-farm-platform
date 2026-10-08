@@ -2,7 +2,7 @@
 
 升级与维护记录：[项目 README](../README.md#最新升级)概括当前能力，[变更日志](../CHANGELOG.md)按日期记录每次调整、验证结果和影响。新增或修改代码、配置、依赖、数据库或文档时，同步登记日志；具体要求见[开发规则](../AGENTS.md)。
 
-最新独立原型：[OpenLayers + 天地图二维卫星底图验证](acceptance/原型/2026-10-08-天地图二维卫星底图.md)，与现有 `/map` 分离，不改业务 API 或数据库。
+最新独立原型：[OpenLayers + 天地图二维卫星底图验证](acceptance/原型/2026-10-08-天地图二维卫星底图.md)，与现有 `/map` 分离，不改业务 API 或数据库。[原型计划](plans/第一阶段1原型验证.md)和[简短报告](acceptance/原型/第一阶段1原型验证报告.md)也已归档。
 
 Mermaid 绘图统一调用 [Pretty Mermaid 技能](../skills/pretty-mermaid/SKILL.md)。[安装与使用说明](../skills/pretty-mermaid/安装来源.md)包含固定上游版本、仓库内宿主入口和克隆后的依赖准备方式；[README 图示说明](架构图/绘图说明.md)记录现有三张图的源文件与绘制方式。
 
