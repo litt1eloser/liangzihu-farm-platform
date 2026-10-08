@@ -60,7 +60,6 @@ export default function SatellitePrototype() {
   const modeRef = useRef<'browse' | 'mark'>('browse');
   const savingRef = useRef(false);
   const composingRef = useRef(false);
-  const compositionEndedAt = useRef(0);
   const nameInput = useRef<HTMLInputElement>(null);
   const [labelsVisible, setLabelsVisible] = useState(true);
   const [imagery, setImagery] = useState<TileCounts>(emptyCounts);
@@ -108,7 +107,7 @@ export default function SatellitePrototype() {
   }, []);
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape' || event.isComposing) return;
+      if (event.key !== 'Escape' || event.isComposing || composingRef.current) return;
       if (savingRef.current) return;
       if (editorRef.current || modeRef.current === 'mark') {
         setEditor(null); setMode('browse'); modeRef.current = 'browse'; setMessage('已取消标点，未写入数据。');
@@ -220,7 +219,7 @@ export default function SatellitePrototype() {
   }
   async function save(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
-    if (composingRef.current || Date.now() - compositionEndedAt.current < 150 || savingRef.current || !editor || !actorId) return;
+    if (composingRef.current || savingRef.current || !editor || !actorId) return;
     savingRef.current = true; setSaving(true);
     try {
       const saved = editor.kind === 'new'
@@ -277,7 +276,7 @@ export default function SatellitePrototype() {
         {editor && <aside className={styles.editor} aria-label="点位编辑表单">
           <h2>{editor.kind === 'new' ? '新建临时标点' : '个人点位草稿'}</h2>
           <p>经度 {editor.lng.toFixed(6)}，纬度 {editor.lat.toFixed(6)}（EPSG:4326）</p>
-          <form onSubmit={event => void save(event)} onCompositionStart={() => { composingRef.current = true; }} onCompositionEnd={() => { composingRef.current = false; compositionEndedAt.current = Date.now(); }} onKeyDown={event => { if (event.key === 'Enter' && event.target instanceof HTMLInputElement) event.preventDefault(); }}>
+          <form onSubmit={event => void save(event)} onCompositionStart={() => { composingRef.current = true; }} onCompositionEnd={() => { composingRef.current = false; }} onKeyDown={event => { if (event.key === 'Enter' && event.target instanceof HTMLInputElement) event.preventDefault(); }}>
             <label htmlFor="draft-point-name">中文名称</label>
             <input id="draft-point-name" ref={nameInput} maxLength={80} required value={editor.name} onChange={event => setEditor(value => value ? { ...value, name: event.target.value } : null)} placeholder="如：一号水泵" />
             <label htmlFor="draft-point-note">备注（可选）</label>
