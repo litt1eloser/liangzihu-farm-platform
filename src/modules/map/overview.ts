@@ -12,9 +12,14 @@ export async function farmOverview(c: PoolClient, actor: Actor) {
   const items = map.items.filter(item => !archived.includes(item.id as string));
   if (actor.role === 'expert') return { items, regions: [], summaries: [], mobileDevices: [], limits: ['仅显示明确分享的边界资料', '历史轨迹不代表实时定位'] };
   const ids = items.map(item => item.id as string);
-  const provenance = ids.length ? (await c.query(`SELECT o.id,o.source AS object_source,COALESCE(v.created_at,o.created_at) AS object_recorded_at,
+  const provenance = ids.length ? (await c.query(`WITH RECURSIVE ancestry AS (
+    SELECT o.id AS origin,o.id,o.parent_id,o.kind FROM objects o WHERE o.id=ANY($1::uuid[])
+    UNION ALL SELECT a.origin,p.id,p.parent_id,p.kind FROM ancestry a JOIN objects p ON p.id=a.parent_id
+    ), farm_roots AS (SELECT origin,id AS farm_id FROM ancestry WHERE kind='farm' AND parent_id IS NULL)
+    SELECT o.id,f.farm_id,o.source AS object_source,COALESCE(v.created_at,o.created_at) AS object_recorded_at,
     b.source AS boundary_source,b.created_at AS boundary_recorded_at
     FROM objects o LEFT JOIN object_versions v ON v.object_id=o.id AND v.version=o.version
+    LEFT JOIN farm_roots f ON f.origin=o.id
     LEFT JOIN LATERAL (SELECT source,created_at FROM boundary_versions WHERE object_id=o.id AND object_version=o.version LIMIT 1) b ON true
     WHERE o.id=ANY($1::uuid[])`,[ids])).rows : [];
   const provenanceById=new Map(provenance.map(row=>[row.id,row]));

@@ -24,7 +24,7 @@ import OverviewDetail from './overview-detail';
 import {demoCounts,demoItems,demoRegions} from './demo-fixture';
 
 type Geometry={type:string;coordinates:unknown};
-type FarmObject={id:string;name:string;code:string;kind:string;version:number;boundary_status:string;geometry:Geometry|null;object_source?:string;object_recorded_at?:string;boundary_source?:string|null;boundary_recorded_at?:string|null;regionId?:string;detail?:string;status?:string;metric?:string;sampledAt?:string};
+type FarmObject={id:string;farm_id?:string;farmId?:string;name:string;code:string;kind:string;version:number;boundary_status:string;geometry:Geometry|null;object_source?:string;object_recorded_at?:string;boundary_source?:string|null;boundary_recorded_at?:string|null;regionId?:string;detail?:string;status?:string;metric?:string;sampledAt?:string};
 type Region={id:string;farmId:string;name:string;version:number;archivedAt:string|null;links:{objectId:string}[]};
 type Summary={object_id:string;open_alerts:number;record_count:number;point_count:number};
 type MobileDevice={binding_id:string;object_id:string;machine_id:string;machine_name:string;terminal_id:string;terminal_name:string;valid_until:string};
@@ -65,8 +65,8 @@ export default function FarmOverview(){
   if(!regions.length)return kindOrder.map(kind=>({kind,label:labels[kind]??kind,items:filtered.filter(item=>item.kind===kind)})).filter(group=>group.items.length);
   const assigned=new Set(regions.flatMap(region=>region.links.map(link=>link.objectId)));
   const search=query.trim().toLocaleLowerCase();
-  const villageGroups=regions.map(region=>({kind:region.id,label:region.name,items:(region.name.toLocaleLowerCase().includes(search)?items:filtered).filter(item=>region.links.some(link=>link.objectId===item.id))}));
-  const unassigned=filtered.filter(item=>item.kind!=='farm'&&!assigned.has(item.id));
+  const villageGroups=regions.map(region=>({kind:region.id,label:region.name,items:(region.name.toLocaleLowerCase().includes(search)?items:filtered).filter(item=>item.kind!=='mobile'&&region.links.some(link=>link.objectId===item.id))}));
+  const unassigned=filtered.filter(item=>item.kind!=='farm'&&item.kind!=='mobile'&&!assigned.has(item.id));
   const farms=filtered.filter(item=>item.kind==='farm');
   return [...villageGroups,...(unassigned.length?[{kind:'unassigned',label:'未关联村庄',items:unassigned}]:[]),...(farms.length?[{kind:'farm',label:'农场',items:farms}]:[])];
  },[filtered,items,query,regions]);

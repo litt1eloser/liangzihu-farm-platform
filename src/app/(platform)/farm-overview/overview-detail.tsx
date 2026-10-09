@@ -1,10 +1,10 @@
 'use client';
 import Link from 'next/link';
-import {demoAlerts,demoCounts,demoItems,demoTasks} from './demo-fixture';
+import {demoAlerts,demoTasks} from './demo-fixture';
 import styles from './farm-overview.module.css';
 
-type Item={id:string;name:string;code:string;kind:string;version:number;boundary_status:string;geometry:unknown;object_source?:string;object_recorded_at?:string;boundary_source?:string|null;boundary_recorded_at?:string|null;regionId?:string;detail?:string;status?:string;metric?:string;sampledAt?:string};
-type Region={id:string;name:string;links:{objectId:string}[]};
+type Item={id:string;farm_id?:string;farmId?:string;name:string;code:string;kind:string;version:number;boundary_status:string;geometry:unknown;object_source?:string;object_recorded_at?:string;boundary_source?:string|null;boundary_recorded_at?:string|null;regionId?:string;detail?:string;status?:string;metric?:string;sampledAt?:string};
+type Region={id:string;farmId:string;name:string;links:{objectId:string}[]};
 type Mobile={binding_id:string;object_id:string;machine_name:string;terminal_name:string;valid_until:string};
 type Summary={object_id:string;open_alerts:number;record_count:number;point_count:number};
 const labels:Record<string,string>={farm:'农场',field:'农田',pond:'塘口',facility:'固定设施',mobile:'机动设备',channel:'渠道'};
@@ -20,11 +20,15 @@ export default function OverviewDetail({mode,item,region,mobile,items,regions,su
  const regionRows=region?items.filter(row=>region.links.some(link=>link.objectId===row.id)):[];
  const attention=demo?demoAlerts.find(row=>row.objectId===item?.id):null;
  const relatedTasks=demo?demoTasks.filter(row=>row.regionId===(region?.id??item?.regionId)):[];
- const farmFacts=[{label:'片区',value:regions.length},{label:'农田',value:items.filter(row=>row.kind==='field').length},{label:'塘口',value:items.filter(row=>row.kind==='pond').length},{label:'固定设施',value:items.filter(row=>row.kind==='facility').length},{label:'机动设备',value:demo?demoCounts.mobiles:mobileDevices.length}];
+ const farmId=item?.kind==='farm'?item.id:null;
+ const farmItems=farmId?items.filter(row=>(row.farm_id??row.farmId??(row.kind==='farm'?row.id:null))===farmId):[];
+ const farmItemIds=new Set(farmItems.map(row=>row.id));
+ const farmAlerts=demo?demoAlerts.filter(row=>farmItemIds.has(row.objectId)):[];
+ const farmFacts=[{label:'片区',value:regions.filter(row=>row.farmId===farmId).length},{label:'农田',value:farmItems.filter(row=>row.kind==='field').length},{label:'塘口',value:farmItems.filter(row=>row.kind==='pond').length},{label:'固定设施',value:farmItems.filter(row=>row.kind==='facility').length},{label:'机动设备',value:demo?farmItems.filter(row=>row.kind==='mobile').length:mobileDevices.filter(row=>farmItemIds.has(row.object_id)).length}];
  const regionFacts=[{label:'农田',value:regionRows.filter(row=>row.kind==='field').length},{label:'塘口',value:regionRows.filter(row=>row.kind==='pond').length},{label:'固定设施',value:regionRows.filter(row=>row.kind==='facility').length}];
  return <aside className={styles.drawer} aria-label="对象详情" aria-live="polite"><div className={styles.drawerTop}><span className={styles.eyebrow}>{demo?'DEMO · SYNTHETIC':'AUTHORIZED DETAIL'}</span><button type="button" onClick={onClose} aria-label="关闭对象详情">×</button></div>
   <span className={styles.kind}>{kind}{demo?' · 演示':''}</span><h2>{title}</h2><p className={styles.detailContext}>{demo?'合成示例 · 非真实现场':region?'经营分组，不代表行政村边界':item&&regionForItem?`所属 ${regionForItem.name}`:mobile?'绑定归属来自原农机业务':'仅当前账号获授权资料'}</p>
-  {item?.kind==='farm'&&<><Facts rows={farmFacts}/>{demo?<div className={styles.attention}>关注事项 · {demoAlerts.length} 条演示提醒<br/>{demoAlerts[0].text}</div>:<p className={styles.drawerHint}>已授权对象中有 {summaries.reduce((n,row)=>n+row.open_alerts,0)} 条未关闭告警；仅统计已有授权概要。</p>}</>}
+  {item?.kind==='farm'&&<><Facts rows={farmFacts}/>{demo?<div className={styles.attention}>关注事项 · {farmAlerts.length} 条演示提醒{farmAlerts[0]&&<><br/>{farmAlerts[0].text}</>}</div>:<p className={styles.drawerHint}>本农场已授权对象中有 {summaries.filter(row=>farmItemIds.has(row.object_id)).reduce((n,row)=>n+row.open_alerts,0)} 条未关闭告警；仅统计已有授权概要。</p>}</>}
   {region&&<><Facts rows={regionFacts}/><p className={styles.drawerHint}>共关联 {regionRows.length} 个可见农业对象；按关联对象边界定位，片区本身没有正式测绘边界。</p></>}
   {item?.kind==='field'&&<><p className={styles.businessLead}>{demo?item.detail:'暂无可信作物或生长阶段资料；进入原农事模块核对。'}</p><Facts rows={[{label:'农事记录',value:demo?'演示资料':summary?.record_count??'暂无可信数据'},{label:'关联测点',value:demo?'演示资料':summary?.point_count??'暂无可信数据'}]}/></>}
   {item&&!demo&&!item.geometry&&<p className={styles.detailContext}>待登记</p>}

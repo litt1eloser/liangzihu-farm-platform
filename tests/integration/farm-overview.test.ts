@@ -29,6 +29,7 @@ test('总览只聚合已授权且未归档对象，机动目录仅使用有效�
   const visible = await transaction(c => farmOverview(c, viewer), pool);
   assert.deepEqual(visible.items.map(item => item.id), [field.id]);
   assert.equal(visible.items[0].object_source,'测试');
+  assert.equal(visible.items[0].farm_id,farm,'对象应标出所属农场，供详情独立统计');
   assert.ok(visible.items[0].object_recorded_at,'应返回对象登记时间供详情抽屉核对');
   assert.equal(visible.regions.length, 1);
   assert.deepEqual((visible.regions[0].links as {objectId:string}[]).map(link=>link.objectId), [field.id]);
@@ -45,4 +46,20 @@ test('总览只聚合已授权且未归档对象，机动目录仅使用有效�
   assert.equal(after.items.length, 0);
   assert.equal(after.mobileDevices.length, 0);
   assert.ok(other.id);
+}));
+
+test('两个已授权农场的对象分别标记所属农场',async()=>withDb(async pool=>{
+ const owner=await actorFixture(pool,'owner');
+ const first=await objectFixture(pool,owner.id);
+ const second=await objectFixture(pool,owner.id);
+ await permit(pool,owner.id,first,['read','configure']);
+ await permit(pool,owner.id,second,['read','configure']);
+ const field=await transaction(c=>saveObject(c,owner,{parentId:first,code:'SYNTH-OVERVIEW-F1',name:'一号农场地块',kind:'field',source:'测试'}),pool);
+ const pond=await transaction(c=>saveObject(c,owner,{parentId:second,code:'SYNTH-OVERVIEW-P2',name:'二号农场塘口',kind:'pond',source:'测试'}),pool);
+ const visible=await transaction(c=>farmOverview(c,owner),pool);
+ const byId=new Map(visible.items.map(item=>[item.id,item.farm_id]));
+ assert.equal(byId.get(first),first);
+ assert.equal(byId.get(field.id),first);
+ assert.equal(byId.get(second),second);
+ assert.equal(byId.get(pond.id),second);
 }));

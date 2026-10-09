@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect,useState } from 'react';
 import {useApi} from './use-api';
 export function formatValue(key: string, value: unknown): string {
     if (value === null || value === undefined)
@@ -14,16 +14,18 @@ export function formatValue(key: string, value: unknown): string {
         return new Date(value).toLocaleString('zh-CN');
     return String(value);
 }
-export default function DataList({ path, columns, linkPrefix, emptyText = '当前没有已授权的记录。可由管理员在配置管理中登记并授权。' }: {
+export default function DataList({ path, columns, linkPrefix, refreshKey=0, emptyText = '当前没有已授权的记录。可由管理员在配置管理中登记并授权。' }: {
     path: string;
     columns: {
         key: string;
         label: string;
     }[];
     linkPrefix?: string;
+    refreshKey?: number;
     emptyText?: string;
 }) {
     const {data,error,loading,reload}=useApi<Record<string,unknown>[]|{items:Record<string,unknown>[];total?:number;nextCursor?:string|null}>(path),[query,setQuery]=useState(''),[sort,setSort]=useState('');
+    useEffect(()=>{if(refreshKey>0)void reload();},[refreshKey,reload]);
     const rows=Array.isArray(data)?data:data?.items??[],shown=rows.filter(r=>columns.some(c=>formatValue(c.key,r[c.key]).toLowerCase().includes(query.toLowerCase())));
     if(sort)shown.sort((a,b)=>{const av=a[sort],bv=b[sort];return typeof av==='number'&&typeof bv==='number'?av-bv:formatValue(sort,av).localeCompare(formatValue(sort,bv),'zh-CN',{numeric:true});});
     if (error)

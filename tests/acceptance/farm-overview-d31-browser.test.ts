@@ -30,6 +30,7 @@ test('D3.1 演示隔离、差异化详情、真实新增路径和权限', {timeo
    await page.getByRole('button',{name:/查看演示效果/}).click();
    await page.getByText(/当前所有村庄、地块、设备位置、状态和告警均为合成示例/).waitFor();
    for(const name of ['沙湾示范片区','长岭示范片区','湖东示范片区'])await page.getByRole('button',{name:`定位村庄 ${name}`}).waitFor();
+   assert.equal(await page.getByRole('button',{name:/植保无人机 U-01/}).count(),1,'无人机只应在独立机动设备目录出现一次');
    assert.equal(await page.getByText('3 片区').count(),1);
    await capture('02-演示全场.png');
    await page.getByRole('button',{name:/梁子湖农场（演示总览）/}).click();
@@ -132,6 +133,7 @@ test('D3.1 演示隔离、差异化详情、真实新增路径和权限', {timeo
    await deviceForm.getByLabel('登记依据').fill('D3.1 隔离测试');
    await deviceForm.getByRole('button',{name:'登记实体设备'}).click();
    await deviceForm.getByText('已保存').waitFor();
+   await page.getByRole('cell',{name:'隔离验收无人机'}).waitFor();
    assert.equal((await pool.query("SELECT kind,verified FROM devices WHERE external_id='SYNTH-U01'")).rows[0].verified,false);
    const workerContext=await browser.newContext();try{await workerContext.addCookies([{name:'agri_session',value:await app.authenticate(worker),url:app.origin}]);const workerPage=await workerContext.newPage();await workerPage.goto(app.origin+'/farm-overview');await workerPage.getByRole('button',{name:/合成测试农场/}).waitFor();await workerPage.getByRole('button',{name:'＋ 新增/管理'}).click();assert.equal(await workerPage.getByRole('link',{name:'新增地块/塘口'}).count(),0);const denied=await workerContext.request.post(app.origin+'/api/v1/objects',{headers:{Origin:app.origin},data:{parentId:farm,kind:'field',code:'DENIED',name:'越权',source:'测试'}});assert.equal(denied.status(),403);}finally{await workerContext.close();}
    const adminContext=await browser.newContext();try{await adminContext.addCookies([{name:'agri_session',value:await app.authenticate(admin),url:app.origin}]);const denied=await adminContext.request.post(app.origin+'/api/v1/map-regions',{headers:{Origin:app.origin},data:{farmId:farm,name:'管理员无权新村',source:'测试'}});assert.equal(denied.status(),403,'管理员角色不得替代对象配置授权');await permit(pool,admin.id,farm,['read','configure']);const allowed=await adminContext.request.get(app.origin+'/api/v1/objects?action=configure&limit=200');assert.equal(allowed.status(),200);assert((await allowed.json()).items.some((row:{id:string})=>row.id===farm));}finally{await adminContext.close();}
