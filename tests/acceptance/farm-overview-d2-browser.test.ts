@@ -42,7 +42,8 @@ test('D2 村庄目录、对象概要、旧页面和角色权限浏览器核对',
       await page.getByRole('link',{name:'返回农场地图'}).click();
       await page.getByRole('complementary',{name:'对象详情'}).getByRole('heading',{name:'合成东村地块'}).waitFor();
       assert.equal(await page.getByRole('searchbox',{name:'搜索名称或编号'}).inputValue(),'合成东村');
-      assert.equal(await map.getAttribute('data-view-zoom'),zoomBeforeReturn,saved);
+      await page.waitForFunction(expected=>document.querySelector('[role="application"]')?.getAttribute('data-view-zoom')===expected,zoomBeforeReturn);
+      assert.equal(await map.getAttribute('data-view-zoom'),zoomBeforeReturn);
       assert.equal(await map.getAttribute('data-view-center'),centerBeforeReturn);
       await mkdir('docs/acceptance/d2',{recursive:true});
       await page.screenshot({path:'docs/acceptance/d2/2026-10-09-D2村庄目录-桌面.png',fullPage:true});
