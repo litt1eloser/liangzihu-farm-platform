@@ -48,8 +48,11 @@ export default function FarmOverview(){
  const groups=useMemo(()=>{
   if(!regions.length)return kindOrder.map(kind=>({kind,label:labels[kind]??kind,items:filtered.filter(item=>item.kind===kind)})).filter(group=>group.items.length);
   const assigned=new Set(regions.flatMap(region=>region.links.map(link=>link.objectId)));
-  return [...regions.map(region=>({kind:region.id,label:region.name,items:filtered.filter(item=>region.links.some(link=>link.objectId===item.id))})),{kind:'unassigned',label:'未关联村庄',items:filtered.filter(item=>!assigned.has(item.id))}].filter(group=>group.items.length);
- },[filtered,regions]);
+  const search=query.trim().toLocaleLowerCase();
+  const villageGroups=regions.map(region=>({kind:region.id,label:region.name,items:(region.name.toLocaleLowerCase().includes(search)?items:filtered).filter(item=>region.links.some(link=>link.objectId===item.id))}));
+  const unassigned=filtered.filter(item=>!assigned.has(item.id));
+  return [...villageGroups,...(unassigned.length?[{kind:'unassigned',label:'未关联村庄',items:unassigned}]:[])];
+ },[filtered,items,query,regions]);
  const located=items.filter(item=>item.geometry).length;
 
  const revealObject=(item:FarmObject,anchor?:number[])=>{const map=mapRef.current,source=sourceRef.current,element=target.current;if(!map||!source||!element||!item.geometry)return;
