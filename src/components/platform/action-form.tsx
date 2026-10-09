@@ -83,5 +83,5 @@ export default function ActionForm({ path, children, method = 'POST', numbers = 
             setBusy(false);
         }
     }
-    return <form className="business-form" onSubmit={submit}>{children}<button disabled={busy}>{busy ? '正在提交…' : label}</button>{error && <p className="form-error" role="alert">{error}</p>}{message && <p role="status">{message}</p>}</form>;
+    return <form className="business-form" aria-label={label} onSubmit={submit}>{children}<button disabled={busy}>{busy ? '正在提交…' : label}</button>{error && <p className="form-error" role="alert">{error}</p>}{message && <p role="status">{message}</p>}</form>;
 }

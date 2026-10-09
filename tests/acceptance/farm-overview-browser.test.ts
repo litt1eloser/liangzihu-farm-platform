@@ -58,7 +58,7 @@ test('D1 卫星总览只展示授权对象，搜索定位与覆盖抽屉在桌�
   await page.setViewportSize({width:390,height:844});await page.getByRole('button',{name:'☰ 对象目录'}).click();
   await page.getByRole('searchbox',{name:'搜索名称或编号'}).fill('');
   await page.getByRole('button',{name:/合成无边界塘口/}).click();
-  await page.getByRole('complementary',{name:'对象详情'}).getByText('待登记').waitFor();
+  await page.getByRole('complementary',{name:'对象详情'}).getByText('待登记',{exact:true}).waitFor();
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
   await page.waitForTimeout(350);
   await page.locator('section[aria-label="农场空间总览"] > div').last().screenshot({path:'docs/acceptance/d1/2026-10-09-农场空间总览-手机.png'});
