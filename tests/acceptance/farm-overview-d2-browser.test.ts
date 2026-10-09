@@ -27,7 +27,7 @@ test('D2 村庄目录、对象概要、旧页面和角色权限浏览器核对',
       const assigned=await ownerContext.request.patch(app.origin+'/api/v1/map-regions',{headers:{Origin:app.origin},data:{action:'assign',objectId:field.id,regionId:region.id,source:'浏览器验收合成资料'}});assert.equal(assigned.status(),200);
       await page.getByRole('button',{name:'刷新授权资料'}).click();await page.getByRole('heading',{name:/合成东村/}).waitFor();
       const map=page.getByRole('application',{name:'天地图卫星影像及已授权农业对象边界'});
-      await page.getByRole('button',{name:'全场视图'}).click();await page.waitForTimeout(400);
+      await page.locator('.ol-zoom-out').click({clickCount:3,delay:80});await page.waitForTimeout(400);
       const beforeVillage=await map.getAttribute('data-view-zoom');
       await page.getByRole('button',{name:'定位村庄 合成东村'}).click();await page.waitForTimeout(450);
       assert.notEqual(await map.getAttribute('data-view-zoom'),beforeVillage,'村庄点击应定位关联边界');
