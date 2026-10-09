@@ -40,7 +40,7 @@ export default function FarmOverview(){
  const {data,error,loading,reload}=useApi<MapData>('/api/v1/farm-overview');
  const me=useApi<{actor:{role:string}}>('/api/v1/me');
  const target=useRef<HTMLDivElement>(null),mapRef=useRef<Map|null>(null),sourceRef=useRef<VectorSource<Feature>|null>(null),selectedRef=useRef<string|null>(null),returnFocus=useRef<HTMLElement|null>(null),itemsRef=useRef<FarmObject[]>([]),selectionAnchor=useRef<{id:string;coordinate:number[]}|null>(null);
- const restored=useRef<SavedState|null>(null),initialised=useRef(false),skipInitialFit=useRef(false);
+ const restored=useRef<SavedState|null>(null),initialised=useRef(false),skipInitialFit=useRef(false),restoreApplied=useRef(false);
  const [query,setQuery]=useState(''),[selectedId,setSelectedId]=useState<string|null>(null),[selectionVersion,setSelectionVersion]=useState(0),[directoryOpen,setDirectoryOpen]=useState(false),[directoryCollapsed,setDirectoryCollapsed]=useState(false),[tileError,setTileError]=useState(false);
  const items=data?.items??[];
  itemsRef.current=items;
@@ -100,6 +100,7 @@ export default function FarmOverview(){
  useEffect(()=>{const source=sourceRef.current,map=mapRef.current;if(!source||!map)return;source.clear();const format=new GeoJSON();for(const item of items){if(!item.geometry)continue;try{const features=format.readFeatures(item.geometry,{dataProjection:'EPSG:4326',featureProjection:'EPSG:3857'});for(const feature of features){feature.set('objectId',item.id);feature.set('status',item.boundary_status);source.addFeature(feature);}}catch{/* 无效几何不绘制，对象仍在目录 */}}
   if(source.getFeatures().length){if(!skipInitialFit.current){const extent=source.getExtent();if(extent&&!isEmpty(extent))map.getView().fit(extent,{padding:[75,75,75,75],maxZoom:14,duration:0});}skipInitialFit.current=false;}
  },[items]);
+ useEffect(()=>{const state=restored.current,map=mapRef.current;if(!data||!map||!state||restoreApplied.current)return;restoreApplied.current=true;const view=map.getView();view.cancelAnimations();view.setCenter(state.center);view.setZoom(state.zoom);},[data]);
  useEffect(()=>{if(data&&selectedId&&!items.some(item=>item.id===selectedId))setSelectedId(null);},[data,items,selectedId]);
  useEffect(()=>{const onKey=(event:KeyboardEvent)=>{if(event.key==='Escape'&&selectedRef.current){setSelectedId(null);returnFocus.current?.focus();}};window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey);},[]);
  useEffect(()=>{const item=itemsRef.current.find(row=>row.id===selectedId);if(!item||selectionVersion===0)return;const frame=window.requestAnimationFrame(()=>revealObject(item,selectionAnchor.current?.id===item.id?selectionAnchor.current.coordinate:undefined));return()=>window.cancelAnimationFrame(frame);},[selectedId,selectionVersion]);
