@@ -1,0 +1,37 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { withDb } from '../support/db';
+import { actorFixture, objectFixture, permit } from '../support/fixtures';
+import { transaction } from '../../src/db/pool';
+import { saveObject, setObjectArchive } from '../../src/modules/registry/objects';
+import { assignRegion, saveRegion } from '../../src/modules/map/regions';
+import { farmOverview } from '../../src/modules/map/overview';
+
+test('总览只聚合已授权且未归档对象，机动目录仅使用有效农机绑定', async () => withDb(async pool => {
+  const owner = await actorFixture(pool, 'owner');
+  const viewer = await actorFixture(pool, 'worker');
+  const farm = await objectFixture(pool, owner.id);
+  await permit(pool, owner.id, farm, ['read', 'configure']);
+  const field = await transaction(c => saveObject(c, owner, { parentId: farm, code: 'SYNTH-D2-OVERVIEW', name: '合成地块', kind: 'field', source: '测试' }), pool);
+  const other = await transaction(c => saveObject(c, owner, { parentId: farm, code: 'SYNTH-D2-HIDDEN', name: '隐藏地块', kind: 'field', source: '测试' }), pool);
+  await permit(pool, viewer.id, field.id, ['read']);
+  const region = await transaction(c => saveRegion(c, owner, { farmId: farm, name: '合成村庄', source: '测试' }), pool);
+  await transaction(c => assignRegion(c, owner, { objectId: field.id, regionId: region.id, source: '测试' }), pool);
+  await pool.query('INSERT INTO data_sources(object_id,code,name,provider,created_by) VALUES($1,$2,$3,$4,$5)', [field.id,'SYNTH-D2-SRC','合成来源','test',owner.id]);
+  const source = (await pool.query('SELECT id FROM data_sources WHERE code=$1', ['SYNTH-D2-SRC'])).rows[0].id;
+  const machine = (await pool.query("INSERT INTO devices(object_id,source_id,external_id,name,kind,source,created_by) VALUES($1,$2,'M-1','合成机具','physical','测试',$3) RETURNING id", [field.id,source,owner.id])).rows[0].id;
+  const terminal = (await pool.query("INSERT INTO devices(object_id,source_id,external_id,name,kind,source,created_by) VALUES($1,$2,'T-1','合成终端','physical','测试',$3) RETURNING id", [field.id,source,owner.id])).rows[0].id;
+  await pool.query("INSERT INTO machinery_bindings(object_id,machine_device_id,terminal_device_id,valid_from,valid_until,evidence,created_by) VALUES($1,$2,$3,now()-interval '1 day',now()+interval '1 day','测试绑定',$4)", [field.id,machine,terminal,owner.id]);
+  const visible = await transaction(c => farmOverview(c, viewer), pool);
+  assert.deepEqual(visible.items.map(item => item.id), [field.id]);
+  assert.equal(visible.regions.length, 1);
+  assert.deepEqual(visible.regions[0].links.map((link: {objectId:string})=>link.objectId), [field.id]);
+  assert.equal(visible.mobileDevices.length, 1);
+  assert.equal(visible.mobileDevices[0].machine_name, '合成机具');
+  assert.equal(visible.summaries[0].object_id, field.id);
+  await transaction(c => setObjectArchive(c, owner, {id:field.id,version:1,archived:true,reason:'测试归档'}), pool);
+  const after = await transaction(c => farmOverview(c, viewer), pool);
+  assert.equal(after.items.length, 0);
+  assert.equal(after.mobileDevices.length, 0);
+  assert.ok(other.id);
+}));

@@ -80,7 +80,7 @@ export async function assignRegion(c: PoolClient, actor: Actor, input: Record<st
   if (!obj || obj.kind === 'farm') throw new AppError(422, 'REGION_OBJECT', '请选择农场内的农业对象');
   const reason = text(input.source, '关联依据', 1000);
   let regionId: string | null = null;
-  if (input.regionId !== null) {
+  if (input.regionId !== null && input.regionId !== '') {
     uuid(input.regionId);
     regionId = input.regionId;
     const region = (await c.query('SELECT * FROM map_regions WHERE id=$1 FOR UPDATE', [regionId])).rows[0];
