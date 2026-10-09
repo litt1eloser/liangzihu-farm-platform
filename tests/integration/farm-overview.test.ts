@@ -28,6 +28,8 @@ test('总览只聚合已授权且未归档对象，机动目录仅使用有效�
   await pool.query('UPDATE devices SET verified=true WHERE id=$1',[terminal]);
   const visible = await transaction(c => farmOverview(c, viewer), pool);
   assert.deepEqual(visible.items.map(item => item.id), [field.id]);
+  assert.equal(visible.items[0].object_source,'测试');
+  assert.ok(visible.items[0].object_recorded_at,'应返回对象登记时间供详情抽屉核对');
   assert.equal(visible.regions.length, 1);
   assert.deepEqual((visible.regions[0].links as {objectId:string}[]).map(link=>link.objectId), [field.id]);
   assert.equal(visible.mobileDevices.length, 1);

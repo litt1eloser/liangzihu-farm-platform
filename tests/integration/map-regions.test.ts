@@ -21,6 +21,9 @@ test('村庄分组关联保留历史，跨农场和未授权对象不能关联',
   await assert.rejects(() => transaction(c => assignRegion(c, owner, { objectId: other.id, regionId: first.id, source: '测试' }), pool), { code: 'REGION_FARM_MISMATCH' });
   await assert.rejects(() => transaction(c => assignRegion(c, viewer, { objectId: field.id, regionId: first.id, source: '测试' }), pool), { status: 403 });
   await transaction(c => assignRegion(c, owner, { objectId: field.id, regionId: first.id, source: '测试' }), pool);
+  const renamed=await transaction(c=>saveRegion(c,owner,{id:first.id,version:1,name:'甲村新名',source:'测试更名'}),pool);
+  assert.equal(renamed.name,'甲村新名');
+  assert.equal((await transaction(c=>regionHistory(c,owner,first.id),pool)).links.length,1,'更名应保留既有关联');
   await transaction(c => assignRegion(c, owner, { objectId: field.id, regionId: second.id, source: '调整' }), pool);
   const history = await transaction(c => regionHistory(c, owner, first.id), pool);
   assert.equal(history.links.length, 1);
