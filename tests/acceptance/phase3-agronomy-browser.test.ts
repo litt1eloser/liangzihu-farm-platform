@@ -7,7 +7,7 @@ test('3C网页真实照片及指数worker、植保部分导入、手机与未下
  const lot=await transaction(c=>createLot(c,a,{objectId:o,code:randomUUID(),product:'合成植保投入品',kind:'input',unit:'L',basis:'as_is',source:'仅软件测试',requestKey:randomUUID()}),pool),store=localStore(join(root,'source'),join(root,'backup')),rgb=await syntheticAsset(pool,a,o,store,'rgb'),tif=await syntheticAsset(pool,a,o,store,'spectral');
  const source= randomUUID(),device=randomUUID();await pool.query("INSERT INTO data_sources(id,object_id,code,name,provider,created_by) VALUES($1::uuid,$2,$1::text,'合成准备来源','synthetic',$3)",[source,o,a.id]);await pool.query("INSERT INTO devices(id,object_id,source_id,external_id,name,kind,source,created_by) VALUES($1,$2,$3,'demo','合成待验设备','physical','仅测试',$4)",[device,o,source,a.id]);
  await withApp(pool,async app=>{
- const browser=await chromium.launch(),context=await browser.newContext({viewport:{width:1280,height:900}}),page=await context.newPage(),errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
+ const browser=await chromium.launch({executablePath:process.env.AGRI_BROWSER_EXECUTABLE||undefined}),context=await browser.newContext({viewport:{width:1280,height:900}}),page=await context.newPage(),errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
  try{await context.addCookies([{name:'agri_session',value:await app.authenticate(a),url:app.origin}]);await page.goto(app.origin+'/agronomy');await page.getByText('分析作物照片',{exact:true}).click();
  const crop=page.locator('form').filter({has:page.getByLabel('照片原件',{exact:true})});await crop.getByLabel('照片原件',{exact:true}).selectOption(rgb.id);await crop.getByRole('button',{name:'保存',exact:true}).click();await crop.getByText('已保存',{exact:true}).waitFor();app.worker('workers/agronomy.ts');await page.getByRole('button',{name:'刷新分析进度',exact:true}).click();await page.getByText(/绿色像素比例100.0%/).waitFor();
  await page.getByText('多光谱反射率产品与分区',{exact:true}).click();const spectral=page.locator('form').filter({has:page.getByLabel('反射率GeoTIFF',{exact:true})});
@@ -20,7 +20,7 @@ test('3C网页真实照片及指数worker、植保部分导入、手机与未下
  const imported=page.locator('form').filter({has:page.getByLabel('稳定来源或设备编号',{exact:true})});await imported.getByLabel('稳定来源或设备编号',{exact:true}).fill('仅合成导入');await imported.getByRole('button',{name:'保存',exact:true}).click();await imported.getByText(/已导入1行；1行未导入/).waitFor();
  await page.setViewportSize({width:390,height:844});await page.waitForFunction(()=>document.querySelector('.app-sidebar')!.getBoundingClientRect().right<=1);await page.evaluate(()=>scrollTo(0,0));assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);await page.screenshot({path:artifactPath('验收/3c/植保手机合成实测.png'),fullPage:true});
  await page.goto(app.origin+'/control-records');await page.getByText('登记控制申请（不会下发）',{exact:true}).click();const control=page.locator('form').filter({has:page.getByLabel('本次申请目的',{exact:true})});
- await control.getByLabel('设备',{exact:true}).selectOption(device);await control.getByLabel('本次申请目的',{exact:true}).fill('验证默认拦截');await control.getByLabel('本次授权依据',{exact:true}).fill('仅工程测试');await control.getByLabel('本次现场条件',{exact:true}).fill('合成记录');await control.getByRole('button',{name:'保存',exact:true}).click();await control.getByText('已保存',{exact:true}).waitFor();await page.getByText(/申请已登记，未下发。/).waitFor();
+ await page.getByLabel('当前设备',{exact:true}).selectOption(device);await control.getByLabel('本次申请目的',{exact:true}).fill('验证默认拦截');await control.getByLabel('本次授权依据',{exact:true}).fill('仅工程测试');await control.getByLabel('本次现场条件',{exact:true}).fill('合成记录');await control.getByRole('button',{name:'保存',exact:true}).click();await control.getByText('已保存',{exact:true}).waitFor();await page.getByText(/申请已登记，未下发。/).waitFor();
  assert.equal((await pool.query('SELECT dispatched FROM control_requests')).rows[0].dispatched,false);
  for(const endpoint of ['inventory','traceability','protection','agronomy','control-records'])assert.equal((await context.request.post(app.origin+'/api/v1/'+endpoint+'/constructor',{headers:{Origin:app.origin},data:{}})).status(),404);
  assert.deepEqual(errors,[]);
@@ -28,4 +28,3 @@ test('3C网页真实照片及指数worker、植保部分导入、手机与未下
  },{mediaRoot:root});
  }finally{await rm(root,{recursive:true,force:true});}
 }));
-
