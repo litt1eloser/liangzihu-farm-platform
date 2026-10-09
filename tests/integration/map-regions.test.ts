@@ -34,3 +34,15 @@ test('村庄分组关联保留历史，跨农场和未授权对象不能关联',
   assert.equal((await transaction(c => listRegions(c, owner), pool)).items.find(r => r.id === second.id)?.links instanceof Array, true);
   assert.equal((await pool.query('SELECT count(*) FROM map_region_links WHERE object_id=$1 AND valid_to IS NULL', [field.id])).rows[0].count, '0');
 }));
+
+test('各角色遵守资源配置权，管理员身份不自动获得对象授权', async () => withDb(async pool => {
+  const creator=await actorFixture(pool,'owner');
+  const farm=await objectFixture(pool,creator.id);
+  for(const role of ['admin','owner','technician','worker','maintainer','expert'] as const){
+    const actor=await actorFixture(pool,role);
+    await assert.rejects(()=>transaction(c=>saveRegion(c,actor,{farmId:farm,name:role+'未授权',source:'测试'}),pool),{status:403});
+    await permit(pool,actor.id,farm,['read','configure']);
+    if(['worker','expert'].includes(role)) await assert.rejects(()=>transaction(c=>saveRegion(c,actor,{farmId:farm,name:role+'无配置角色',source:'测试'}),pool),{status:403});
+    else assert.equal((await transaction(c=>saveRegion(c,actor,{farmId:farm,name:role+'测试村',source:'测试'}),pool)).farm_id,farm);
+  }
+}));
