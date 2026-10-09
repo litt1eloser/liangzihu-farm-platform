@@ -80,7 +80,7 @@ export default function FarmOverview(){
  };
  const selectObject=(item:FarmObject,trigger?:HTMLElement,coordinate?:number[])=>{returnFocus.current=trigger??null;selectionAnchor.current=coordinate?{id:item.id,coordinate}:null;setSelectedId(item.id);setSelectionVersion(version=>version+1);setDirectoryOpen(false);};
 
- useEffect(()=>{if(initialised.current)return;initialised.current=true;const state=savedState();sessionStorage.removeItem(stateKey);if(!state)return;restored.current=state;skipInitialFit.current=true;setQuery(state.query);setSelectedId(state.selectedId);setDirectoryCollapsed(state.directoryCollapsed);},[]);
+ useEffect(()=>{if(initialised.current)return;initialised.current=true;const state=savedState();if(!state)return;restored.current=state;skipInitialFit.current=true;setQuery(state.query);setSelectedId(state.selectedId);setDirectoryCollapsed(state.directoryCollapsed);},[]);
 
  useEffect(()=>{selectedRef.current=selectedId;sourceRef.current?.changed();},[selectedId]);
  useEffect(()=>{if(!validBrowserKey(key)||!target.current)return;
