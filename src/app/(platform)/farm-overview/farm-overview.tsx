@@ -84,6 +84,7 @@ export default function FarmOverview(){
 
  useEffect(()=>{selectedRef.current=selectedId;sourceRef.current?.changed();},[selectedId]);
  useEffect(()=>{if(!validBrowserKey(key)||!target.current)return;
+  const returnState=savedState();if(returnState){restored.current=returnState;skipInitialFit.current=true;restoreApplied.current=false;}
   const imagery=new XYZ({urls:tiandituWmtsUrls('img',key),maxZoom:18,attributions:'© 国家地理信息公共服务平台 天地图'});
   imagery.on('tileloaderror',()=>setTileError(true));
   const annotations=new XYZ({urls:tiandituWmtsUrls('cia',key),maxZoom:18});
