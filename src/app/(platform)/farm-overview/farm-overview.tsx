@@ -92,6 +92,7 @@ export default function FarmOverview(){
   const layer=new VectorLayer({source:vectors,style:feature=>feature.get('objectId')===selectedRef.current?selectedStyle:feature.get('status')==='verified'?defaultStyle:draftStyle});
   const view=new View({center:restored.current?.center??fromLonLat(INITIAL_CENTER_4326),zoom:restored.current?.zoom??11,minZoom:2,maxZoom:18});
   const map=new Map({target:target.current,layers:[new TileLayer({source:imagery}),new TileLayer({source:annotations}),layer],view});mapRef.current=map;
+  target.current.dataset.viewCenter=view.getCenter()?.join(',')??'';target.current.dataset.viewZoom=String(view.getZoom()??11);
   view.on('change:center',()=>{if(target.current)target.current.dataset.viewCenter=view.getCenter()?.join(',')??'';});
   view.on('change:resolution',()=>{if(target.current)target.current.dataset.viewZoom=String(view.getZoom()??'');});
   map.on('singleclick',event=>{const feature=map.forEachFeatureAtPixel(event.pixel,f=>f,{layerFilter:visible=>visible===layer});const id=feature?.get('objectId') as string|undefined,item=itemsRef.current.find(row=>row.id===id);if(item)selectObject(item,undefined,event.coordinate);});
