@@ -37,6 +37,8 @@ test('D2 村庄目录、对象概要、旧页面和角色权限浏览器核对',
       await page.waitForTimeout(350);
       const centerBeforeReturn=await map.getAttribute('data-view-center'),zoomBeforeReturn=await map.getAttribute('data-view-zoom');
       await page.getByRole('complementary',{name:'对象详情'}).getByRole('link',{name:/查看对象详情/}).click();
+      const saved=await page.evaluate(()=>sessionStorage.getItem('farm-overview-return-v1'));assert(saved,'离开地图前应保存返回状态');
+      assert.equal(JSON.parse(saved).zoom,Number(zoomBeforeReturn));
       await page.getByRole('link',{name:'返回农场地图'}).click();
       await page.getByRole('complementary',{name:'对象详情'}).getByRole('heading',{name:'合成东村地块'}).waitFor();
       assert.equal(await page.getByRole('searchbox',{name:'搜索名称或编号'}).inputValue(),'合成东村');
