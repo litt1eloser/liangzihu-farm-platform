@@ -72,6 +72,7 @@ export default function FarmOverview(){
  },[filtered,items,query,regions]);
  const located=items.filter(item=>item.geometry).length;
  const switchMode=(next:'real'|'demo')=>{sessionStorage.removeItem(stateKey);restored.current=null;restoreApplied.current=false;skipInitialFit.current=false;setQuery('');setSelectedId(null);setSelectedRegionId(null);setSelectedMobileId(null);selectionAnchor.current=null;setDirectoryOpen(false);setManageOpen(false);setMode(next);};
+ useEffect(()=>{if(new URLSearchParams(window.location.search).get('demo')==='1')switchMode('demo');},[]);
  const openRegionManager=()=>{if(mode==='demo'){switchMode('real');return;}setDirectoryOpen(true);setRegionOpenSignal(value=>value+1);};
 
  const revealObject=(item:FarmObject,anchor?:number[])=>{const map=mapRef.current,source=sourceRef.current,element=target.current;if(!map||!source||!element||!item.geometry)return;

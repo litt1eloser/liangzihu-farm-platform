@@ -26,6 +26,10 @@ test('D3.1 演示隔离、差异化详情、真实新增路径和权限', {timeo
    await page.goto(app.origin+'/farm-overview');await page.getByRole('button',{name:/合成测试农场/}).waitFor();
    assert.equal(await page.getByText('演示模式',{exact:true}).count(),0);
    await capture('01-真实空状态.png');
+   await page.goto(app.origin+'/farm-overview?demo=1');
+   await page.getByText(/当前所有村庄、地块、设备位置、状态和告警均为合成示例/).waitFor();
+   await page.getByRole('button',{name:'退出演示，返回真实数据'}).click();
+   await page.getByText('真实数据',{exact:true}).waitFor();
    const before=await counts();
    await page.getByRole('button',{name:/查看演示效果/}).click();
    await page.getByText(/当前所有村庄、地块、设备位置、状态和告警均为合成示例/).waitFor();
