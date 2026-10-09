@@ -44,6 +44,8 @@ test('D2 村庄目录、对象概要、旧页面和角色权限浏览器核对',
         await workerContext.addCookies([{name:'agri_session',value:await app.authenticate(worker),url:app.origin}]);
         const workerOverview=await workerContext.request.get(app.origin+'/api/v1/farm-overview');assert.equal(workerOverview.status(),200);
         assert.equal((await workerOverview.json()).items.length,1);
+        const workerPage=await workerContext.newPage();await workerPage.goto(app.origin+'/farm-overview');await workerPage.getByRole('button',{name:/合成东村地块/}).waitFor();
+        assert.equal(await workerPage.getByText('维护村庄与对象关联').count(),0);
         const denied=await workerContext.request.post(app.origin+'/api/v1/map-regions',{headers:{Origin:app.origin},data:{farmId:farm,name:'越权村庄',source:'测试'}});assert.equal(denied.status(),403);
       }finally{await workerContext.close();}
       const expertContext=await browser.newContext();try{
