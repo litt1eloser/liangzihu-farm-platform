@@ -3,7 +3,8 @@ import { useState } from 'react';
 import {useApi} from './use-api';
 export function formatValue(key: string, value: unknown): string {
     if (value === null || value === undefined)
-        return '未登记';
+        return key === 'archived_at' ? '使用中' : '未登记';
+    if (key === 'archived_at' && typeof value === 'string') return '已归档 · ' + new Date(value).toLocaleString('zh-CN');
     if (typeof value === 'boolean')
         return key === 'enabled' ? (value ? '已启用' : '已停用') : key === 'night_shift' ? (value ? '夜班' : '白班') : key === 'connected' ? (value ? '已接通' : '未接通') : (value ? '已核实' : '待核实');
     const labels: Record<string, Record<string, string>> = { kind: { farm: '场区', pond: '塘口', field: '地块', channel: '渠道', facility: '设施', physical: '物理设备', gateway: '网关', camera_channel: '摄像通道', measurement: '测值告警', monitoring_gap: '监测中断', source_unavailable: '来源不可用' }, boundary_status: { unknown: '待核实', draft: '待确认', verified: '已核实' }, state: { open: '待处理', recovered: '恢复待关闭', closed: '已关闭', queued: '待发送', sending: '正在发起', accepted: '服务商已受理', delivered: '已送达', failed: '失败', unknown: '结果未知', blocked: '依赖未就绪', cancelled: '已取消' }, severity: { info: '提示', warning: '注意', severe: '严重' }, quality: { valid: '有效', suspect: '待核', invalid: '无效' }, data_quality: { valid: '有效', suspect: '待核' }, channel: { wecom: '企业微信', voice: '电话' }, phase: { initial: '首次通知', recovery: '恢复通知', escalation: '未认领升级', reminder: '合并提醒', admin_reminder: '管理员提醒' } };
