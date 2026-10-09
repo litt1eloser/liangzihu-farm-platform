@@ -33,10 +33,11 @@ test('总览只聚合已授权且未归档对象，机动目录仅使用有效�
   assert.equal(visible.mobileDevices.length, 1);
   assert.equal(visible.mobileDevices[0].machine_name, '合成机具');
   assert.equal(visible.summaries[0].object_id, field.id);
-  await pool.query('UPDATE machinery_bindings SET valid_until=now()-interval \'1 second\' WHERE id=$1',[binding]);
-  assert.equal((await transaction(c=>farmOverview(c,viewer),pool)).mobileDevices.length,0,'过期绑定不能进入目录');
-  await pool.query('UPDATE machinery_bindings SET valid_until=now()+interval \'1 day\',revoked_at=now() WHERE id=$1',[binding]);
-  assert.equal((await transaction(c=>farmOverview(c,viewer),pool)).mobileDevices.length,0,'撤回绑定不能进入目录');
+  const expired=(await pool.query("INSERT INTO machinery_bindings(object_id,machine_device_id,terminal_device_id,valid_from,valid_until,evidence,created_by) VALUES($1,$2,$3,now()-interval '2 days',now()-interval '1 day','测试过期',$4) RETURNING id",[field.id,machine,terminal,owner.id])).rows[0].id;
+  const revoked=(await pool.query("INSERT INTO machinery_bindings(object_id,machine_device_id,terminal_device_id,valid_from,valid_until,evidence,revoked_at,created_by) VALUES($1,$2,$3,now()-interval '1 day',now()+interval '1 day','测试撤回',now(),$4) RETURNING id",[field.id,machine,terminal,owner.id])).rows[0].id;
+  const current=await transaction(c=>farmOverview(c,viewer),pool);
+  assert.deepEqual(current.mobileDevices.map(row=>row.binding_id),[binding],'过期和撤回绑定不能进入目录');
+  assert.notEqual(expired,binding);assert.notEqual(revoked,binding);
   await transaction(c => setObjectArchive(c, owner, {id:field.id,version:1,archived:true,reason:'测试归档'}), pool);
   const after = await transaction(c => farmOverview(c, viewer), pool);
   assert.equal(after.items.length, 0);
