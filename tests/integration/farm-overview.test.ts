@@ -25,7 +25,7 @@ test('总览只聚合已授权且未归档对象，机动目录仅使用有效�
   const visible = await transaction(c => farmOverview(c, viewer), pool);
   assert.deepEqual(visible.items.map(item => item.id), [field.id]);
   assert.equal(visible.regions.length, 1);
-  assert.deepEqual(visible.regions[0].links.map((link: {objectId:string})=>link.objectId), [field.id]);
+  assert.deepEqual((visible.regions[0].links as {objectId:string}[]).map(link=>link.objectId), [field.id]);
   assert.equal(visible.mobileDevices.length, 1);
   assert.equal(visible.mobileDevices[0].machine_name, '合成机具');
   assert.equal(visible.summaries[0].object_id, field.id);
