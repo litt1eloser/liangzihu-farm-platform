@@ -34,6 +34,7 @@ test('D2 村庄目录、对象概要、旧页面和角色权限浏览器核对',
       await page.getByRole('button',{name:'关闭对象详情'}).click();
       await page.getByRole('button',{name:'☰ 对象目录'}).click();
       await page.getByRole('heading',{name:/合成东村/}).waitFor();
+      await page.waitForTimeout(350);
       assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
       await page.screenshot({path:'docs/acceptance/d2/2026-10-09-D2村庄目录-手机.png',fullPage:true});
       const oldMap=await ownerContext.request.get(app.origin+'/map');assert.equal(oldMap.status(),200);
