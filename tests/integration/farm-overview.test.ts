@@ -21,7 +21,11 @@ test('总览只聚合已授权且未归档对象，机动目录仅使用有效�
   const source = (await pool.query('SELECT id FROM data_sources WHERE code=$1', ['SYNTH-D2-SRC'])).rows[0].id;
   const machine = (await pool.query("INSERT INTO devices(object_id,source_id,external_id,name,kind,source,created_by) VALUES($1,$2,'M-1','合成机具','physical','测试',$3) RETURNING id", [field.id,source,owner.id])).rows[0].id;
   const terminal = (await pool.query("INSERT INTO devices(object_id,source_id,external_id,name,kind,source,created_by) VALUES($1,$2,'T-1','合成终端','physical','测试',$3) RETURNING id", [field.id,source,owner.id])).rows[0].id;
-  await pool.query("INSERT INTO machinery_bindings(object_id,machine_device_id,terminal_device_id,valid_from,valid_until,evidence,created_by) VALUES($1,$2,$3,now()-interval '1 day',now()+interval '1 day','测试绑定',$4)", [field.id,machine,terminal,owner.id]);
+  const binding=(await pool.query("INSERT INTO machinery_bindings(object_id,machine_device_id,terminal_device_id,valid_from,valid_until,evidence,created_by) VALUES($1,$2,$3,now()-interval '1 day',now()+interval '1 day','测试绑定',$4) RETURNING id", [field.id,machine,terminal,owner.id])).rows[0].id;
+  assert.equal((await transaction(c=>farmOverview(c,viewer),pool)).mobileDevices.length,0,'未核实设备不能进入机动目录');
+  await pool.query('UPDATE devices SET verified=true WHERE id=$1',[machine]);
+  assert.equal((await transaction(c=>farmOverview(c,viewer),pool)).mobileDevices.length,0,'终端未核实仍不能进入目录');
+  await pool.query('UPDATE devices SET verified=true WHERE id=$1',[terminal]);
   const visible = await transaction(c => farmOverview(c, viewer), pool);
   assert.deepEqual(visible.items.map(item => item.id), [field.id]);
   assert.equal(visible.regions.length, 1);
@@ -29,6 +33,10 @@ test('总览只聚合已授权且未归档对象，机动目录仅使用有效�
   assert.equal(visible.mobileDevices.length, 1);
   assert.equal(visible.mobileDevices[0].machine_name, '合成机具');
   assert.equal(visible.summaries[0].object_id, field.id);
+  await pool.query('UPDATE machinery_bindings SET valid_until=now()-interval \'1 second\' WHERE id=$1',[binding]);
+  assert.equal((await transaction(c=>farmOverview(c,viewer),pool)).mobileDevices.length,0,'过期绑定不能进入目录');
+  await pool.query('UPDATE machinery_bindings SET valid_until=now()+interval \'1 day\',revoked_at=now() WHERE id=$1',[binding]);
+  assert.equal((await transaction(c=>farmOverview(c,viewer),pool)).mobileDevices.length,0,'撤回绑定不能进入目录');
   await transaction(c => setObjectArchive(c, owner, {id:field.id,version:1,archived:true,reason:'测试归档'}), pool);
   const after = await transaction(c => farmOverview(c, viewer), pool);
   assert.equal(after.items.length, 0);
