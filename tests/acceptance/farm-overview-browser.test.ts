@@ -1,0 +1,46 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdir} from 'node:fs/promises';
+import {chromium} from 'playwright';
+import {withDb} from '../support/db';
+import {withApp} from '../support/app';
+import {actorFixture,objectFixture,permit} from '../support/fixtures';
+
+test('D1 卫星总览只展示授权对象，搜索定位与覆盖抽屉在桌面和手机可操作',{timeout:120000},()=>withDb(async pool=>{
+ const actor=await actorFixture(pool,'worker'),expert=await actorFixture(pool,'expert');
+ const farm=await objectFixture(pool,actor.id),visible=await objectFixture(pool,actor.id),unlocated=await objectFixture(pool,actor.id),hidden=await objectFixture(pool,actor.id);
+ await pool.query("UPDATE objects SET parent_id=$2,name='合成东片农田',code='D1-FIELD',kind='field',boundary_status='draft',boundary=ST_GeomFromText('POLYGON((114.62 30.24,114.64 30.24,114.64 30.26,114.62 30.26,114.62 30.24))',4326) WHERE id=$1",[visible,farm]);
+ await pool.query("UPDATE objects SET parent_id=$2,name='合成无边界塘口',code='D1-POND',kind='pond' WHERE id=$1",[unlocated,farm]);
+ await pool.query("UPDATE objects SET parent_id=$2,name='未授权对象不可见',code='D1-HIDDEN',kind='field' WHERE id=$1",[hidden,farm]);
+ await permit(pool,actor.id,visible,['read']);await permit(pool,actor.id,unlocated,['read']);
+ await permit(pool,expert.id,visible,['read']);
+ await withApp(pool,async app=>{const browser=await chromium.launch(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH?{executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH}:{}),context=await browser.newContext({viewport:{width:1440,height:900},locale:'zh-CN'}),page=await context.newPage(),errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));try{
+  await context.addCookies([{name:'agri_session',value:await app.authenticate(actor),url:app.origin}]);
+  await page.goto(app.origin+'/farm-overview');
+  await page.getByRole('heading',{name:'农场空间总览'}).waitFor();
+  await page.getByRole('button',{name:/合成东片农田/}).waitFor();
+  assert.equal(await page.getByText('未授权对象不可见').count(),0);
+  const api=await context.request.get(app.origin+'/api/v1/map');assert.equal(api.status(),200);assert.equal((await api.text()).includes('未授权对象不可见'),false);
+  await page.getByRole('searchbox',{name:'搜索名称或编号'}).fill('D1-FIELD');
+  assert.equal(await page.getByRole('button',{name:/合成东片农田/}).count(),1);
+  assert.equal(await page.getByRole('button',{name:/合成无边界塘口/}).count(),0);
+  await page.getByRole('button',{name:/合成东片农田/}).click();
+  await page.getByRole('complementary',{name:'对象详情'}).getByRole('heading',{name:'合成东片农田'}).waitFor();
+  const map=page.getByRole('application',{name:'天地图卫星影像及已授权农业对象边界'});
+  await map.waitFor();const center=await map.evaluate(el=>(el.querySelector('.ol-viewport') as HTMLElement)?.style.width??'');
+  await mkdir('docs/acceptance/d1',{recursive:true});
+  await page.screenshot({path:'docs/acceptance/d1/2026-10-09-农场空间总览-桌面.png',fullPage:true});
+  await page.getByRole('button',{name:'关闭对象详情'}).click();
+  assert.equal(await page.getByRole('complementary',{name:'对象详情'}).count(),0);
+  assert.equal(await map.evaluate(el=>(el.querySelector('.ol-viewport') as HTMLElement)?.style.width??''),center);
+  await page.setViewportSize({width:390,height:844});await page.getByRole('button',{name:'☰ 对象目录'}).click();
+  await page.getByRole('searchbox',{name:'搜索名称或编号'}).fill('');
+  await page.getByRole('button',{name:/合成无边界塘口/}).click();
+  await page.getByRole('complementary',{name:'对象详情'}).getByText('待登记').waitFor();
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
+  await page.waitForTimeout(350);
+  await page.locator('section[aria-label="农场空间总览"] > div').last().screenshot({path:'docs/acceptance/d1/2026-10-09-农场空间总览-手机.png'});
+  const expertContext=await browser.newContext();try{await expertContext.addCookies([{name:'agri_session',value:await app.authenticate(expert),url:app.origin}]);const expertApi=await expertContext.request.get(app.origin+'/api/v1/map');assert.equal(expertApi.status(),200);assert.deepEqual((await expertApi.json()).items,[]);const expertPage=await expertContext.newPage();await expertPage.goto(app.origin+'/farm-overview');await expertPage.getByText('当前没有可查看的农业对象。').waitFor();assert.equal(await expertPage.getByText('合成东片农田').count(),0);}finally{await expertContext.close();}
+  assert.deepEqual(errors,[]);
+ }finally{await browser.close();}});
+}));
