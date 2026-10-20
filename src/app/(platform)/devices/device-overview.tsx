@@ -7,6 +7,8 @@ type Point={id:string;code:string;name:string;device_id:string;metric:string;uni
 type Current={pointId:string;current:{value:number|null;unit:string|null;quality:string|null;sampledAt:string|null;reasons:string[]|null}|null};
 const qualityLabel:Record<string,string>={valid:'有效',suspect:'可疑',invalid:'无效'};
 const qualityDot:Record<string,string>={valid:styles.dotValid,suspect:styles.dotSuspect,invalid:styles.dotInvalid};
+function relTime(iso:string){const diff=Date.now()-Date.parse(iso),m=Math.floor(diff/60000);if(m<1)return '刚刚';if(m<60)return `${m} 分钟前`;const h=Math.floor(m/60);if(h<24)return `${h} 小时前`;return `${Math.floor(h/24)} 天前`;}
+
 export default function DeviceOverview({refreshKey=0}:{refreshKey?:number}){
  const devices=useApi<{items:Device[]}>('/api/v1/devices?limit=200'),points=useApi<Point[]>('/api/v1/points'),current=useApi<Current[]>('/api/v1/points/current');
  useEffect(()=>{if(refreshKey>0){void devices.reload();void points.reload();void current.reload();}},[refreshKey,devices.reload,points.reload,current.reload]);
@@ -19,12 +21,11 @@ export default function DeviceOverview({refreshKey=0}:{refreshKey?:number}){
  if(!list.length)return <p className="empty-state">当前没有已授权的物理设备。可由管理员在上方登记区建档并授权。</p>;
  return <div className={styles.cards}>{list.map(d=>{const devicePoints=byDevice.get(d.id)??[];return <article key={d.id} className={styles.card}>
   <div className={styles.cardHead}><div><h3>{d.name}</h3><p className={styles.meta}>{[d.model,`厂家编号 ${d.external_id}`].filter(Boolean).join(' · ')}</p></div><span className={`${styles.badge} ${d.verified?styles.badgeOk:''}`}>{d.verified?'已核实':'待核实'}</span></div>
-  {devicePoints.length?<div className={`table-wrap ${styles.points}`}><table><thead><tr><th scope="col">名称</th><th scope="col">最新值</th><th scope="col">质量</th><th scope="col">采样时间</th><th scope="col">历史</th></tr></thead><tbody>{devicePoints.map(p=>{const c=currentByPoint.get(p.id)??null,q=c?.quality??'';return <tr key={p.id}>
-   <td data-label="名称">{p.name}</td>
-   <td data-label="最新值" className={styles.value}>{c&&c.value!==null?`${c.value} ${c.unit??p.unit}`:'暂无数据'}</td>
-   <td data-label="质量">{q?<><span className={`${styles.dot} ${qualityDot[q]??styles.dotNone}`}/>{qualityLabel[q]??q}</>:<><span className={`${styles.dot} ${styles.dotNone}`}/>暂无数据</>}</td>
-   <td data-label="采样时间">{c?.sampledAt?new Date(c.sampledAt).toLocaleString('zh-CN'):'—'}</td>
-   <td data-label="历史"><a className={styles.history} href={'/points/'+encodeURIComponent(p.id)}>查看历史</a></td>
-  </tr>;})}</tbody></table></div>:<p className="hint">该设备尚未登记测点。</p>}
+  {devicePoints.length?<div className={styles.metrics}>{devicePoints.map(p=>{const c=currentByPoint.get(p.id)??null,q=c?.quality??'';return <a key={p.id} className={`${styles.metric} ${c?'':styles.metricEmpty}`} href={'/points/'+encodeURIComponent(p.id)}>
+   <span className={styles.metricName}>{p.name.replace(/^闸门\d+/,'')}</span>
+   <span className={styles.metricValue}>{c&&c.value!==null?<>{c.value}<small>{c.unit??p.unit}</small></>:'暂无数据'}</span>
+   <span className={styles.metricFoot}><span className={`${styles.dot} ${q?(qualityDot[q]??styles.dotNone):styles.dotNone}`}/>{q?(qualityLabel[q]??q):'暂无数据'}{c?.sampledAt?' · '+relTime(c.sampledAt):''}</span>
+   <span className={styles.metricLink}>查看历史 →</span>
+  </a>;})}</div>:<p className="hint">该设备尚未登记测点。</p>}
  </article>;})}</div>;
 }
