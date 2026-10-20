@@ -6,9 +6,7 @@ import { savePoint, bindPoint } from '../src/modules/registry/points';
 function pointsOf(nnn: string) {
   return [
     { code: `GATE-${nnn}-OPENING`, name: `闸门${nnn}当前开度`, metric: 'opening', unit: '%' },
-    { code: `GATE-${nnn}-WATER-LEVEL`, name: `闸门${nnn}水位`, metric: 'water_level', unit: 'mm' },
-    { code: `GATE-${nnn}-INSTANT-FLOW`, name: `闸门${nnn}瞬时流量`, metric: 'instantaneous_flow', unit: 'm³/s' },
-    { code: `GATE-${nnn}-CUMULATIVE-FLOW`, name: `闸门${nnn}累计流量`, metric: 'cumulative_flow', unit: 'm³' },
+
     { code: `GATE-${nnn}-SET-OPENING`, name: `闸门${nnn}设置开度`, metric: 'set_opening', unit: '%' },
     { code: `GATE-${nnn}-STALL-CURRENT`, name: `闸门${nnn}堵转电流`, metric: 'stall_current', unit: 'mA' },
   ];
@@ -22,6 +20,12 @@ async function main() {
   if (!/^hbdxscz[0-9]{3}$/.test(device)) throw new Error('设备编号须形如 hbdxsczNNN');
   const nnn = device.slice(-3);
   const POINTS = pointsOf(nnn);
+  // 水位/流量测点依赖水位计与测流箱（本批未安装），加装后用 --with-hydrology 补充登记
+  if (args.includes('--with-hydrology')) POINTS.push(
+    { code: `GATE-${nnn}-WATER-LEVEL`, name: `闸门${nnn}水位`, metric: 'water_level', unit: 'mm' },
+    { code: `GATE-${nnn}-INSTANT-FLOW`, name: `闸门${nnn}瞬时流量`, metric: 'instantaneous_flow', unit: 'm³/s' },
+    { code: `GATE-${nnn}-CUMULATIVE-FLOW`, name: `闸门${nnn}累计流量`, metric: 'cumulative_flow', unit: 'm³' },
+  );
   await transaction(async c => {
     if ((await c.query('SELECT current_database() AS name')).rows[0].name !== 'agri_dev') throw new Error('仅登记开发库');
     const user = (await c.query("SELECT id FROM users WHERE username='farm-admin' AND role='admin' AND enabled")).rows[0];
