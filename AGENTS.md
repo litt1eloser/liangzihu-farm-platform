@@ -21,3 +21,13 @@
 
 - 在本项目创建、修改、渲染或嵌入任何 Mermaid 图时，必须先读取并调用 Pretty Mermaid 技能：`skills/pretty-mermaid/SKILL.md`。Codex 与 Claude Code 入口分别为 `.agents/skills/pretty-mermaid`、`.claude/skills/pretty-mermaid`，均指向仓库内的同一技能目录，不依赖外层工作区。
 - 保留可编辑源文件，并按技能工作流渲染、检查中文文字、连线和实际展示效果。
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
