@@ -32,6 +32,9 @@ importers:
       cesium:
         specifier: 1.146.0
         version: 1.146.0
+      ezuikit-js:
+        specifier: 9.0.23
+        version: 9.0.23
       geotiff:
         specifier: 3.0.4
         version: 3.0.4
@@ -394,6 +397,30 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@ezuikit/control-aichat@0.1.1-beta.1':
+    resolution: {integrity: sha512-vj5u4QnxGIbeVN1kIyDTifV1gFUTd4Pnz5JeAA8OlYexY0FcHCaKNarXDIBFVJwppAxdkrXMW6AuAlURr2lfUw==}
+
+  '@ezuikit/player-ezopen@9.0.9-beta.5':
+    resolution: {integrity: sha512-sM7joGejhhhuG6bJb1J0LuVvawVOXsqLjMtec40H3Ba9VysB4R+f8skyZaDyoKIMIpKNNcNo0SojitNrdgzpjg==}
+
+  '@ezuikit/player-plugin-record@9.2.0-beta.1':
+    resolution: {integrity: sha512-SA7IlSckKfoW73QhW9CjirnSRQHYYgstLIAhWzbL9/rvhj0AJ84NgvzRfySN10pkk7lZ485XQQwyBJgZFbz/6w==}
+
+  '@ezuikit/utils-collect@0.1.1':
+    resolution: {integrity: sha512-BgEOnTtAq8rQRBAKv5rLXbQLGOnfOZ6NS0QTmiviey80JbMJlxrLiqmjL5lxvkm4JtCcXCtSgPA4tskQKN4eDA==}
+
+  '@ezuikit/utils-i18n@2.0.1':
+    resolution: {integrity: sha512-846z2bDpCxioTBO3KG8Uw8QUFa6hzquSzmZKWPO6fjT3P4v6zNnXRz+Z3JCPlXnc4eesi03A+JmMAU6m5KI4gg==}
+
+  '@ezuikit/utils-logger@2.1.0':
+    resolution: {integrity: sha512-Kj/vTddGWhRhOApo/QmesxqEPxkSwhwakQGZx3b3xLI8Dou2NMg8iNA+9aXU4jT5uT13TmdCn0oMC8Kbq6BMGQ==}
+
+  '@ezuikit/utils-service@2.0.0':
+    resolution: {integrity: sha512-CBCPMw3uwd/vCh/YS+fZPMJrmg0LmCPO5bVkAon6VxjJJxwpVNcVb15sNbZyGR52JYt3wq7UEhnqHMprHnCSEA==}
+
+  '@ezuikit/utils-tools@2.0.7':
+    resolution: {integrity: sha512-phxKRP17FunG0cwLLK951V18x96EzwO5XSfZ+FfI4jv8agbujV5HtY709lpXM0H5j4XC7pZryT70wjdRFASQgA==}
+
   '@huggingface/jinja@0.5.10':
     resolution: {integrity: sha512-SgS1D1bglQ94ceD4ZCL6eayUDy9uV1xuyk61OjgSxU5GJh7upqZCKII0JoTYMc6wWsg3JUgaPRX0ElQzXPk3Cw==}
     engines: {node: '>=18'}
@@ -567,6 +594,9 @@ packages:
     resolution: {integrity: sha512-wgm9Ehl2jpeqP3zw/7mo3kRHFp5MEDhqAdwy1fTGkHAwnkGOVsgpvQhL8B5n1qlb01jV3n/bI0ZfZp5lWA1k4w==}
     engines: {node: '>=18.0.0'}
 
+  '@juggle/resize-observer@3.4.0':
+    resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
+
   '@next/env@16.3.8':
     resolution: {integrity: sha512-Al9zqHVV7TJv0eFuOU4U7Lvv74PTih4Ch63sk2xCIpSTkE3udFnaOcnzP2lQVymiL7yS9Cj2iClUXlR3EQ5sEw==}
 
@@ -677,6 +707,9 @@ packages:
   '@scure/base@2.4.0':
     resolution: {integrity: sha512-thZ1TuJwFwBblOhgsjDKvvGirBxNp+wSvY/DR6tJBJOTDhdAAcHJ8Vbr2eFnqaxeca4+t0i9KBf+uHYGWwZORg==}
 
+  '@skax/delegate@4.0.2':
+    resolution: {integrity: sha512-8imP+fGESjlbU4mFhZMEuR3/qmYVtqQjXXzZ/C/imbzKqyaMWYpEDqQXNf6yGHzWHUJhZwn5AWNm645U1GjQsQ==}
+
   '@smithy/core@3.35.1':
     resolution: {integrity: sha512-i4YPS4B6ts7bjn7UwLnGjiZdprOvHvgGobFZsYK3GIY3E5hIqtj0rReU69BcTpGp+fvtraSNXeG1l+jtJvF55w==}
     engines: {node: '>=18.0.0'}
@@ -760,6 +793,9 @@ packages:
   abort-controller@3.0.0:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
     engines: {node: '>=6.5'}
+
+  abortcontroller-polyfill@1.7.8:
+    resolution: {integrity: sha512-9f1iZ2uWh92VcrU9Y8x+LdM4DLj75VE0MJB8zuF1iUnroEptStw+DQ8EQPMUdfe5k+PkB1uUfDQfWbhstH8LrQ==}
 
   agent-base@6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
@@ -871,6 +907,12 @@ packages:
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
 
+  dayjs@1.11.23:
+    resolution: {integrity: sha512-QDTCU0M0MxR3hQfnlDJfwekQiaanm1ubOD231u73WBckQ/fsamwRLiE2GBz6D3a/xF1NgfiDLJjXBa1hYOYTtQ==}
+
+  debounce-promise@3.1.2:
+    resolution: {integrity: sha512-rZHcgBkbYavBeD9ej6sP56XfG53d51CD4dnaw989YX/nZ/ZJfgRx/9ePKmTNiUiyQvh4mtrMoS3OAWW+yoYtpg==}
+
   debug@4.4.3:
     resolution: {integrity: sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==}
     engines: {node: '>=6.0'}
@@ -879,6 +921,10 @@ packages:
     peerDependenciesMeta:
       supports-color:
         optional: true
+
+  deepmerge@4.3.1:
+    resolution: {integrity: sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A==}
+    engines: {node: '>=0.10.0'}
 
   define-data-property@1.1.4:
     resolution: {integrity: sha512-rBMvIzlpA8v6E+SJZoo++HAYqsLrkg7MSfIinMPFhmkorw7X+dOXVJQs+QT69zGkzMyfDnIMN2Wid1+NbL3T+A==}
@@ -928,12 +974,18 @@ packages:
     resolution: {integrity: sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==}
     engines: {node: '>=6'}
 
+  eventemitter3@5.0.4:
+    resolution: {integrity: sha512-mlsTRyGaPBjPedk6Bvw+aqbsXDtoAyAzm5MO7JgU+yVRyMQ5O8bD4Kcci7BS85f93veegeCPkL8R4GLClnjLFw==}
+
   events-universal@1.0.1:
     resolution: {integrity: sha512-LUd5euvbMLpwOF8m6ivPCbhQeSiYVNb8Vs0fQ8QjXo0JTkEHpz8pxdQf0gStltaPpw0Cca8b39KxvK9cfKRiAw==}
 
   events@3.3.0:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
     engines: {node: '>=0.8.x'}
+
+  ezuikit-js@9.0.23:
+    resolution: {integrity: sha512-Z0U8Ap4jIXSlcqaZKP6fX8qjIyvhahmt8gRQ7wnnuIvg9e+ZhHlIykpywoyUZ1SGYrme8gxKw7e0dQGQY+D8ZA==}
 
   fast-fifo@1.3.2:
     resolution: {integrity: sha512-/d9sfos4yxzpwkDkuN7k2SqFKtYNmCTzgfEpz82x34IM9/zc8KGxQoXg1liNC/izpRM/MBdt44Nmx41ZWqk+FQ==}
@@ -942,11 +994,19 @@ packages:
     resolution: {integrity: sha512-nDA9ADeINN8SA2u2wCtU+siWFTTDqQR37XvgPIDDmboWQeExz7X0mImxuaN+kJddliIqy2FpVRmnvRZ+j8i1/A==}
     engines: {node: '>=18.2.0'}
 
+  fetch-blob@3.2.0:
+    resolution: {integrity: sha512-7yAQpD2UMJzLi1Dqv7qFYnPbaPx7ZfFK6PiIxQ4PfkGPyNyl2Ugx+a/umUonmKqjhM4DnfbMvdX6otXq83soQQ==}
+    engines: {node: ^12.20 || >= 14.13}
+
   fflate@0.8.3:
     resolution: {integrity: sha512-tbZNuJrLwGUp3zshBtdy4W+ORxZuIh8a5ilyIEQDC5rY1f3U20JMry0Ll3WBzU58EZKsEuJFXhb5gwv8CsPvgA==}
 
   flatbuffers@25.9.23:
     resolution: {integrity: sha512-MI1qs7Lo4Syw0EOzUl0xjs2lsoeqFku44KpngfIduHBYvzm8h2+7K8YMQh1JtVVVrUvhLpNwqVi4DERegUJhPQ==}
+
+  formdata-polyfill@4.0.10:
+    resolution: {integrity: sha512-buewHzMvYL29jdeQTVILecSaZKnt/RJWjoZCF5OW60Z67/GmSLBkOFM7qh1PI3zFNtJbaZL5eQu1vLfazOwj4g==}
+    engines: {node: '>=12.20.0'}
 
   fsevents@2.3.2:
     resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
@@ -1111,6 +1171,11 @@ packages:
         optional: true
       sass:
         optional: true
+
+  node-domexception@1.0.0:
+    resolution: {integrity: sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==}
+    engines: {node: '>=10.5.0'}
+    deprecated: Use your platform's native DOMException instead
 
   nosleep.js@0.12.0:
     resolution: {integrity: sha512-9d1HbpKLh3sdWlhXMhU6MMH+wQzKkrgfRkYV0EBdvt99YJfj0ilCJrWRDYG2130Tm4GXbEoTCx5b34JSaP+HhA==}
@@ -1292,6 +1357,10 @@ packages:
   scheduler@0.27.0:
     resolution: {integrity: sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q==}
 
+  screenfull@5.2.0:
+    resolution: {integrity: sha512-9BakfsO2aUQN2K9Fdbj87RJIEZ82Q9IGim7FqM5OsebfoFC6ZHXgDq/KvniuLTPdeM8wY2o6Dj3WQ7KeQCj3cA==}
+    engines: {node: '>=0.10.0'}
+
   semver-compare@1.0.0:
     resolution: {integrity: sha512-YM3/ITh2MJ5MtzaM429anh+x2jiLVjqILF4m4oyQB18W7Ggea7BfqdH/wGMK7dDiMghv/6WG7znWMwUDzJiXow==}
 
@@ -1395,6 +1464,9 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
+  ua-parser-js@1.0.37:
+    resolution: {integrity: sha512-bhTyI94tZofjo+Dn8SN6Zv8nBDvyXTymAdM3LDI/0IboIUwTu1rEhW7v2TfiVsoYWgkQ4kOVqnI8APUFbIQIFQ==}
+
   undici-types@6.21.0:
     resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
 
@@ -1407,6 +1479,10 @@ packages:
 
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
+
+  web-streams-polyfill@3.3.3:
+    resolution: {integrity: sha512-d2JWLCivmZYTSIoge9MsgFCZrt571BikcWGYkjC1khllbTeDlGqZ2D8vD8E/lJa8WGWbb7Plm8/XJYV7IJHZZw==}
+    engines: {node: '>= 8'}
 
   web-worker@1.5.0:
     resolution: {integrity: sha512-RiMReJrTAiA+mBjGONMnjVDP2u3p9R1vkcGz6gDIrOMT3oGuYwX2WRMYI9ipkphSuE5XKEhydbhNEJh4NY9mlw==}
@@ -1897,6 +1973,41 @@ snapshots:
   '@esbuild/win32-x64@0.28.2':
     optional: true
 
+  '@ezuikit/control-aichat@0.1.1-beta.1':
+    dependencies:
+      '@ezuikit/utils-i18n': 2.0.1
+
+  '@ezuikit/player-ezopen@9.0.9-beta.5':
+    dependencies:
+      '@ezuikit/player-plugin-record': 9.2.0-beta.1
+      '@ezuikit/utils-i18n': 2.0.1
+      '@ezuikit/utils-logger': 2.1.0
+      '@ezuikit/utils-service': 2.0.0
+      '@ezuikit/utils-tools': 2.0.7
+      dayjs: 1.11.23
+      deepmerge: 4.3.1
+      eventemitter3: 5.0.4
+      screenfull: 5.2.0
+      ua-parser-js: 1.0.37
+
+  '@ezuikit/player-plugin-record@9.2.0-beta.1':
+    dependencies:
+      '@ezuikit/utils-tools': 2.0.7
+
+  '@ezuikit/utils-collect@0.1.1': {}
+
+  '@ezuikit/utils-i18n@2.0.1':
+    dependencies:
+      deepmerge: 4.3.1
+
+  '@ezuikit/utils-logger@2.1.0': {}
+
+  '@ezuikit/utils-service@2.0.0':
+    dependencies:
+      '@ezuikit/utils-tools': 2.0.7
+
+  '@ezuikit/utils-tools@2.0.7': {}
+
   '@huggingface/jinja@0.5.10': {}
 
   '@huggingface/transformers@3.8.1(@types/node@22.20.4)':
@@ -2018,6 +2129,8 @@ snapshots:
     dependencies:
       minipass: 7.1.3
 
+  '@juggle/resize-observer@3.4.0': {}
+
   '@next/env@16.3.8': {}
 
   '@next/swc-darwin-arm64@16.3.8':
@@ -2096,6 +2209,8 @@ snapshots:
   '@protobufjs/utf8@1.1.2': {}
 
   '@scure/base@2.4.0': {}
+
+  '@skax/delegate@4.0.2': {}
 
   '@smithy/core@3.35.1':
     dependencies:
@@ -2191,6 +2306,8 @@ snapshots:
   abort-controller@3.0.0:
     dependencies:
       event-target-shim: 5.0.1
+
+  abortcontroller-polyfill@1.7.8: {}
 
   agent-base@6.0.2:
     dependencies:
@@ -2290,9 +2407,15 @@ snapshots:
 
   csstype@3.2.3: {}
 
+  dayjs@1.11.23: {}
+
+  debounce-promise@3.1.2: {}
+
   debug@4.4.3:
     dependencies:
       ms: 2.1.3
+
+  deepmerge@4.3.1: {}
 
   define-data-property@1.1.4:
     dependencies:
@@ -2357,6 +2480,8 @@ snapshots:
 
   event-target-shim@5.0.1: {}
 
+  eventemitter3@5.0.4: {}
+
   events-universal@1.0.1:
     dependencies:
       bare-events: 2.9.2
@@ -2365,6 +2490,22 @@ snapshots:
 
   events@3.3.0: {}
 
+  ezuikit-js@9.0.23:
+    dependencies:
+      '@ezuikit/control-aichat': 0.1.1-beta.1
+      '@ezuikit/player-ezopen': 9.0.9-beta.5
+      '@ezuikit/utils-collect': 0.1.1
+      '@ezuikit/utils-i18n': 2.0.1
+      '@ezuikit/utils-logger': 2.1.0
+      '@ezuikit/utils-tools': 2.0.7
+      '@juggle/resize-observer': 3.4.0
+      '@skax/delegate': 4.0.2
+      abortcontroller-polyfill: 1.7.8
+      debounce-promise: 3.1.2
+      deepmerge: 4.3.1
+      formdata-polyfill: 4.0.10
+      screenfull: 5.2.0
+
   fast-fifo@1.3.2: {}
 
   fast-unique-numbers@9.0.27:
@@ -2372,9 +2513,18 @@ snapshots:
       '@babel/runtime': 7.29.10
       tslib: 2.8.1
 
+  fetch-blob@3.2.0:
+    dependencies:
+      node-domexception: 1.0.0
+      web-streams-polyfill: 3.3.3
+
   fflate@0.8.3: {}
 
   flatbuffers@25.9.23: {}
+
+  formdata-polyfill@4.0.10:
+    dependencies:
+      fetch-blob: 3.2.0
 
   fsevents@2.3.2:
     optional: true
@@ -2564,6 +2714,8 @@ snapshots:
       - '@babel/core'
       - '@types/node'
       - babel-plugin-macros
+
+  node-domexception@1.0.0: {}
 
   nosleep.js@0.12.0: {}
 
@@ -2759,6 +2911,8 @@ snapshots:
 
   scheduler@0.27.0: {}
 
+  screenfull@5.2.0: {}
+
   semver-compare@1.0.0: {}
 
   semver@7.8.5: {}
@@ -2891,6 +3045,8 @@ snapshots:
 
   typescript@5.9.3: {}
 
+  ua-parser-js@1.0.37: {}
+
   undici-types@6.21.0: {}
 
   unzipit@2.0.0: {}
@@ -2898,6 +3054,8 @@ snapshots:
   urijs@1.19.11: {}
 
   util-deprecate@1.0.2: {}
+
+  web-streams-polyfill@3.3.3: {}
 
   web-worker@1.5.0: {}
 
