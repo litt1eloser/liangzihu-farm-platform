@@ -1,0 +1,1330 @@
+{
+  "2026.4.16竣工图（庙下流）": {
+    "type_stats": {
+      "INSERT": 1442,
+      "LWPOLYLINE": 441,
+      "POINT": 89,
+      "POLYLINE": 17,
+      "LINE": 1760,
+      "TEXT": 365,
+      "CIRCLE": 8,
+      "MTEXT": 22,
+      "HATCH": 36,
+      "LEADER": 14,
+      "OLE2FRAME": 3
+    },
+    "bbox": [
+      559475.9139492587,
+      3347665.517564542,
+      560647.787174487,
+      3348782.203268906
+    ],
+    "layers": {
+      "GCD": {
+        "INSERT": 224
+      },
+      "DMTZ": {
+        "LWPOLYLINE": 45,
+        "POINT": 1,
+        "LINE": 1495,
+        "INSERT": 598,
+        "POLYLINE": 2
+      },
+      "新建雨水沟（0.5m)": {
+        "LWPOLYLINE": 6
+      },
+      "新建田埂II型（0.5m）": {
+        "LWPOLYLINE": 28,
+        "POLYLINE": 2
+      },
+      "0": {
+        "LWPOLYLINE": 210,
+        "TEXT": 28,
+        "HATCH": 8,
+        "LINE": 22,
+        "CIRCLE": 2,
+        "OLE2FRAME": 2
+      },
+      "ASSIST": {
+        "POLYLINE": 11,
+        "LWPOLYLINE": 4
+      },
+      "SXSS": {
+        "LWPOLYLINE": 7,
+        "TEXT": 6,
+        "INSERT": 4,
+        "LINE": 22
+      },
+      "新建碎石路（3.5m）": {
+        "LWPOLYLINE": 6
+      },
+      "新建田间道（3m）": {
+        "LWPOLYLINE": 2
+      },
+      "新建生态渠III型（3m)": {
+        "LWPOLYLINE": 12
+      },
+      "新建田埂II型（2.0m）": {
+        "LWPOLYLINE": 4
+      },
+      "GXYZ": {
+        "LWPOLYLINE": 6,
+        "INSERT": 12,
+        "LINE": 5
+      },
+      "6-1下田埠": {
+        "INSERT": 25
+      },
+      "JMD": {
+        "TEXT": 106,
+        "LWPOLYLINE": 6,
+        "LINE": 20,
+        "HATCH": 2
+      },
+      "ZDH": {
+        "POINT": 88,
+        "TEXT": 80,
+        "LWPOLYLINE": 1
+      },
+      "3过路涵A（500）": {
+        "INSERT": 84
+      },
+      "检查井": {
+        "TEXT": 4,
+        "CIRCLE": 4
+      },
+      "现状水泥路": {
+        "LWPOLYLINE": 3
+      },
+      "地名标注": {
+        "MTEXT": 2
+      },
+      "水田填充": {
+        "HATCH": 12,
+        "INSERT": 1
+      },
+      "2-3新建排水沟标注层": {
+        "MTEXT": 2,
+        "LEADER": 2
+      },
+      "2-2新建农渠标注": {
+        "MTEXT": 7,
+        "LEADER": 4
+      },
+      "0坑塘填充": {
+        "HATCH": 2
+      },
+      "DLDW": {
+        "INSERT": 15
+      },
+      "坟地": {
+        "LWPOLYLINE": 5
+      },
+      "003GH修复3.5m田间道标注": {
+        "MTEXT": 4,
+        "LEADER": 5,
+        "LWPOLYLINE": 1
+      },
+      "4-0蓄水池": {
+        "MTEXT": 2,
+        "LEADER": 2
+      },
+      "2-5 泵站": {
+        "INSERT": 2,
+        "MTEXT": 1,
+        "LEADER": 1,
+        "TEXT": 1
+      },
+      "TK": {
+        "INSERT": 1,
+        "MTEXT": 1,
+        "TEXT": 10,
+        "LINE": 1
+      },
+      "0殡葬用地填充": {
+        "HATCH": 1
+      },
+      "0水库水面填充": {
+        "HATCH": 1
+      },
+      "0灌木林地填充": {
+        "HATCH": 1
+      },
+      "0居民地填充": {
+        "HATCH": 1
+      },
+      "0河流填充": {
+        "HATCH": 1
+      },
+      "0道路填充": {
+        "HATCH": 2
+      },
+      "0草地填充": {
+        "HATCH": 1
+      },
+      "0果园填充": {
+        "HATCH": 1
+      },
+      "0旱地填充": {
+        "HATCH": 1
+      },
+      "0有林地填充": {
+        "HATCH": 1
+      },
+      "0沟渠填充": {
+        "HATCH": 1
+      },
+      "DGX": {
+        "POLYLINE": 2
+      },
+      "TL": {
+        "TEXT": 47,
+        "LINE": 180,
+        "LWPOLYLINE": 5
+      },
+      "DLSS": {
+        "LINE": 11
+      },
+      "ZJ": {
+        "TEXT": 1
+      },
+      "ZBTZ1": {
+        "LINE": 2,
+        "INSERT": 466
+      },
+      "JJ": {
+        "LINE": 2
+      },
+      "施工过项目范围": {
+        "LWPOLYLINE": 1
+      },
+      "04GH护栏标注层": {
+        "LWPOLYLINE": 1
+      },
+      "新建生态渠I型（6m)": {
+        "LWPOLYLINE": 1
+      },
+      "新建生态渠II型（4m)": {
+        "LWPOLYLINE": 1
+      },
+      "2-3新建排水沟": {
+        "LWPOLYLINE": 1
+      },
+      "05水流方向": {
+        "INSERT": 1
+      },
+      "2-7（涵管）农沟过田间道": {
+        "INSERT": 1
+      },
+      "02GH新建农渠": {
+        "LWPOLYLINE": 1
+      },
+      "02GH清淤沟渠": {
+        "LWPOLYLINE": 1
+      },
+      "0-0项目范围线": {
+        "LWPOLYLINE": 2
+      },
+      "原始标高": {
+        "CIRCLE": 1
+      },
+      "tdz_格田标注": {
+        "LWPOLYLINE": 52,
+        "TEXT": 76
+      },
+      "新建田埂II型（1.5m）": {
+        "LWPOLYLINE": 2
+      },
+      "已验收项目范围线": {
+        "TEXT": 2,
+        "CIRCLE": 1,
+        "LWPOLYLINE": 1
+      },
+      "图例": {
+        "TEXT": 4
+      },
+      "平整范围线": {
+        "LWPOLYLINE": 26
+      },
+      "2-1坑塘清淤": {
+        "MTEXT": 3
+      },
+      "6-2水闸": {
+        "INSERT": 8
+      },
+      "3-2生产路": {
+        "OLE2FRAME": 1
+      }
+    }
+  },
+  "2026.4.16竣工图（新屋湾、毛家湾）": {
+    "type_stats": {
+      "LWPOLYLINE": 433,
+      "TEXT": 437,
+      "INSERT": 1738,
+      "POINT": 237,
+      "CIRCLE": 31,
+      "LINE": 249,
+      "MTEXT": 49,
+      "HATCH": 30,
+      "POLYLINE": 2,
+      "LEADER": 12,
+      "OLE2FRAME": 3
+    },
+    "bbox": [
+      558401.9406283513,
+      3347739.727256141,
+      560686.6829661207,
+      3349583.428947405
+    ],
+    "layers": {
+      "0": {
+        "LWPOLYLINE": 186,
+        "TEXT": 110,
+        "LINE": 22,
+        "HATCH": 5,
+        "MTEXT": 6,
+        "CIRCLE": 5,
+        "OLE2FRAME": 2
+      },
+      "SXSS": {
+        "LWPOLYLINE": 21,
+        "TEXT": 21,
+        "LINE": 22,
+        "INSERT": 3
+      },
+      "GXYZ": {
+        "LWPOLYLINE": 5,
+        "INSERT": 6
+      },
+      "3过路涵A（500）": {
+        "INSERT": 73
+      },
+      "DMTZ": {
+        "LWPOLYLINE": 19
+      },
+      "新建田埂II型（2.0m）": {
+        "LWPOLYLINE": 36
+      },
+      "新建碎石路（3.5m）": {
+        "LWPOLYLINE": 5
+      },
+      "6-1下田埠": {
+        "INSERT": 24
+      },
+      "新建生态渠III型（3m)": {
+        "LWPOLYLINE": 13,
+        "MTEXT": 1
+      },
+      "DM": {
+        "POINT": 233,
+        "TEXT": 120
+      },
+      "检查井": {
+        "TEXT": 24,
+        "CIRCLE": 24
+      },
+      "GCD-1": {
+        "INSERT": 26
+      },
+      "新建雨水沟（0.5m)": {
+        "LWPOLYLINE": 8
+      },
+      "新建田间道（3m）": {
+        "LWPOLYLINE": 5
+      },
+      "JMD": {
+        "TEXT": 11,
+        "LWPOLYLINE": 1,
+        "HATCH": 2,
+        "LINE": 4
+      },
+      "TL": {
+        "LINE": 185,
+        "TEXT": 47,
+        "LWPOLYLINE": 5
+      },
+      "地名标注": {
+        "TEXT": 1,
+        "MTEXT": 4
+      },
+      "DLSS": {
+        "LWPOLYLINE": 9,
+        "LINE": 11
+      },
+      "tdz_格田标注": {
+        "LWPOLYLINE": 56,
+        "TEXT": 83
+      },
+      "2-1坑塘清淤": {
+        "MTEXT": 8,
+        "LWPOLYLINE": 1
+      },
+      "3-4生产路标注层": {
+        "MTEXT": 6,
+        "LWPOLYLINE": 4
+      },
+      "2-2新建农渠": {
+        "MTEXT": 5,
+        "LWPOLYLINE": 6
+      },
+      "2-3新建排水沟": {
+        "MTEXT": 5,
+        "LWPOLYLINE": 2,
+        "LEADER": 1
+      },
+      "2-5泵站": {
+        "INSERT": 2,
+        "LWPOLYLINE": 2,
+        "TEXT": 2
+      },
+      "1-1平整范围及标注层": {
+        "TEXT": 1,
+        "LWPOLYLINE": 1
+      },
+      "0-0项目范围线": {
+        "LWPOLYLINE": 5
+      },
+      "平整范围线": {
+        "LWPOLYLINE": 25
+      },
+      "水田填充": {
+        "LWPOLYLINE": 7,
+        "HATCH": 7
+      },
+      "0旱地填充": {
+        "HATCH": 4
+      },
+      "ZBTZ": {
+        "INSERT": 6
+      },
+      "TK": {
+        "TEXT": 10,
+        "LINE": 1,
+        "MTEXT": 1
+      },
+      "0殡葬用地填充": {
+        "HATCH": 1
+      },
+      "0水库水面填充": {
+        "HATCH": 1
+      },
+      "0灌木林地填充": {
+        "HATCH": 1
+      },
+      "0居民地填充": {
+        "HATCH": 1
+      },
+      "0河流填充": {
+        "HATCH": 1
+      },
+      "0道路填充": {
+        "HATCH": 2
+      },
+      "0草地填充": {
+        "HATCH": 1
+      },
+      "0坑塘填充": {
+        "HATCH": 1
+      },
+      "0果园填充": {
+        "HATCH": 1
+      },
+      "0有林地填充": {
+        "HATCH": 1
+      },
+      "0沟渠填充": {
+        "HATCH": 1
+      },
+      "DGX": {
+        "POLYLINE": 2
+      },
+      "ZJ": {
+        "TEXT": 1
+      },
+      "ZBTZ1": {
+        "LINE": 2,
+        "INSERT": 303
+      },
+      "DLDW": {
+        "INSERT": 2
+      },
+      "JJ": {
+        "LINE": 2
+      },
+      "施工过项目范围": {
+        "LWPOLYLINE": 1
+      },
+      "04GH护栏标注层": {
+        "LWPOLYLINE": 1
+      },
+      "新建生态渠I型（6m)": {
+        "LWPOLYLINE": 1
+      },
+      "新建生态渠II型（4m)": {
+        "LWPOLYLINE": 1
+      },
+      "05水流方向": {
+        "INSERT": 1
+      },
+      "2-7（涵管）农沟过田间道": {
+        "INSERT": 1
+      },
+      "02GH新建农渠": {
+        "LWPOLYLINE": 1
+      },
+      "02GH清淤沟渠": {
+        "LWPOLYLINE": 1
+      },
+      "原始标高": {
+        "CIRCLE": 1
+      },
+      "新建田埂II型（1.5m）": {
+        "LWPOLYLINE": 2
+      },
+      "已验收项目范围线": {
+        "TEXT": 2,
+        "CIRCLE": 1,
+        "LWPOLYLINE": 1
+      },
+      "2-5 泵站": {
+        "INSERT": 1,
+        "LEADER": 2
+      },
+      "GCD": {
+        "INSERT": 1277
+      },
+      "2-9沟渠清淤": {
+        "LEADER": 2,
+        "LWPOLYLINE": 1,
+        "MTEXT": 2
+      },
+      "2-2新建农渠标注层": {
+        "MTEXT": 2
+      },
+      "4-0蓄水池": {
+        "INSERT": 3,
+        "LEADER": 2,
+        "MTEXT": 1
+      },
+      "4-0蓄水池标注": {
+        "MTEXT": 3,
+        "LEADER": 1
+      },
+      "3-2生产路": {
+        "MTEXT": 4,
+        "LEADER": 4,
+        "OLE2FRAME": 1
+      },
+      "6-2水闸": {
+        "INSERT": 10
+      },
+      "ZDH": {
+        "POINT": 4,
+        "TEXT": 4
+      },
+      "坑塘清淤": {
+        "LWPOLYLINE": 1
+      },
+      "002GH坑塘清淤": {
+        "MTEXT": 1
+      }
+    }
+  },
+  "2026.8.10竣工图（张家湾）": {
+    "type_stats": {
+      "LWPOLYLINE": 1054,
+      "LINE": 443,
+      "TEXT": 524,
+      "POLYLINE": 60,
+      "INSERT": 2238,
+      "HATCH": 402,
+      "POINT": 703,
+      "CIRCLE": 4,
+      "MTEXT": 63,
+      "OLE2FRAME": 3
+    },
+    "bbox": [
+      559328.8621666804,
+      3347563.32568115,
+      560031.7906533182,
+      3348368.879303151
+    ],
+    "layers": {
+      "DMTZ": {
+        "LWPOLYLINE": 52,
+        "POLYLINE": 55,
+        "LINE": 6,
+        "TEXT": 16
+      },
+      "DLSS": {
+        "LWPOLYLINE": 125,
+        "TEXT": 34,
+        "POLYLINE": 2,
+        "LINE": 11
+      },
+      "ZBTZ": {
+        "LWPOLYLINE": 190,
+        "INSERT": 785,
+        "TEXT": 3
+      },
+      "SXSS": {
+        "LWPOLYLINE": 63,
+        "LINE": 70,
+        "TEXT": 22,
+        "INSERT": 3
+      },
+      "ASSIST": {
+        "LWPOLYLINE": 14
+      },
+      "GXYZ": {
+        "LWPOLYLINE": 5,
+        "INSERT": 99,
+        "LINE": 8,
+        "TEXT": 1
+      },
+      "DLDW": {
+        "LWPOLYLINE": 24,
+        "INSERT": 146,
+        "TEXT": 2
+      },
+      "JMD": {
+        "LWPOLYLINE": 486,
+        "TEXT": 1,
+        "LINE": 141,
+        "INSERT": 2,
+        "HATCH": 386
+      },
+      "GCD": {
+        "INSERT": 972,
+        "LWPOLYLINE": 31
+      },
+      "梁子湖范围": {
+        "POINT": 1
+      },
+      "0": {
+        "LWPOLYLINE": 18,
+        "INSERT": 2,
+        "CIRCLE": 1,
+        "OLE2FRAME": 2,
+        "LINE": 22,
+        "TEXT": 21,
+        "HATCH": 1
+      },
+      "DGX": {
+        "POLYLINE": 3
+      },
+      "ZDH": {
+        "POINT": 702,
+        "TEXT": 350,
+        "LWPOLYLINE": 1
+      },
+      "2-5泵站标注层": {
+        "INSERT": 1
+      },
+      "1-2田坎": {
+        "LWPOLYLINE": 1
+      },
+      "2-8水流方向": {
+        "INSERT": 8
+      },
+      "6-6护砌": {
+        "CIRCLE": 1
+      },
+      "2-7（涵管）农沟过田间道": {
+        "INSERT": 19
+      },
+      "4-0蓄水池": {
+        "INSERT": 5
+      },
+      "6-1下田埠": {
+        "INSERT": 11
+      },
+      "2-3新建排水沟": {
+        "LWPOLYLINE": 3
+      },
+      "1-1平整范围标注层": {
+        "MTEXT": 62,
+        "LWPOLYLINE": 15
+      },
+      "TL": {
+        "TEXT": 51,
+        "LINE": 180,
+        "LWPOLYLINE": 5
+      },
+      "ZBTZ1": {
+        "INSERT": 181,
+        "LINE": 2
+      },
+      "3-2生产路": {
+        "LWPOLYLINE": 6,
+        "OLE2FRAME": 1
+      },
+      "水田填充": {
+        "HATCH": 2
+      },
+      "TK": {
+        "INSERT": 1,
+        "MTEXT": 1,
+        "TEXT": 10,
+        "LINE": 1
+      },
+      "0殡葬用地填充": {
+        "HATCH": 1
+      },
+      "0水库水面填充": {
+        "HATCH": 1
+      },
+      "0灌木林地填充": {
+        "HATCH": 1
+      },
+      "0居民地填充": {
+        "HATCH": 1
+      },
+      "0河流填充": {
+        "HATCH": 1
+      },
+      "0道路填充": {
+        "HATCH": 2
+      },
+      "0草地填充": {
+        "HATCH": 1
+      },
+      "0坑塘填充": {
+        "HATCH": 1
+      },
+      "0果园填充": {
+        "HATCH": 1
+      },
+      "0旱地填充": {
+        "HATCH": 1
+      },
+      "0有林地填充": {
+        "HATCH": 1
+      },
+      "0沟渠填充": {
+        "HATCH": 1
+      },
+      "ZJ": {
+        "TEXT": 1
+      },
+      "JJ": {
+        "LINE": 2
+      },
+      "施工过项目范围": {
+        "LWPOLYLINE": 1
+      },
+      "04GH护栏标注层": {
+        "LWPOLYLINE": 1
+      },
+      "新建生态渠I型（6m)": {
+        "LWPOLYLINE": 1
+      },
+      "新建生态渠II型（4m)": {
+        "LWPOLYLINE": 1
+      },
+      "新建生态渠III型（3m)": {
+        "LWPOLYLINE": 1
+      },
+      "新建碎石路（3.5m）": {
+        "LWPOLYLINE": 2
+      },
+      "05水流方向": {
+        "INSERT": 1
+      },
+      "02GH新建农渠": {
+        "LWPOLYLINE": 1
+      },
+      "02GH清淤沟渠": {
+        "LWPOLYLINE": 1
+      },
+      "0-0项目范围线": {
+        "LWPOLYLINE": 1
+      },
+      "原始标高": {
+        "CIRCLE": 1
+      },
+      "tdz_格田标注": {
+        "LWPOLYLINE": 2,
+        "TEXT": 10
+      },
+      "新建田埂II型（1.5m）": {
+        "LWPOLYLINE": 2
+      },
+      "已验收项目范围线": {
+        "TEXT": 2,
+        "CIRCLE": 1,
+        "LWPOLYLINE": 1
+      },
+      "2-5 泵站": {
+        "INSERT": 1
+      },
+      "6-2水闸": {
+        "INSERT": 1
+      }
+    }
+  },
+  "2026.8.10竣工图（谭湾沈湾）": {
+    "type_stats": {
+      "INSERT": 11050,
+      "POINT": 5824,
+      "TEXT": 2972,
+      "LWPOLYLINE": 877,
+      "LINE": 600,
+      "HATCH": 237,
+      "CIRCLE": 5,
+      "MTEXT": 29,
+      "POLYLINE": 2,
+      "OLE2FRAME": 3
+    },
+    "bbox": [
+      559956.2687178106,
+      3348088.764119869,
+      38560363.18340954,
+      3348816.745241032
+    ],
+    "layers": {
+      "GCD": {
+        "INSERT": 7413,
+        "LWPOLYLINE": 5
+      },
+      "DM": {
+        "POINT": 5821,
+        "TEXT": 2718
+      },
+      "DMTZ": {
+        "LWPOLYLINE": 126,
+        "TEXT": 10
+      },
+      "DLSS": {
+        "LWPOLYLINE": 110,
+        "TEXT": 76,
+        "LINE": 11
+      },
+      "ZBTZ": {
+        "LWPOLYLINE": 179,
+        "INSERT": 2724
+      },
+      "0": {
+        "LWPOLYLINE": 40,
+        "HATCH": 2,
+        "MTEXT": 12,
+        "LINE": 22,
+        "TEXT": 21,
+        "OLE2FRAME": 2
+      },
+      "DLDW": {
+        "INSERT": 196,
+        "LWPOLYLINE": 16,
+        "LINE": 4,
+        "TEXT": 10
+      },
+      "COMPONENT": {
+        "INSERT": 43
+      },
+      "JMD": {
+        "TEXT": 60,
+        "LWPOLYLINE": 310,
+        "LINE": 147,
+        "HATCH": 220
+      },
+      "GXYZ": {
+        "INSERT": 635,
+        "LINE": 208,
+        "LWPOLYLINE": 3
+      },
+      "GUOZDH": {
+        "POINT": 3,
+        "TEXT": 3
+      },
+      "SXSS": {
+        "LWPOLYLINE": 52,
+        "TEXT": 11,
+        "LINE": 38,
+        "INSERT": 3
+      },
+      "ASSIST": {
+        "LWPOLYLINE": 2
+      },
+      "TK": {
+        "INSERT": 1,
+        "TEXT": 10,
+        "LINE": 1,
+        "MTEXT": 1
+      },
+      "坟地范围": {
+        "LWPOLYLINE": 3
+      },
+      "T农村宅基地填充": {
+        "LWPOLYLINE": 1
+      },
+      "坟区不动工": {
+        "LWPOLYLINE": 8
+      },
+      "2-7（涵管）农沟过田间道": {
+        "INSERT": 10
+      },
+      "2-8水流方向": {
+        "INSERT": 6
+      },
+      "沙湾6组": {
+        "LWPOLYLINE": 1
+      },
+      "6-1下田埠": {
+        "INSERT": 5
+      },
+      "6-6护砌": {
+        "CIRCLE": 4
+      },
+      "1-1平整范围标注层": {
+        "MTEXT": 16
+      },
+      "3-2生产路": {
+        "LINE": 1,
+        "LWPOLYLINE": 4,
+        "OLE2FRAME": 1
+      },
+      "水田填充": {
+        "HATCH": 2
+      },
+      "0殡葬用地填充": {
+        "HATCH": 1
+      },
+      "0水库水面填充": {
+        "HATCH": 1
+      },
+      "0灌木林地填充": {
+        "HATCH": 1
+      },
+      "0居民地填充": {
+        "HATCH": 1
+      },
+      "0河流填充": {
+        "HATCH": 1
+      },
+      "0道路填充": {
+        "HATCH": 2
+      },
+      "0草地填充": {
+        "HATCH": 1
+      },
+      "0坑塘填充": {
+        "HATCH": 1
+      },
+      "0果园填充": {
+        "HATCH": 1
+      },
+      "0旱地填充": {
+        "HATCH": 1
+      },
+      "0有林地填充": {
+        "HATCH": 1
+      },
+      "0沟渠填充": {
+        "HATCH": 1
+      },
+      "DGX": {
+        "POLYLINE": 2
+      },
+      "TL": {
+        "TEXT": 44,
+        "LINE": 164,
+        "LWPOLYLINE": 2
+      },
+      "ZJ": {
+        "TEXT": 1
+      },
+      "ZBTZ1": {
+        "LINE": 2,
+        "INSERT": 12
+      },
+      "JJ": {
+        "LINE": 2
+      },
+      "施工过项目范围": {
+        "LWPOLYLINE": 1
+      },
+      "04GH护栏标注层": {
+        "LWPOLYLINE": 1
+      },
+      "新建碎石路（3.5m）": {
+        "LWPOLYLINE": 2
+      },
+      "2-3新建排水沟": {
+        "LWPOLYLINE": 2
+      },
+      "05水流方向": {
+        "INSERT": 1
+      },
+      "02GH清淤沟渠": {
+        "LWPOLYLINE": 1
+      },
+      "0-0项目范围线": {
+        "LWPOLYLINE": 1
+      },
+      "原始标高": {
+        "CIRCLE": 1
+      },
+      "tdz_格田标注": {
+        "LWPOLYLINE": 2,
+        "TEXT": 7
+      },
+      "新建田埂II型（1.5m）": {
+        "LWPOLYLINE": 1
+      },
+      "2-5 泵站": {
+        "INSERT": 1
+      },
+      "2-4pe管": {
+        "LWPOLYLINE": 1
+      },
+      "02GH新建农渠": {
+        "LWPOLYLINE": 1
+      },
+      "已验收项目范围线": {
+        "LWPOLYLINE": 1,
+        "TEXT": 1
+      },
+      "2-2新建农渠": {
+        "LWPOLYLINE": 1
+      }
+    }
+  },
+  "ABCDEFD区竣工图": {
+    "type_stats": {
+      "LWPOLYLINE": 643,
+      "INSERT": 179,
+      "TEXT": 306,
+      "CIRCLE": 14,
+      "HATCH": 31,
+      "LINE": 1028,
+      "MTEXT": 282,
+      "LEADER": 255,
+      "POLYLINE": 8,
+      "ARC": 2,
+      "POINT": 24,
+      "OLE2FRAME": 1
+    },
+    "bbox": [
+      558424.8204342203,
+      3348617.814924661,
+      560573.4100584984,
+      3349984.064588686
+    ],
+    "layers": {
+      "水   田": {
+        "LWPOLYLINE": 29
+      },
+      "SXSS": {
+        "LWPOLYLINE": 50,
+        "TEXT": 5,
+        "INSERT": 28,
+        "LINE": 49
+      },
+      "0": {
+        "LWPOLYLINE": 161,
+        "HATCH": 13,
+        "LINE": 22,
+        "TEXT": 98,
+        "MTEXT": 3,
+        "LEADER": 2,
+        "OLE2FRAME": 1
+      },
+      "新建生态渠I型（6m)": {
+        "LWPOLYLINE": 3
+      },
+      "新建30暗管（DN300)": {
+        "LWPOLYLINE": 3
+      },
+      "新建田埂I型（3m）": {
+        "LWPOLYLINE": 12
+      },
+      "003GH修复3.5m田间道": {
+        "LWPOLYLINE": 8,
+        "LEADER": 25
+      },
+      "坟   地": {
+        "LWPOLYLINE": 2,
+        "INSERT": 2
+      },
+      "原有机井": {
+        "TEXT": 2,
+        "CIRCLE": 4,
+        "LWPOLYLINE": 3
+      },
+      "新建生态渠II型（4m)": {
+        "LWPOLYLINE": 2
+      },
+      "新建田埂II型（1.5m）": {
+        "LWPOLYLINE": 39,
+        "MTEXT": 2,
+        "LEADER": 2
+      },
+      "003GH修复3.5m田间道标注": {
+        "LWPOLYLINE": 2,
+        "MTEXT": 25
+      },
+      "建设用地": {
+        "LWPOLYLINE": 1,
+        "HATCH": 2
+      },
+      "坑塘清淤": {
+        "LWPOLYLINE": 4
+      },
+      "新建碎石路（3.5m）": {
+        "LWPOLYLINE": 7
+      },
+      "原有道路": {
+        "LWPOLYLINE": 2
+      },
+      "3过路涵A（500）": {
+        "INSERT": 83,
+        "LEADER": 22,
+        "LWPOLYLINE": 2,
+        "LINE": 141,
+        "MTEXT": 22
+      },
+      "JMD": {
+        "LWPOLYLINE": 110,
+        "LINE": 168,
+        "TEXT": 13,
+        "HATCH": 2
+      },
+      "DLSS": {
+        "LWPOLYLINE": 11,
+        "LINE": 11
+      },
+      "新建生态渠III型（3m)": {
+        "LWPOLYLINE": 13
+      },
+      "DMTZ": {
+        "LWPOLYLINE": 32,
+        "LINE": 374
+      },
+      "原有水泥路": {
+        "LWPOLYLINE": 4
+      },
+      "检查井": {
+        "TEXT": 3,
+        "CIRCLE": 3,
+        "LWPOLYLINE": 2
+      },
+      "新建30波纹管（DN300)": {
+        "LWPOLYLINE": 2
+      },
+      "DLDW": {
+        "INSERT": 6
+      },
+      "MJZJ": {
+        "TEXT": 7
+      },
+      "新建雨水沟（0.5m)": {
+        "LWPOLYLINE": 3
+      },
+      "assist": {
+        "LWPOLYLINE": 6,
+        "POLYLINE": 6
+      },
+      "002GH新建农渠标注": {
+        "MTEXT": 151,
+        "LEADER": 151,
+        "TEXT": 2,
+        "LINE": 55,
+        "INSERT": 1,
+        "LWPOLYLINE": 2
+      },
+      "02GH 泵站": {
+        "MTEXT": 5,
+        "LEADER": 6,
+        "LINE": 7,
+        "LWPOLYLINE": 2
+      },
+      "tdz_格田标注": {
+        "LWPOLYLINE": 40,
+        "TEXT": 82
+      },
+      "新建田埂": {
+        "MTEXT": 39,
+        "LEADER": 39,
+        "LWPOLYLINE": 1
+      },
+      "新建环行沟II型（3.5m)": {
+        "LWPOLYLINE": 4
+      },
+      "新建环行沟I型（4m)": {
+        "LWPOLYLINE": 3
+      },
+      "002GH坑塘清淤": {
+        "MTEXT": 6
+      },
+      "雨水沟": {
+        "LWPOLYLINE": 2
+      },
+      "新建田埂II型（2.0m）": {
+        "LWPOLYLINE": 7
+      },
+      "已验收项目范围线": {
+        "LWPOLYLINE": 6,
+        "MTEXT": 21,
+        "TEXT": 9,
+        "CIRCLE": 6
+      },
+      "新建矩形沟": {
+        "LWPOLYLINE": 1
+      },
+      "路(4.5)": {
+        "LWPOLYLINE": 3
+      },
+      "旱   地": {
+        "LWPOLYLINE": 1
+      },
+      "GXYZ": {
+        "LWPOLYLINE": 5,
+        "INSERT": 6
+      },
+      "涵   管": {
+        "INSERT": 34,
+        "LEADER": 2,
+        "MTEXT": 2
+      },
+      "新建3.5m水泥路": {
+        "LEADER": 3
+      },
+      "新建水泥路标注": {
+        "TEXT": 3
+      },
+      "施工范围线": {
+        "LWPOLYLINE": 5
+      },
+      "泵站标注": {
+        "TEXT": 2,
+        "LWPOLYLINE": 3,
+        "MTEXT": 1
+      },
+      "TK": {
+        "MTEXT": 2,
+        "TEXT": 10,
+        "LINE": 1
+      },
+      "0殡葬用地填充": {
+        "HATCH": 1
+      },
+      "0水库水面填充": {
+        "HATCH": 1
+      },
+      "0灌木林地填充": {
+        "HATCH": 1
+      },
+      "0居民地填充": {
+        "HATCH": 1
+      },
+      "0河流填充": {
+        "HATCH": 1
+      },
+      "0道路填充": {
+        "HATCH": 2
+      },
+      "0草地填充": {
+        "HATCH": 1
+      },
+      "0坑塘填充": {
+        "HATCH": 1
+      },
+      "0果园填充": {
+        "HATCH": 1
+      },
+      "0水田填充": {
+        "HATCH": 1
+      },
+      "0旱地填充": {
+        "HATCH": 1
+      },
+      "0有林地填充": {
+        "HATCH": 1
+      },
+      "0沟渠填充": {
+        "HATCH": 1
+      },
+      "DGX": {
+        "POLYLINE": 2
+      },
+      "TL": {
+        "LINE": 187,
+        "TEXT": 48,
+        "INSERT": 2,
+        "LWPOLYLINE": 6
+      },
+      "ZJ": {
+        "TEXT": 1
+      },
+      "ZBTZ1": {
+        "LINE": 2,
+        "INSERT": 12
+      },
+      "JJ": {
+        "LINE": 2
+      },
+      "施工过项目范围": {
+        "LWPOLYLINE": 1
+      },
+      "04GH护栏标注层": {
+        "LWPOLYLINE": 1
+      },
+      "05水流方向": {
+        "INSERT": 1
+      },
+      "02GH新建农渠": {
+        "LWPOLYLINE": 1
+      },
+      "02GH清淤沟渠": {
+        "LWPOLYLINE": 1
+      },
+      "项目范围线": {
+        "LWPOLYLINE": 1
+      },
+      "原始标高": {
+        "CIRCLE": 1
+      },
+      "图框": {
+        "TEXT": 1,
+        "LINE": 9,
+        "ARC": 2
+      },
+      "ZDH": {
+        "POINT": 24,
+        "TEXT": 20
+      },
+      "新建碎石路（4.5m）": {
+        "LWPOLYLINE": 4
+      },
+      "新建田间道（4m）": {
+        "LWPOLYLINE": 3
+      },
+      "新建田间道（3m）": {
+        "LWPOLYLINE": 4
+      },
+      "3泵站": {
+        "LWPOLYLINE": 1
+      },
+      "0002-4-2（涵管）农沟过田间道": {
+        "INSERT": 2
+      },
+      "COMPONENT": {
+        "INSERT": 2
+      },
+      "2-3新建排水沟标注层": {
+        "MTEXT": 3,
+        "LEADER": 3
+      },
+      "施工项目范围线": {
+        "LWPOLYLINE": 1
+      },
+      "平整范围线": {
+        "LWPOLYLINE": 20
+      },
+      "施工线": {
+        "LWPOLYLINE": 1
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "total_survey_point_candidates": 6877,
+  "total_facility_block_instances": 343,
+  "by_point_layer": {
+    "2026.4.16竣工图（庙下流）.dxf | DMTZ": 1,
+    "2026.4.16竣工图（庙下流）.dxf | ZDH": 88,
+    "2026.4.16竣工图（新屋湾、毛家湾）.dxf | DM": 233,
+    "2026.4.16竣工图（新屋湾、毛家湾）.dxf | ZDH": 4,
+    "2026.8.10竣工图（张家湾）.dxf | 梁子湖范围": 1,
+    "2026.8.10竣工图（张家湾）.dxf | ZDH": 702,
+    "2026.8.10竣工图（谭湾沈湾）.dxf | DM": 5821,
+    "2026.8.10竣工图（谭湾沈湾）.dxf | GUOZDH": 3,
+    "ABCDEFD区竣工图.dxf | ZDH": 24
+  },
+  "facility_spatial_inlier": 279,
+  "facility_spatial_outlier": 64,
+  "z_min": -5.848,
+  "z_max": 27.751
+}
