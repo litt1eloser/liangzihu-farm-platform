@@ -1,4 +1,4 @@
-name: liangzihu-farm-platform
+name: ${AGRI_DB_PROJECT:-liangzihu-farm-platform}
 
 services:
   db:
@@ -7,13 +7,13 @@ services:
       context: .
       dockerfile: Dockerfile.database
     platform: linux/amd64
-    container_name: liangzihu-farm-db
+    container_name: ${AGRI_DB_CONTAINER:-liangzihu-farm-db}
     environment:
       POSTGRES_USER: postgres
       POSTGRES_DB: postgres
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Run pnpm db:setup to prepare credentials}
     ports:
-      - '127.0.0.1:55432:5432'
+      - '127.0.0.1:${AGRI_DB_PORT:-55432}:5432'
     volumes:
       - pgdata:/var/lib/postgresql
     healthcheck:
