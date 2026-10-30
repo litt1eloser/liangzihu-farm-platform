@@ -4,6 +4,13 @@
 
 从 2026-10-04 起，每次代码、配置、依赖、数据库或文档调整均须随交付更新本文件。同一任务的连续修改合为一条，同日不同任务另起条目；历史补记注明来源。日期采用北京时间，序号只区分当天记录，不是软件版本号。
 
+## 2026-10-30 · 02 · 闸门图标按数据状态三档分色
+
+- **改动与原因**：按用户要求调整 `/farm-overview` 闸门图标着色语义：从未读取过数据=灰色、有历史数据但当前离线=橙色、30 分钟内有数据（实时在线）=绿色；登记"已坏"仍红色优先。`farmOverview` 的 `gateDevices` 新增 `lastReadingAt`（该设备全部观测的最大 received_at，含历史回放），前端按 30 分钟窗口分档；原 `latestOpening`（point_current）语义不变，历史回放不计入"当前值"属预期。
+- **联动**：地图图例改为四色圆点说明（实时/历史/暂无/已坏）；闸门详情抽屉"在线状态"同步三档（实时在线/有历史数据/离线），最近收到数据时间改按 `lastReadingAt` 显示。
+- **验证**：TypeScript 类型检查与 `pnpm build` 通过；集成测试 `farm-overview-gates` 补充 `lastReadingAt` 断言，在 luminous 隔离测试库执行 2/2 通过（部署后补记）。未做浏览器逐台核对。
+- **运行影响**：无数据库迁移；部署需重建 web。
+
 ## 2026-10-30 · 01 · 农场总览卫星地图标注智能闸门与控制申请登记
 
 - **改动与原因**：`/farm-overview` 真实模式新增智能闸门图层。`src/modules/map/overview.ts` 的 `farmOverview` 返回 `gateDevices`（按"有 gate_deployments 档案的物理设备"识别，含最新点位 GeoJSON、点位核实标记、厂家/控制器型号/固件/安装资料、opening 测点最新值与采样时间、来源 `source_health.last_success_at`）；`farm-overview.tsx` 增加闸门 VectorLayer（内联 SVG 圆形"闸"图标：有读数橙色、暂无读数灰色、登记资料注明"已坏"红色，选中加亮放大）与新的 `gate-detail.tsx` 详情抽屉。

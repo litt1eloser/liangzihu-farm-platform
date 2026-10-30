@@ -51,10 +51,12 @@ test('总览返回可见对象下的闸门，含点位、档案、最新开度�
   assert.equal(first.latestOpening.value, 42);
   assert.ok(first.latestOpening.sampledAt, '应返回开度采样时间');
   assert.ok(first.lastSuccessAt, '应返回来源最近成功时间');
+  assert.ok(first.lastReadingAt, '有读数闸门应返回最近收到数据时间');
   const second = overview.gateDevices.find((row: { externalId: string }) => row.externalId === 'synthgate002');
   assert.ok(second);
   assert.equal(second.latestOpening, null, '无读数闸门 latestOpening 为 null');
   assert.equal(second.lastSuccessAt, null, '无来源健康记录时为 null');
+  assert.equal(second.lastReadingAt, null, '从未读取数据的闸门 lastReadingAt 为 null');
 }));
 
 test('专家角色总览不返回闸门设备，登记已坏标记原样保留在档案中', () => withDb(async pool => {

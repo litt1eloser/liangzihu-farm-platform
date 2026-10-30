@@ -5,17 +5,20 @@ import styles from './farm-overview.module.css';
 
 type Geometry={type:string;coordinates:unknown};
 type GateDeployment={manufacturer:string|null;controllerModel:string|null;firmware:string|null;installationRef:string|null};
-type GateDevice={deviceId:string;externalId:string;name:string;geometry:Geometry|null;positionVerified:boolean;deployment:GateDeployment;latestOpening:{value:number|null;sampledAt:string}|null;lastSuccessAt:string|null};
+type GateDevice={deviceId:string;externalId:string;name:string;geometry:Geometry|null;positionVerified:boolean;deployment:GateDeployment;latestOpening:{value:number|null;sampledAt:string}|null;lastSuccessAt:string|null;lastReadingAt:string|null};
 
 function time(value?:string|null){return value?new Date(value).toLocaleString('zh-CN'):'未提供';}
 function Facts({rows}:{rows:{value:string|number;label:string}[]}){return <div className={styles.detailFacts}>{rows.map(row=><div key={row.label}><strong>{row.value}</strong><span>{row.label}</span></div>)}</div>;}
 
 const gateActions=[['开闸','开'],['关闸','关'],['停止','停']] as const;
+const REALTIME_MS=30*60*1000;
+function onlineState(gate:GateDevice){if(!gate.lastReadingAt)return'offline';return Date.now()-new Date(gate.lastReadingAt).getTime()<=REALTIME_MS?'realtime':'historical';}
 
 export default function GateDetail({gate,onClose}:{gate:GateDevice|null;onClose:()=>void}){
  const [busy,setBusy]=useState<string|null>(null),[result,setResult]=useState(''),[error,setError]=useState('');
  if(!gate)return null;
  const broken=gate.deployment.installationRef?.includes('已坏')??false;
+ const online=onlineState(gate),onlineText=online==='realtime'?'实时在线':online==='historical'?'有历史数据':'离线';
  const apply=async(label:string,word:string)=>{
   setBusy(label);setError('');setResult('');
   try{
@@ -39,13 +42,13 @@ export default function GateDetail({gate,onClose}:{gate:GateDevice|null;onClose:
   <p className={styles.detailContext}>设备编号 {gate.externalId} · 仅当前账号获授权资料</p>
   <Facts rows={[
    {label:'最新开度',value:gate.latestOpening?.value===null||gate.latestOpening===null?'暂无读数':`${gate.latestOpening.value}%`},
-   {label:'在线状态',value:gate.lastSuccessAt?'有数据':'离线'},
+   {label:'在线状态',value:onlineText},
    {label:'点位核实',value:gate.positionVerified?'已核实':'待确认'},
   ]}/>
   {gate.latestOpening
    ?<p className={styles.metric}>开度 {gate.latestOpening.value===null?'未知（读数无效）':`${gate.latestOpening.value}%`} · 采样 {time(gate.latestOpening.sampledAt)}</p>
    :<p className={styles.metric}>暂无开度读数</p>}
-  <p className={styles.businessLead}>{gate.lastSuccessAt?`最近收到数据：${time(gate.lastSuccessAt)}`:'离线/未收到过数据'}</p>
+  <p className={styles.businessLead}>{online==='realtime'?`实时在线 · 最近收到数据：${time(gate.lastReadingAt)}`:gate.lastReadingAt?`最近收到数据：${time(gate.lastReadingAt)}（当前离线）`:'离线/未收到过数据'}</p>
   {!gate.positionVerified&&<p className={styles.drawerHint}>位置待现场确认；图上点位来自登记资料，未经现场核实。</p>}
   {broken&&<div className={styles.attention}>登记资料注明该闸门"已坏"，控制申请不会被下发，请先现场处理。</div>}
   <section aria-label="申请控制">

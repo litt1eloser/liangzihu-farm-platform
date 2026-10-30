@@ -48,11 +48,12 @@ export async function farmOverview(c: PoolClient, actor: Actor) {
     ST_AsGeoJSON(p.position)::jsonb AS geometry,p.verified AS position_verified,
     g.manufacturer,g.controller_model,g.firmware,g.installation_ref,
     cur.value AS opening_value,cur.sampled_at AS opening_sampled_at,
-    h.last_success_at
+    h.last_success_at,rd.last_reading_at
     FROM devices d
     JOIN LATERAL(SELECT manufacturer,controller_model,firmware,installation_ref FROM gate_deployments WHERE device_id=d.id ORDER BY version DESC LIMIT 1) g ON true
     LEFT JOIN LATERAL(SELECT * FROM device_positions WHERE device_id=d.id ORDER BY version DESC LIMIT 1) p ON true
     LEFT JOIN LATERAL(SELECT ob.value,pc.sampled_at FROM points pt JOIN point_current pc ON pc.point_id=pt.id JOIN observations ob ON ob.id=pc.observation_id WHERE pt.device_id=d.id AND pt.metric='opening' LIMIT 1) cur ON true
+    LEFT JOIN LATERAL(SELECT max(o.received_at) AS last_reading_at FROM observations o WHERE o.external_device_id=d.external_id) rd ON true
     LEFT JOIN source_health h ON h.source_id=d.source_id
     WHERE d.object_id=ANY($1::uuid[]) AND d.kind='physical'
     ORDER BY d.external_id LIMIT 200`, [ids])).rows : [];
@@ -65,6 +66,7 @@ export async function farmOverview(c: PoolClient, actor: Actor) {
     deployment: { manufacturer: row.manufacturer ?? null, controllerModel: row.controller_model ?? null, firmware: row.firmware ?? null, installationRef: row.installation_ref ?? null },
     latestOpening: row.opening_sampled_at ? { value: row.opening_value === null ? null : Number(row.opening_value), sampledAt: row.opening_sampled_at } : null,
     lastSuccessAt: row.last_success_at ?? null,
+    lastReadingAt: row.last_reading_at ?? null,
   }));
   return { items:detailedItems, regions: regions.items, summaries, mobileDevices, gateDevices, limits: ['业务概要仅是已有记录数量', '机具与终端来自有效农机绑定；历史轨迹不代表实时定位', '闸门点位以登记资料为准，未核实位置不代表现场实际坐标', '控制申请仅登记留痕，平台未下发任何命令'] };
 }
