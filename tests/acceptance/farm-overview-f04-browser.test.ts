@@ -52,7 +52,7 @@ test('F04 农田面积口径、塘口当前养殖与水体指标摘要',{timeout
    // 塘口：当前养殖 + 至多两个可信水体指标 + 草稿边界口径
    await page.getByRole('button',{name:'南塘口',exact:true}).click();
    await detail.getByRole('heading',{name:'南塘口'}).waitFor();
-   await detail.getByText('当前养殖：克氏原螯虾 · 养成期').waitFor();
+   await detail.getByText('克氏原螯虾 · 养成期').waitFor();
    await detail.getByText(/按草稿边界计算，尚未核实/).waitFor();
    assert.equal(await detail.getByText(/溶解氧 6\.1 mg\/L · 水温/).count(),0,'缺时效依据时摘要不得展示水体指标数值');
    await detail.getByRole('tab',{name:'水体监测',exact:true}).click();

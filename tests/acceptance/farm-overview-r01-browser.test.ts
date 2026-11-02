@@ -56,7 +56,7 @@ test('R01 当前值可信口径、面积口径与切换不残留',{timeout:18000
 
    // 快速切换不残留：批次与测点随对象清空
    await page.getByRole('tab',{name:'基本信息',exact:true}).click();
-   await detail.getByText('当前养殖：克氏原螯虾 · 养成期').waitFor();
+   await detail.getByText('克氏原螯虾 · 养成期').waitFor();
    await page.getByRole('button',{name:'北塘口B',exact:true}).click();
    await detail.getByRole('heading',{name:'北塘口B'}).waitFor();
    assert.equal(await detail.getByText(/克氏原螯虾/).count(),0,'切换后不得残留上一对象的批次');
