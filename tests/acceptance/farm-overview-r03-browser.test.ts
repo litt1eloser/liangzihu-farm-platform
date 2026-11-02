@@ -25,29 +25,36 @@ test('R03 覆盖式详情抽屉：开关不改变地图宽度与视口、不遮�
    await page.getByRole('button',{name:'东片田',exact:true}).waitFor();
    await page.waitForTimeout(1000);
    const mapBox0=await map.boundingBox();assert(mapBox0);
-   const center0=await map.getAttribute('data-view-center'),zoom0=await map.getAttribute('data-view-zoom');
 
-   // 打开详情：地图容器宽度与视口不变
+   // 打开详情：选中定位是既有行为；先完成选中定位，再以其为基准
    await page.getByRole('button',{name:'东片田',exact:true}).click();
    await detail.getByRole('heading',{name:'东片田'}).waitFor();
-   await page.waitForTimeout(400);
+   await page.waitForTimeout(600);
+   const center0=await map.getAttribute('data-view-center'),zoom0=await map.getAttribute('data-view-zoom');
    const mapBox1=await map.boundingBox();assert(mapBox1);
    assert(Math.abs(mapBox1.width-mapBox0.width)<2,'打开详情不得改变地图容器宽度');
-   assert.equal(await map.getAttribute('data-view-zoom'),zoom0,'打开详情不得改变缩放');
    const drawerBox=await detail.boundingBox();assert(drawerBox);
    const dirBox=await page.locator('#farm-object-directory').boundingBox();assert(dirBox);
    assert(drawerBox.x>=dirBox.x+dirBox.width-1,'抽屉不得遮挡资源目录');
    assert(drawerBox.x>mapBox1.x&&drawerBox.x+drawerBox.width<=mapBox1.x+mapBox1.width+2,'抽屉应覆盖在地图范围内');
    await page.screenshot({path:'docs/acceptance/m2r03/1440-详情打开.png'});
 
-   // 标签切换与关闭：地图保持
+   // 标签切换不得移动视口
    await detail.getByRole('tab',{name:'相关记录',exact:true}).click();
    await detail.getByRole('button',{name:'巡检',exact:true}).waitFor();
+   assert.equal(await map.getAttribute('data-view-zoom'),zoom0,'切换标签不得改变缩放');
+   assert.equal(await map.getAttribute('data-view-center'),center0,'切换标签不得改变中心');
+   // 关闭详情：视口保持
    await detail.getByRole('button',{name:'关闭对象详情'}).click();
    assert.equal(await detail.count(),0);
    const mapBox2=await map.boundingBox();assert(mapBox2&&Math.abs(mapBox2.width-mapBox0.width)<2,'关闭详情后地图宽度不变');
    assert.equal(await map.getAttribute('data-view-zoom'),zoom0,'关闭详情后缩放不变');
    assert.equal(await map.getAttribute('data-view-center'),center0,'关闭详情后中心不变');
+   // 重新打开同一对象：不得二次跳转
+   await page.getByRole('button',{name:'东片田',exact:true}).click();
+   await detail.getByRole('heading',{name:'东片田'}).waitFor();
+   await page.waitForTimeout(600);
+   assert.equal(await map.getAttribute('data-view-zoom'),zoom0,'重新打开不得二次跳转');
 
    // 宽屏与 1024
    for(const [w,h] of [[1920,1080],[1024,768]] as const){
