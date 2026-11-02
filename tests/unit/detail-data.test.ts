@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {classifyCurrent,buildPointViews,groupByMetric,sectionState,mapAlerts} from '../../src/app/(platform)/farm-overview/detail-data';
+import {classifyCurrent,buildPointViews,groupByMetric,sectionState,mapAlerts,severityLabel} from '../../src/app/(platform)/farm-overview/detail-data';
 
 test('F03 当前值事实判定：可信/质量/冲突/缺失/过期分类，0 不等于缺失',()=>{
   const now=Date.parse('2026-10-29T12:00:00Z');
@@ -50,4 +50,12 @@ test('F03 告警映射：open 才是当前告警，recovered 仅作历史',()=>{
   assert.equal(views[0].current,true);
   assert.equal(views[1].current,false);
   assert.equal(views[1].state,'recovered');
+});
+
+test('R02-C 告警级别中文化：已知枚举准确转换，未知值保守显示',()=>{
+ assert.equal(severityLabel('severe'),'严重');
+ assert.equal(severityLabel('warning'),'警告');
+ assert.equal(severityLabel('info'),'提示');
+ assert.equal(severityLabel('critical'),'未定级','未知枚举不猜测含义');
+ assert.equal(severityLabel(''),'未定级');
 });

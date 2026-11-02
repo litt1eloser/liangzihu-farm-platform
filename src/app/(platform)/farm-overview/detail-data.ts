@@ -133,3 +133,11 @@ export function orderGateMetrics(views:PointView[]):PointView[]{
   const rank=(metric:string)=>metric==='opening'?0:metric==='set_opening'?1:2;
   return views.map((view,index)=>({view,index})).sort((a,b)=>rank(a.view.metric)-rank(b.view.metric)||a.index-b.index).map(row=>row.view);
 }
+
+// R02-C 收尾：告警级别中文化；未知枚举值保守显示为「未定级」，不猜测含义。
+export function severityLabel(severity:string):string{
+  if(severity==='severe')return '严重';
+  if(severity==='warning')return '警告';
+  if(severity==='info')return '提示';
+  return '未定级';
+}

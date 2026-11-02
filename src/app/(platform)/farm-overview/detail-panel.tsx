@@ -4,7 +4,7 @@ import {useEffect,useMemo,useState} from 'react';
 import {demoAlerts,demoTasks} from './demo-fixture';
 import KindIcon from './kind-icon';
 import {resolveBusinessClass,resolveActiveTab,tabsFor,recordFiltersFor,scopeBadge,classLabels,type BusinessClass,type DetailTabId,type RecordFilter} from './detail-classes';
-import {groupByMetric,factLabels,currentBatch,buildTopIndicators,selectOpeningView,orderGateMetrics,currentAlerts,type PointView,type SectionRequestState} from './detail-data';
+import {groupByMetric,factLabels,currentBatch,buildTopIndicators,selectOpeningView,orderGateMetrics,currentAlerts,severityLabel,type PointView,type SectionRequestState} from './detail-data';
 import {boundaryAreaSqm,formatArea,areaPresentation} from './detail-area';
 import {useObjectDetail} from './use-object-detail';
 import {usePointHistory,type TrendWindow} from './use-point-history';
@@ -174,15 +174,15 @@ export default function DetailPanel({mode,item,region,mobile,items,regions,summa
    <div className={styles.recordFilters} role="group" aria-label="记录类别筛选">{recordFiltersFor(region?'region':mobile?'mobile':cls??'generic').map(row=><button key={row.id} type="button" className={recordFilter===row.id?styles.activeFilter:''} aria-pressed={recordFilter===row.id} onClick={()=>onRecordFilter(row.id)}>{row.label}</button>)}</div>
    {demo?(shownRecords.length?shownRecords.map(row=><p key={row.id} className={styles.drawerHint}>{row.text}</p>):<p className={styles.drawerHint}>该类别暂无演示记录。</p>):(()=>{
     const {alertState,alertViews,retry}=detail;
-    if(alertState==='loading')return <p className={styles.drawerHint}>正在读取相关记录…</p>;
-    if(alertState==='denied')return <p className={styles.drawerHint}>当前账号无权读取该对象的相关记录。</p>;
-    if(alertState==='error')return <p className={styles.drawerHint}>相关记录读取失败。<button type="button" onClick={retry}>重试</button></p>;
     if(recordFilter!=='all'&&recordFilter!=='alert')return <p className={styles.drawerHint}>该类别记录暂未接入查询，接入后在此展示。</p>;
+    if(alertState==='loading')return <p className={styles.drawerHint}>正在读取相关记录…</p>;
+    if(alertState==='denied')return <p className={styles.drawerHint}>暂不可查看：没有该对象相关记录的查看权限。</p>;
+    if(alertState==='error')return <p className={styles.drawerHint}>相关记录读取失败。<button type="button" onClick={retry}>重试</button></p>;
     if(!alertViews.length)return <p className={styles.drawerHint}>{recordFilter==='alert'?'暂无告警记录。':'已接入的记录中暂无内容；其他类别暂未接入查询。'}</p>;
     return <>{alertViews.map(row=><div key={row.id} className={styles.recordItem}>
-     <button type="button" className={styles.recordItemButton} aria-expanded={expandedRecordId===row.id} onClick={()=>setExpandedRecordId(expandedRecordId===row.id?null:row.id)}><strong>{row.title}</strong><span>{row.severity} · {row.current?'当前告警':'已恢复'}</span></button>
-     {expandedRecordId===row.id&&<div className={styles.recordDetail}><dl className={styles.detailList}><div><dt>类别</dt><dd>告警</dd></div><div><dt>业务状态</dt><dd>{row.current?'当前':'已恢复'}</dd></div><div><dt>严重程度</dt><dd>{row.severity}</dd></div></dl><Link href={`/alerts/${row.id}`}>查看完整告警 ↗</Link></div>}
-    </div>)}<p className={styles.drawerHint}>已恢复告警仅作历史展示。</p></>;
+     <button type="button" className={styles.recordItemButton} aria-expanded={expandedRecordId===row.id} onClick={()=>setExpandedRecordId(expandedRecordId===row.id?null:row.id)}><strong>{row.title}</strong><span>{severityLabel(row.severity)} · {row.current?'当前':'已恢复'}</span></button>
+     {expandedRecordId===row.id&&<div className={styles.recordDetail}><dl className={styles.detailList}><div><dt>类别</dt><dd>告警</dd></div><div><dt>业务状态</dt><dd>{row.current?'当前':'已恢复'}</dd></div><div><dt>严重程度</dt><dd>{severityLabel(row.severity)}</dd></div></dl><Link href={`/alerts/${row.id}`}>查看完整告警 ↗</Link></div>}
+    </div>)}<p className={styles.drawerHint}>已恢复告警仅作历史展示。{recordFilter==='all'&&alertViews.length>0?'其他类别暂未接入查询。':''}</p></>;
    })()}
   </div>}
   <div className={styles.drawerActions}>{demo?<button type="button" onClick={onExitDemo}>退出演示，管理真实资料 ↗</button>:<>{item?.kind==='farm'&&<Link href="/objects">查看全部对象 ↗</Link>}{region&&canConfigure&&<button type="button" onClick={onManageRegion}>管理村庄与关联 ↗</button>}{item&&item.kind!=='farm'&&<Link href={`/objects/${item.id}`} onClick={onSaveReturn}>查看对象台账 ↗</Link>}{item&&item.kind!=='farm'&&item.kind!=='mobile'&&<details className={styles.moreActions}><summary>更多</summary><div className={styles.drawerLinks}>{canConfigure&&item&&['field','pond'].includes(item.kind)&&<Link href={`/map-editor?object=${item.id}`} onClick={onSaveReturn}>{item.geometry?'编辑边界':'登记边界'}</Link>}{canConfigure&&item&&onChangeRegion&&<button type="button" onClick={()=>onChangeRegion(item)}>更改所属村庄</button>}{item?.kind==='field'&&<Link href="/records">查看农事记录 ↗</Link>}{item?.kind==='pond'&&<Link href="/alerts">查看告警与测点 ↗</Link>}{item?.kind==='facility'&&<Link href="/devices">查看关联设备 ↗</Link>}{canConfigure&&item?.kind==='facility'&&<Link href="/devices#register">登记关联实体设备 ↗</Link>}</div></details>}{mobile&&<Link href="/machinery">打开农机业务 ↗</Link>}</>}</div>

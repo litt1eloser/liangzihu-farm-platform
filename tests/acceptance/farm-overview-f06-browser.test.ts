@@ -37,7 +37,7 @@ test('F06 顶部当前告警定位、记录一次展开一条与真实业务入�
    assert.equal(await detail.getByRole('button',{name:'告警',exact:true}).getAttribute('aria-pressed'),'true','应筛选告警类别');
    const openItem=detail.getByRole('button',{name:/溶氧偏低/});
    assert.equal(await openItem.getAttribute('aria-expanded'),'true','点击顶部告警应展开原事件');
-   await detail.getByText('warning · 当前告警',{exact:true}).waitFor();
+   await detail.getByText('警告 · 当前',{exact:true}).waitFor();
    const link=detail.getByRole('link',{name:'查看完整告警 ↗'});
    await link.waitFor();
    assert((await link.getAttribute('href'))?.endsWith(`/alerts/${openAlert}`),'完整业务入口应指向真实告警页');
@@ -46,7 +46,7 @@ test('F06 顶部当前告警定位、记录一次展开一条与真实业务入�
    await detail.getByRole('button',{name:/监测曾中断/}).click();
    assert.equal(await detail.getByRole('button',{name:/监测曾中断/}).getAttribute('aria-expanded'),'true');
    assert.equal(await openItem.getAttribute('aria-expanded'),'false','展开新记录时旧记录应收起');
-   await detail.getByText('info · 已恢复',{exact:true}).waitFor();
+   await detail.getByText('提示 · 已恢复',{exact:true}).waitFor();
    assert((await detail.getByRole('link',{name:'查看完整告警 ↗'}).getAttribute('href'))?.endsWith(`/alerts/${recoveredAlert}`));
    assert.deepEqual(errors,[],'页面不得出现脚本错误');
    await context.close();
