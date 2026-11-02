@@ -33,7 +33,8 @@ test('R02-B 冻结偏差修复：顶部顺序与独立卡片、类别筛选、�
    await page.getByRole('button',{name:'自营田A',exact:true}).click();
    await detail.getByRole('heading',{name:'自营田A'}).waitFor();
    await detail.getByText('范围已核实',{exact:true}).first().waitFor();
-   const area=await detail.getByText(/管理范围面积 .* 亩/).textContent();
+   await detail.getByText('管理范围面积',{exact:true}).waitFor();
+   await detail.getByText(/\d+(\.\d+)? 亩/).first().waitFor();
    await detail.getByText('水稻（甬优）',{exact:true}).waitFor();
    await detail.getByText('分蘖期',{exact:true}).waitFor();
    const html=await detail.innerHTML();

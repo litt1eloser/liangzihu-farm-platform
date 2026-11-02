@@ -41,7 +41,7 @@ test('F04 农田面积口径、塘口当前养殖与水体指标摘要',{timeout
    // 农田：管理范围面积（已核实边界）+ 无批次空态
    await page.getByRole('button',{name:'东片田',exact:true}).click();
    await detail.getByRole('heading',{name:'东片田'}).waitFor();
-   await detail.getByText(/管理范围面积 .* 亩/).waitFor();
+   await detail.getByText('管理范围面积',{exact:true}).waitFor();
    await detail.getByText(/万㎡/).waitFor();
    await detail.getByText(/按已核实登记边界计算/).waitFor();
    await detail.getByText('暂无登记').first().waitFor();

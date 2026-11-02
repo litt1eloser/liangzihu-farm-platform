@@ -39,12 +39,13 @@ test('R01 当前值可信口径、面积口径与切换不残留',{timeout:18000
    // 面积口径：CAD 对象只能称施工参考面积
    await page.getByRole('button',{name:'庙下流农田01',exact:true}).click();
    await detail.getByRole('heading',{name:'庙下流农田01'}).waitFor();
-   await detail.getByText(/竣工图施工参考面积 .* 亩/).waitFor();
+   await detail.getByText('竣工图施工参考面积',{exact:true}).waitFor();
+   await detail.getByText(/约 .* ㎡/).first().waitFor();
    assert.equal(await detail.getByText(/管理范围面积/).count(),0,'CAD 施工范围不得称管理范围面积');
    // 非 CAD 对象保持管理范围口径
    await page.getByRole('button',{name:'自营田',exact:true}).click();
    await detail.getByRole('heading',{name:'自营田'}).waitFor();
-   await detail.getByText(/管理范围面积 .* 亩/).waitFor();
+   await detail.getByText('管理范围面积',{exact:true}).waitFor();
 
    // 当前值可信口径：接口未提供时效参数时不得显示数值
    await page.getByRole('button',{name:'南塘口A',exact:true}).click();
