@@ -101,7 +101,7 @@ test('R03 V1.2 概要卡与按需展开：双态切换、目录协同、目标�
    await detail.getByRole('heading',{name:'东片田'}).waitFor();
    await page.waitForTimeout(600);
    assert.equal(await directory.count()&&await directory.isVisible(),false,'1024 选中对象后目录应自动折叠');
-   await page.getByRole('button',{name:'› 目录'}).waitFor();
+   await page.getByRole('button',{name:'展开对象目录'}).waitFor();
    {
     const [x0,,x1]=await selectionPx();
     const dBox=await detail.boundingBox();const mb=await map.boundingBox();assert(dBox&&mb);
@@ -111,7 +111,7 @@ test('R03 V1.2 概要卡与按需展开：双态切换、目录协同、目标�
    await expand();
    await page.screenshot({path:'docs/acceptance/m2r03v12/1024-完整.png'});
    // 用户手动展开目录：不被后续选择强制折叠
-   await page.getByRole('button',{name:'› 目录'}).click();
+   await page.getByRole('button',{name:'展开对象目录'}).click();
    await page.waitForTimeout(300);
    assert.equal(await directory.isVisible(),true,'手动展开后目录应可见');
    await page.getByRole('button',{name:'北片田',exact:true}).click();
