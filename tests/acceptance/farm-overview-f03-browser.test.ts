@@ -37,6 +37,7 @@ test('F03 测点当前值事实展示、局部状态与相关记录告警',{time
    await page.getByRole('button',{name:'南塘口',exact:true}).waitFor();
    await page.getByRole('button',{name:'南塘口',exact:true}).click();
    await detail.getByRole('heading',{name:'南塘口'}).waitFor();
+   await detail.getByRole('button',{name:'查看详细资料'}).click();
    await detail.getByRole('tab',{name:'水体监测',exact:true}).click();
    await detail.getByText('溶解氧',{exact:true}).waitFor();
    await detail.getByText('尚未核实：缺少时效依据').waitFor();
@@ -51,6 +52,7 @@ test('F03 测点当前值事实展示、局部状态与相关记录告警',{time
    await page.screenshot({path:'docs/acceptance/m2f03/02-相关记录告警.png'});
    await page.getByRole('button',{name:'测点房',exact:true}).click();
    await detail.getByRole('heading',{name:'测点房'}).waitFor();
+   await detail.getByRole('button',{name:'查看详细资料'}).click();
    await detail.getByRole('tab',{name:'关联设备',exact:true}).click();
    await detail.getByText(/暂无关联测点。/).waitFor();
    assert.deepEqual(errors,[],'页面不得出现脚本错误');

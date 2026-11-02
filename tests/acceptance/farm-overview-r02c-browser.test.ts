@@ -23,6 +23,7 @@ test('R02-C 收尾：全部筛选提示未接入类别、未接入类别不被�
    await page.goto(app.origin+'/farm-overview');
    await page.getByRole('button',{name:'南塘口',exact:true}).click();
    await detail.getByRole('heading',{name:'南塘口'}).waitFor();
+   await detail.getByRole('button',{name:'查看详细资料'}).click();
    await detail.getByRole('tab',{name:'相关记录',exact:true}).click();
    // 「全部」有告警时仍提示其他类别未接入
    await detail.getByText('溶氧偏低',{exact:true}).waitFor();

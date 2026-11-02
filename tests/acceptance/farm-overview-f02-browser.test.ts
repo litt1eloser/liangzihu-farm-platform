@@ -26,21 +26,26 @@ test('F02 同类/跨类切换标签规则、快速连击、返回上下文恢复
    const tabSelected=(name:string)=>detail.getByRole('tab',{name,exact:true});
    const assertTab=async(name:string,value:string,label:string)=>poll(()=>tabSelected(name).getAttribute('aria-selected'),value,label);
    const assertFilter=async(name:string,value:string,label:string)=>poll(()=>detail.getByRole('button',{name,exact:true}).getAttribute('aria-pressed'),value,label);
+   // R03 V1.2：选中后默认概要卡；涉及标签/记录/操作区前须先展开完整详情
+   const expand=async()=>{await detail.getByRole('button',{name:'查看详细资料'}).click();await detail.getByRole('tablist').waitFor();};
    await page.goto(app.origin+'/farm-overview');
    await page.getByRole('button',{name:'东片田',exact:true}).waitFor();
 
    // 同类切换保留标签
    await page.getByRole('button',{name:'东片田',exact:true}).click();
    await detail.getByRole('heading',{name:'东片田'}).waitFor();
+   await expand();
    await tabSelected('农事生产').click();
    await assertTab('农事生产','true','农事生产标签选中');
    await page.getByRole('button',{name:'北片田',exact:true}).click();
    await detail.getByRole('heading',{name:'北片田'}).waitFor();
    await assertTab('农事生产','true','同类切换应保留中标签');
 
-   // 跨类切换回基本信息
+   // 跨类切换回概要卡与基本信息
    await page.getByRole('button',{name:'南塘口',exact:true}).click();
    await detail.getByRole('heading',{name:'南塘口'}).waitFor();
+   await poll(()=>detail.getAttribute('data-density'),'summary','跨类切换应回概要卡');
+   await expand();
    await assertTab('基本信息','true','跨类切换应回基本信息');
    assert.equal(await tabSelected('农事生产').count(),0,'塘口不应出现农田标签');
    await tabSelected('水体监测').waitFor();
@@ -48,6 +53,7 @@ test('F02 同类/跨类切换标签规则、快速连击、返回上下文恢复
    // 同类切换保留记录类别筛选
    await page.getByRole('button',{name:'东片田',exact:true}).click();
    await detail.getByRole('heading',{name:'东片田'}).waitFor();
+   await expand();
    await tabSelected('相关记录').click();
    await detail.getByRole('button',{name:'告警',exact:true}).click();
    await assertFilter('告警','true','告警筛选按下');
@@ -62,12 +68,14 @@ test('F02 同类/跨类切换标签规则、快速连击、返回上下文恢复
    await page.getByRole('button',{name:'北片田',exact:true}).click();
    await page.getByRole('button',{name:'南塘口',exact:true}).click();
    await detail.getByRole('heading',{name:'南塘口'}).waitFor();
+   await expand();
    await assertTab('基本信息','true','快速连击后回基本信息');
    assert.equal(await tabSelected('农事生产').count(),0);
 
    // 修改 CAD 与注记显隐、改变视口后离开到完整档案
    await page.getByRole('button',{name:'东片田',exact:true}).click();
    await detail.getByRole('heading',{name:'东片田'}).waitFor();
+   await expand();
    await tabSelected('相关记录').click();
    await detail.getByRole('button',{name:'告警',exact:true}).click();
    await page.getByRole('button',{name:'图层'}).click();
@@ -84,6 +92,7 @@ test('F02 同类/跨类切换标签规则、快速连击、返回上下文恢复
    await page.getByRole('heading',{name:'东片田'}).first().waitFor();
    await page.goto(app.origin+'/farm-overview');
    await detail.getByRole('heading',{name:'东片田'}).waitFor();
+   await expand();
    await assertTab('相关记录','true','返回后应恢复相关记录标签');
    await assertFilter('告警','true','返回后应恢复记录类别筛选');
    assert.equal(await map.getAttribute('data-annotations'),'false','返回后注记显隐应保持');

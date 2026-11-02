@@ -37,6 +37,7 @@ test('F07 单测点 24h/7d 轻量趋势预览：展开、窗口切换、空态�
    await page.getByRole('button',{name:'南塘口',exact:true}).waitFor();
    await page.getByRole('button',{name:'南塘口',exact:true}).click();
    await detail.getByRole('heading',{name:'南塘口'}).waitFor();
+   await detail.getByRole('button',{name:'查看详细资料'}).click();
    await detail.getByRole('tab',{name:'水体监测',exact:true}).click();
    // 展开溶解氧趋势：默认 24 小时，3 个点在窗口内（50 小时前的不在）
    await detail.getByRole('button',{name:/溶解氧/}).click();

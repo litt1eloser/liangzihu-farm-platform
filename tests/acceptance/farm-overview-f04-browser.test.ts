@@ -45,6 +45,7 @@ test('F04 农田面积口径、塘口当前养殖与水体指标摘要',{timeout
    await detail.getByText(/万㎡/).waitFor();
    await detail.getByText(/按已核实登记边界计算/).waitFor();
    await detail.getByText('暂无登记').first().waitFor();
+   await detail.getByRole('button',{name:'查看详细资料'}).click();
    await detail.getByRole('tab',{name:'农事生产',exact:true}).click();
    await detail.getByText('暂无生产批次登记。').waitFor();
    await page.screenshot({path:'docs/acceptance/m2f04/01-农田面积与生产空态.png'});
@@ -55,6 +56,7 @@ test('F04 农田面积口径、塘口当前养殖与水体指标摘要',{timeout
    await detail.getByText('克氏原螯虾 · 养成期').waitFor();
    await detail.getByText(/按草稿边界计算，尚未核实/).waitFor();
    assert.equal(await detail.getByText(/溶解氧 6\.1 mg\/L · 水温/).count(),0,'缺时效依据时摘要不得展示水体指标数值');
+   await detail.getByRole('button',{name:'查看详细资料'}).click();
    await detail.getByRole('tab',{name:'水体监测',exact:true}).click();
    await detail.getByText('尚未核实：缺少时效依据').first().waitFor();
    await detail.getByText(/尚未核实：暂无可用当前值/).waitFor();

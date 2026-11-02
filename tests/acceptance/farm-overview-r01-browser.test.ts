@@ -50,6 +50,7 @@ test('R01 当前值可信口径、面积口径与切换不残留',{timeout:18000
    // 当前值可信口径：接口未提供时效参数时不得显示数值
    await page.getByRole('button',{name:'南塘口A',exact:true}).click();
    await detail.getByRole('heading',{name:'南塘口A'}).waitFor();
+   await detail.getByRole('button',{name:'查看详细资料'}).click();
    await detail.getByRole('tab',{name:'水体监测',exact:true}).click();
    await detail.getByText('尚未核实：缺少时效依据').waitFor();
    assert.equal(await detail.getByText(/6\.1 mg\/L/).count(),0,'缺时效依据不得显示当前值');

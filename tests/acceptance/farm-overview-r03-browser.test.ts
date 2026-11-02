@@ -39,7 +39,8 @@ test('R03 覆盖式详情抽屉：开关不改变地图宽度与视口、不遮�
    assert(drawerBox.x>mapBox1.x&&drawerBox.x+drawerBox.width<=mapBox1.x+mapBox1.width+2,'抽屉应覆盖在地图范围内');
    await page.screenshot({path:'docs/acceptance/m2r03/1440-详情打开.png'});
 
-   // 标签切换不得移动视口
+   // 标签切换不得移动视口（V1.2：先展开完整详情再操作标签）
+   await detail.getByRole('button',{name:'查看详细资料'}).click();
    await detail.getByRole('tab',{name:'相关记录',exact:true}).click();
    await detail.getByRole('button',{name:'巡检',exact:true}).waitFor();
    assert.equal(await map.getAttribute('data-view-zoom'),zoom0,'切换标签不得改变缩放');

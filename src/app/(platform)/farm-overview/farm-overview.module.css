@@ -154,7 +154,7 @@
 .detailList div{display:flex;justify-content:space-between;gap:14px;border-bottom:1px solid #e4ebdf;padding:9px 0;font-size:12px}
 .detailList dt{color:#718175}
 .detailList dd{margin:0;text-align:right;font-weight:500}
-@media(max-width:1000px){.topNav{flex-wrap:wrap;gap:10px 20px}.topLinks{order:3;width:100%}.topActions{order:2;margin-left:auto}}
+@media(min-width:761px) and (max-width:1100px){.topNav{flex-wrap:nowrap;gap:14px;padding:0 16px}.topBrand{min-width:0}.topBrand span{display:none}.topLinks{gap:14px;overflow-x:auto;scrollbar-width:none}.topLinks a{white-space:nowrap}.topActions{flex-shrink:0}}
 @media(max-width:760px){.topNav{gap:8px 14px;padding-bottom:8px}.topBrand strong{font-size:17px}.topBrand span{display:none}.topLinks{gap:16px}.topActions{width:100%;margin-left:0}}
 
 /* 新建按钮与目标图一致的深绿实心样式 */
@@ -322,3 +322,14 @@ button.pointRowButton:hover>span:first-child{color:#17513b}
 .mapShell:has(.drawer) .layerPanelWrap,.mapShell:has(.managementDrawer) .layerPanelWrap{right:402px}
 @media(max-width:760px){.mapShell:has(.drawer) :global(.ol-zoom),.mapShell:has(.managementDrawer) :global(.ol-zoom){right:16px}}
 @media(max-width:760px){.mapShell:has(.drawer) .layerPanelWrap,.mapShell:has(.managementDrawer) .layerPanelWrap{right:12px;left:12px}}
+
+/* R03 V1.2 轻量概要卡 + 按需展开：详情高度随内容自适应，超出上限内部滚动，不强制占满全高 */
+.drawer{bottom:auto;max-height:calc(100% - 96px)}
+.summaryActions{display:flex;gap:9px;margin-top:18px}
+.summaryActions .expandButton{flex:1;min-height:38px;border:0;border-radius:7px;background:#17513b;color:#fff;font-size:12px;font-weight:650;cursor:pointer}
+.summaryActions .locateButton{min-height:38px;padding:7px 12px;border:1px solid #d7e1d0;border-radius:7px;background:#fff;color:#315a51;font-size:12px;font-weight:650;cursor:pointer}
+.drawerActions .locateButton{min-height:38px;padding:7px 12px;border:1px solid #d7e1d0;border-radius:7px;background:#fff;color:#315a51;font-size:12px;font-weight:650;cursor:pointer}
+.drawerTopActions{display:flex;align-items:center;gap:4px}
+.collapseButton{min-height:28px;padding:3px 9px;border:1px solid #d7e1d0;border-radius:6px;background:#f4f7ee;color:#315a51;font-size:11px;font-weight:650;cursor:pointer;white-space:nowrap}
+/* V1.2 手机端：底部卡上限 66%（概要更矮），缩放控件移到顶部工具栏下方，避免被底部卡遮挡 */
+@media(max-width:760px){.drawer{max-height:66%;bottom:10px}.drawerSummary{max-height:58%}.mapShell:has(.drawer) :global(.ol-zoom),.mapShell:has(.managementDrawer) :global(.ol-zoom){top:64px;bottom:auto;right:12px}}

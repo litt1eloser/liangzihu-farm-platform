@@ -38,7 +38,7 @@ function PointTrend({point}:{point:PointView}){
 
 // 统一右侧详情框架（F01）：身份标题 + 业务摘要插槽 + 三标签 + 真实完整档案入口。
 // 只做展示分发；缺少后端可信数据时显示明确空态，不伪造数值。
-export default function DetailPanel({mode,item,region,mobile,items,regions,summaries,mobileDevices,canConfigure,tab,recordFilter,onTab,onRecordFilter,onClose,onExitDemo,onManageRegion,onSaveReturn,onChangeRegion}:{mode:'real'|'demo';item:Item|null;region:Region|null;mobile:Mobile|null;items:Item[];regions:Region[];summaries:Summary[];mobileDevices:Mobile[];canConfigure:boolean;tab:DetailTabId;recordFilter:RecordFilter;onTab:(tab:DetailTabId)=>void;onRecordFilter:(filter:RecordFilter)=>void;onClose:()=>void;onExitDemo:()=>void;onManageRegion:()=>void;onSaveReturn:()=>void;onChangeRegion?:(item:Item)=>void}){
+export default function DetailPanel({mode,item,region,mobile,items,regions,summaries,mobileDevices,canConfigure,tab,recordFilter,density,onTab,onRecordFilter,onDensity,onClose,onLocate,onExitDemo,onManageRegion,onSaveReturn,onChangeRegion}:{mode:'real'|'demo';item:Item|null;region:Region|null;mobile:Mobile|null;items:Item[];regions:Region[];summaries:Summary[];mobileDevices:Mobile[];canConfigure:boolean;tab:DetailTabId;recordFilter:RecordFilter;density:'summary'|'full';onTab:(tab:DetailTabId)=>void;onRecordFilter:(filter:RecordFilter)=>void;onDensity:(density:'summary'|'full')=>void;onClose:()=>void;onLocate?:()=>void;onExitDemo:()=>void;onManageRegion:()=>void;onSaveReturn:()=>void;onChangeRegion?:(item:Item)=>void}){
  const cls:BusinessClass|null=item?resolveBusinessClass(item,mode==='demo'):null;
  const tabs=useMemo(()=>{if(region||mobile)return[{id:'basic' as const,label:'基本信息'},{id:'records' as const,label:'相关记录'}];return cls?tabsFor(cls):[];},[cls,region,mobile]);
  const activeTab=cls?resolveActiveTab(tab,cls):'basic';
@@ -50,7 +50,7 @@ export default function DetailPanel({mode,item,region,mobile,items,regions,summa
  const [expandedPointId,setExpandedPointId]=useState<string|null>(null);
  useEffect(()=>{setExpandedRecordId(null);setExpandedPointId(null);},[item?.id]);
  const openAlerts=currentAlerts(detail.alertViews);
- const locateAlert=(id:string)=>{onTab('records');onRecordFilter('alert');setExpandedRecordId(id);};
+ const locateAlert=(id:string)=>{onDensity('full');onTab('records');onRecordFilter('alert');setExpandedRecordId(id);};
  // F06 顶部当前告警条：仅在可信查询成功且确有 open 事件时出现；读取失败明确「无法确认」，不冒充无告警。
  const alertSlot=<>{detail.alertState==='ready'?openAlerts.length>0&&<div className={styles.attention}>当前告警 {openAlerts.length} 条：{openAlerts[0].title} <button type="button" onClick={()=>locateAlert(openAlerts[0].id)}>查看</button></div>:detail.alertState==='error'?<p className={styles.drawerHint}>当前重要告警状态无法确认（读取失败）。<button type="button" onClick={detail.retry}>重试</button></p>:null}</>;
  if(!item&&!region&&!mobile)return null;
@@ -156,11 +156,12 @@ export default function DetailPanel({mode,item,region,mobile,items,regions,summa
   return null;
  })();
 
- return <aside className={styles.drawer} aria-label="对象详情" aria-live="polite">
-  <div className={styles.drawerTop}><div className={styles.detailHeading}><KindIcon kind={cls==='gate'||cls==='pump_station'?'facility':item?.kind??(region?'region':undefined)} className={styles.detailKindIcon}/><h2>{title}</h2></div><button type="button" onClick={onClose} aria-label="关闭对象详情" title="收起右侧详情栏">×</button></div>
+ return <aside className={density==='summary'?`${styles.drawer} ${styles.drawerSummary}`:styles.drawer} data-density={density} aria-label="对象详情" aria-live="polite">
+  <div className={styles.drawerTop}><div className={styles.detailHeading}><KindIcon kind={cls==='gate'||cls==='pump_station'?'facility':item?.kind??(region?'region':undefined)} className={styles.detailKindIcon}/><h2>{title}</h2></div><div className={styles.drawerTopActions}>{density==='full'&&<button type="button" className={styles.collapseButton} onClick={()=>onDensity('summary')}>收回概要</button>}<button type="button" onClick={onClose} aria-label="关闭对象详情" title="收起右侧详情栏">×</button></div></div>
   <div className={styles.detailBadges}><span className={styles.kind}>{kindLabel}{demo?' · 演示':''}</span>{item&&cls&&<span className={styles.statusBadge} data-status={demo?(item.geometry?(item.boundary_status==='verified'?'已核实':'草稿'):'待登记'):scopeBadge(cls,item).status}>{demo?(item.geometry?(item.boundary_status==='verified'?'已核实':'草稿'):'待登记'):scopeBadge(cls,item).text}</span>}{cls==='generic'&&item?.kind==='facility'&&!demo&&<span className={styles.statusBadge} data-status="待登记">子类未核实</span>}</div>
   <p className={styles.detailContext}>{demo?'合成示例 · 非真实现场':region?'经营分组，不代表行政村边界':item&&regionForItem?`所属 ${regionForItem.name}`:mobile?'绑定归属来自原农机业务':cls==='generic'&&item?.kind==='facility'?'设施类型尚未核实，按通用设施显示':'仅当前账号获授权资料'}</p>
   {summarySlot}
+  {density==='summary'?<div className={styles.summaryActions}><button type="button" className={styles.expandButton} onClick={()=>onDensity('full')}>查看详细资料</button>{onLocate&&<button type="button" className={styles.locateButton} onClick={onLocate}>定位当前对象</button>}</div>:<>
   <div className={styles.detailTabs} role="tablist" aria-label="对象资料分区">
    {tabs.map(row=><button key={row.id} type="button" role="tab" aria-selected={activeTab===row.id} className={activeTab===row.id?styles.activeTab:''} onClick={()=>onTab(row.id)}>{row.label}</button>)}
   </div>
@@ -185,6 +186,7 @@ export default function DetailPanel({mode,item,region,mobile,items,regions,summa
     </div>)}<p className={styles.drawerHint}>已恢复告警仅作历史展示。{recordFilter==='all'&&alertViews.length>0?'其他类别暂未接入查询。':''}</p></>;
    })()}
   </div>}
-  <div className={styles.drawerActions}>{demo?<button type="button" onClick={onExitDemo}>退出演示，管理真实资料 ↗</button>:<>{item?.kind==='farm'&&<Link href="/objects">查看全部对象 ↗</Link>}{region&&canConfigure&&<button type="button" onClick={onManageRegion}>管理村庄与关联 ↗</button>}{item&&item.kind!=='farm'&&<Link href={`/objects/${item.id}`} onClick={onSaveReturn}>查看对象台账 ↗</Link>}{item&&item.kind!=='farm'&&item.kind!=='mobile'&&<details className={styles.moreActions}><summary>更多</summary><div className={styles.drawerLinks}>{canConfigure&&item&&['field','pond'].includes(item.kind)&&<Link href={`/map-editor?object=${item.id}`} onClick={onSaveReturn}>{item.geometry?'编辑边界':'登记边界'}</Link>}{canConfigure&&item&&onChangeRegion&&<button type="button" onClick={()=>onChangeRegion(item)}>更改所属村庄</button>}{item?.kind==='field'&&<Link href="/records">查看农事记录 ↗</Link>}{item?.kind==='pond'&&<Link href="/alerts">查看告警与测点 ↗</Link>}{item?.kind==='facility'&&<Link href="/devices">查看关联设备 ↗</Link>}{canConfigure&&item?.kind==='facility'&&<Link href="/devices#register">登记关联实体设备 ↗</Link>}</div></details>}{mobile&&<Link href="/machinery">打开农机业务 ↗</Link>}</>}</div>
+  <div className={styles.drawerActions}>{demo?<button type="button" onClick={onExitDemo}>退出演示，管理真实资料 ↗</button>:<>{item?.kind==='farm'&&<Link href="/objects">查看全部对象 ↗</Link>}{region&&canConfigure&&<button type="button" onClick={onManageRegion}>管理村庄与关联 ↗</button>}{item&&item.kind!=='farm'&&<Link href={`/objects/${item.id}`} onClick={onSaveReturn}>查看对象台账 ↗</Link>}{item&&item.kind!=='farm'&&item.kind!=='mobile'&&<details className={styles.moreActions}><summary>更多</summary><div className={styles.drawerLinks}>{canConfigure&&item&&['field','pond'].includes(item.kind)&&<Link href={`/map-editor?object=${item.id}`} onClick={onSaveReturn}>{item.geometry?'编辑边界':'登记边界'}</Link>}{canConfigure&&item&&onChangeRegion&&<button type="button" onClick={()=>onChangeRegion(item)}>更改所属村庄</button>}{item?.kind==='field'&&<Link href="/records">查看农事记录 ↗</Link>}{item?.kind==='pond'&&<Link href="/alerts">查看告警与测点 ↗</Link>}{item?.kind==='facility'&&<Link href="/devices">查看关联设备 ↗</Link>}{canConfigure&&item?.kind==='facility'&&<Link href="/devices#register">登记关联实体设备 ↗</Link>}</div></details>}{mobile&&<Link href="/machinery">打开农机业务 ↗</Link>}</>}{onLocate&&<button type="button" className={styles.locateButton} onClick={onLocate}>定位当前对象</button>}</div>
+  </>}
  </aside>;
 }

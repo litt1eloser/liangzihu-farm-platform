@@ -41,6 +41,7 @@ test('R02-B 冻结偏差修复：顶部顺序与独立卡片、类别筛选、�
    assert(html.indexOf('管理范围面积')<html.indexOf('当前生产'),'面积须在当前生产之前');
    assert(html.indexOf('当前生产')<html.indexOf('生长阶段'),'当前生产须在生长阶段之前');
    // 记录筛选为农事类别
+   await detail.getByRole('button',{name:'查看详细资料'}).click();
    await detail.getByRole('tab',{name:'相关记录',exact:true}).click();
    await detail.getByRole('button',{name:'农事',exact:true}).waitFor();
    assert.equal(await detail.getByRole('button',{name:'操作',exact:true}).count(),0,'农田不得出现操作筛选');
@@ -59,6 +60,7 @@ test('R02-B 冻结偏差修复：顶部顺序与独立卡片、类别筛选、�
    await page.getByRole('button',{name:'南塘口',exact:true}).click();
    await detail.getByRole('heading',{name:'南塘口'}).waitFor();
    await detail.getByText('范围待核对',{exact:true}).first().waitFor();
+   await detail.getByRole('button',{name:'查看详细资料'}).click();
    await detail.getByRole('tab',{name:'相关记录',exact:true}).click();
    await detail.getByRole('button',{name:'养殖',exact:true}).waitFor();
    assert.equal(await detail.getByRole('button',{name:'操作',exact:true}).count(),0,'塘口不得出现操作筛选');
@@ -68,6 +70,7 @@ test('R02-B 冻结偏差修复：顶部顺序与独立卡片、类别筛选、�
    await detail.getByRole('heading',{name:'一号闸'}).waitFor();
    await detail.getByText('位置待核对',{exact:true}).first().waitFor();
    assert.equal(await detail.getByText('范围待核对',{exact:true}).count(),0,'设施不得误用范围语义');
+   await detail.getByRole('button',{name:'查看详细资料'}).click();
    await detail.getByRole('tab',{name:'相关记录',exact:true}).click();
    await detail.getByRole('button',{name:'操作',exact:true}).waitFor();
    assert.equal(await detail.getByRole('button',{name:'养殖',exact:true}).count(),0);
