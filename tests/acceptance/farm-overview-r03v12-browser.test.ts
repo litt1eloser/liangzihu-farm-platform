@@ -27,7 +27,7 @@ test('R03 V1.2 概要卡与按需展开：双态切换、目录协同、目标�
    const map=page.getByRole('application');
    const directory=page.locator('#farm-object-directory');
    const expand=async()=>{await detail.getByRole('button',{name:'查看详细资料'}).click();await detail.getByRole('tablist').waitFor();};
-   const settleMouse=async()=>{const mb=await map.boundingBox();if(mb)await page.mouse.move(mb.x+mb.width*0.4,mb.y+mb.height*0.25);};
+   const settleMouse=async()=>{const mb=await map.boundingBox();if(mb)await page.mouse.move(mb.x+mb.width*0.4,mb.y+mb.height*0.25);await page.waitForTimeout(220);};
    const selectionPx=async()=>{const raw=await map.getAttribute('data-selection-px');assert(raw,'应写入目标屏幕像素范围');return raw.split(',').map(Number);};
    await page.goto(app.origin+'/farm-overview');
    await page.getByRole('button',{name:'东片田',exact:true}).waitFor();
