@@ -330,6 +330,6 @@ button.pointRowButton:hover>span:first-child{color:#17513b}
 .summaryActions .locateButton{min-height:38px;padding:7px 12px;border:1px solid #d7e1d0;border-radius:7px;background:#fff;color:#315a51;font-size:12px;font-weight:650;cursor:pointer}
 .drawerActions .locateButton{min-height:38px;padding:7px 12px;border:1px solid #d7e1d0;border-radius:7px;background:#fff;color:#315a51;font-size:12px;font-weight:650;cursor:pointer}
 .drawerTopActions{display:flex;align-items:center;gap:4px}
-.collapseButton{min-height:28px;padding:3px 9px;border:1px solid #d7e1d0;border-radius:6px;background:#f4f7ee;color:#315a51;font-size:11px;font-weight:650;cursor:pointer;white-space:nowrap}
+.drawerTopActions .collapseButton{min-height:28px;padding:3px 9px;border:1px solid #d7e1d0;border-radius:6px;background:#f4f7ee;color:#315a51;font-size:11px;font-weight:650;cursor:pointer;white-space:nowrap}
 /* V1.2 手机端：底部卡上限 66%（概要更矮），缩放控件移到顶部工具栏下方，避免被底部卡遮挡 */
 @media(max-width:760px){.drawer{max-height:66%;bottom:10px}.drawerSummary{max-height:58%}.mapShell:has(.drawer) :global(.ol-zoom),.mapShell:has(.managementDrawer) :global(.ol-zoom){top:64px;bottom:auto;right:12px}}
