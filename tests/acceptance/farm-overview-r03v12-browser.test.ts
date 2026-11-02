@@ -27,6 +27,7 @@ test('R03 V1.2 概要卡与按需展开：双态切换、目录协同、目标�
    const map=page.getByRole('application');
    const directory=page.locator('#farm-object-directory');
    const expand=async()=>{await detail.getByRole('button',{name:'查看详细资料'}).click();await detail.getByRole('tablist').waitFor();};
+   const settleMouse=async()=>{const mb=await map.boundingBox();if(mb)await page.mouse.move(mb.x+mb.width*0.4,mb.y+mb.height*0.25);};
    const selectionPx=async()=>{const raw=await map.getAttribute('data-selection-px');assert(raw,'应写入目标屏幕像素范围');return raw.split(',').map(Number);};
    await page.goto(app.origin+'/farm-overview');
    await page.getByRole('button',{name:'东片田',exact:true}).waitFor();
@@ -51,7 +52,7 @@ test('R03 V1.2 概要卡与按需展开：双态切换、目录协同、目标�
     assert(x1<=drawerLeft-4,`目标右缘 ${x1} 应在抽屉左缘 ${drawerLeft} 左侧`);
     assert(y1<=mapBox.height,'目标下缘应在地图可视区内');
    }
-   await page.screenshot({path:'docs/acceptance/m2r03v12/1440-概要.png'});
+   await settleMouse();await page.screenshot({path:'docs/acceptance/m2r03v12/1440-概要.png'});
 
    // —— 展开完整详情：三标签、资料依据默认折叠、视口不变 ——
    await expand();
@@ -62,7 +63,7 @@ test('R03 V1.2 概要卡与按需展开：双态切换、目录协同、目标�
    assert.equal(await basis.getAttribute('open'),null,'资料依据须默认折叠');
    assert.equal(await map.getAttribute('data-view-zoom'),zoom0,'展开不得改变缩放');
    assert.equal(await map.getAttribute('data-view-center'),center0,'展开不得改变中心');
-   await page.screenshot({path:'docs/acceptance/m2r03v12/1440-完整.png'});
+   await settleMouse();await page.screenshot({path:'docs/acceptance/m2r03v12/1440-完整.png'});
 
    // 标签切换与收回概要均不动视口
    await detail.getByRole('tab',{name:'农事生产',exact:true}).click();
@@ -107,9 +108,9 @@ test('R03 V1.2 概要卡与按需展开：双态切换、目录协同、目标�
     const dBox=await detail.boundingBox();const mb=await map.boundingBox();assert(dBox&&mb);
     assert(x1<=dBox.x-mb.x-4&&x0>=0,'1024 目标边界应在未遮挡区');
    }
-   await page.screenshot({path:'docs/acceptance/m2r03v12/1024-概要.png'});
+   await settleMouse();await page.screenshot({path:'docs/acceptance/m2r03v12/1024-概要.png'});
    await expand();
-   await page.screenshot({path:'docs/acceptance/m2r03v12/1024-完整.png'});
+   await settleMouse();await page.screenshot({path:'docs/acceptance/m2r03v12/1024-完整.png'});
    // 用户手动展开目录：不被后续选择强制折叠
    await page.getByRole('button',{name:'展开对象目录'}).click();
    await page.waitForTimeout(300);
@@ -118,7 +119,7 @@ test('R03 V1.2 概要卡与按需展开：双态切换、目录协同、目标�
    await detail.getByRole('heading',{name:'北片田'}).waitFor();
    await page.waitForTimeout(400);
    assert.equal(await directory.isVisible(),true,'用户手动展开的目录不得被普通选择更新折叠');
-   await page.screenshot({path:'docs/acceptance/m2r03v12/1024-目录手动展开.png'});
+   await settleMouse();await page.screenshot({path:'docs/acceptance/m2r03v12/1024-目录手动展开.png'});
    // 关闭详情：用户已手动操作过目录，不自动还原折叠
    await detail.getByRole('button',{name:'关闭对象详情'}).click();
    await page.waitForTimeout(300);
@@ -144,7 +145,7 @@ test('R03 V1.2 概要卡与按需展开：双态切换、目录协同、目标�
    const zoomBox=await page.locator('.ol-zoom').boundingBox();assert(zoomBox);
    assert(zoomBox.y+zoomBox.height<=mSummary.y+1,'缩放控件不得被底部卡遮挡');
    await detail.getByRole('button',{name:'定位当前对象'}).waitFor();
-   await page.screenshot({path:'docs/acceptance/m2r03v12/390-概要.png'});
+   await settleMouse();await page.screenshot({path:'docs/acceptance/m2r03v12/390-概要.png'});
    await expand();
    await page.waitForTimeout(300);
    const mFull=await detail.boundingBox();assert(mFull);
@@ -156,7 +157,7 @@ test('R03 V1.2 概要卡与按需展开：双态切换、目录协同、目标�
     const [x0,y0,x1,y1]=await selectionPx();
     assert(y1<=mFull.y-mMap.y+1&&y0>=0&&x0>=0&&x1<=mMap.width,'手机端定位后目标边界应在底部卡上方可视区');
    }
-   await page.screenshot({path:'docs/acceptance/m2r03v12/390-完整.png'});
+   await settleMouse();await page.screenshot({path:'docs/acceptance/m2r03v12/390-完整.png'});
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false,'手机不得出现横向滚动');
    assert.deepEqual(errors,[],'页面不得出现脚本错误');
    await context.close();
