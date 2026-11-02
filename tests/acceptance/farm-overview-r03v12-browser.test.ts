@@ -85,10 +85,13 @@ test('R03 V1.2 概要卡与按需展开：双态切换、目录协同、目标�
    await expand();
    assert.equal(await detail.getByRole('tab',{name:'基本信息',exact:true}).getAttribute('aria-selected'),'true','跨类切换应回基本信息');
 
-   // 关闭详情：视口保持
+   // 关闭详情：视口保持（以最后一次选中定位后为基准）
+   await page.waitForTimeout(400);
+   const centerClose=await map.getAttribute('data-view-center'),zoomClose=await map.getAttribute('data-view-zoom');
    await detail.getByRole('button',{name:'关闭对象详情'}).click();
    assert.equal(await detail.count(),0);
-   assert.equal(await map.getAttribute('data-view-zoom'),zoom0,'关闭详情后缩放不变');
+   assert.equal(await map.getAttribute('data-view-zoom'),zoomClose,'关闭详情后缩放不变');
+   assert.equal(await map.getAttribute('data-view-center'),centerClose,'关闭详情后中心不变');
 
    // —— 1024 窄屏：目录协同折叠与手动优先 ——
    await page.setViewportSize({width:1024,height:768});
