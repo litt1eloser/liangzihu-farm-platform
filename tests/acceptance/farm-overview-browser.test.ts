@@ -51,8 +51,8 @@ test('D1 卫星总览只展示授权对象，搜索定位与固定详情栏在�
   await page.getByRole('complementary',{name:'对象详情'}).getByRole('heading',{name:'合成东片农田'}).waitFor();
   await page.waitForTimeout(300);assert(Number(await map.getAttribute('data-view-zoom'))>=Number(zoomBeforeMapClick)-0.01,'M2-C 起地图点选后缩放不降低');
   const drawerBox=await page.getByRole('complementary',{name:'对象详情'}).boundingBox();assert(drawerBox);
-  const mapAfterDetail=await map.boundingBox();assert(mapAfterDetail&&mapAfterDetail.width<bounds.width,'右侧固定详情列出现后地图应收缩');
-  assert(drawerBox.x>=mapAfterDetail.x+mapAfterDetail.width-1,'详情应为独立布局列，不覆盖地图');
+  const mapAfterDetail=await map.boundingBox();assert(mapAfterDetail&&Math.abs(mapAfterDetail.width-bounds.width)<2,'R03 覆盖式抽屉不得改变地图容器宽度');
+  assert(drawerBox.x>mapAfterDetail.x&&drawerBox.x+drawerBox.width<=mapAfterDetail.x+mapAfterDetail.width+2,'抽屉应覆盖在地图范围内右侧');
   await page.screenshot({path:'docs/acceptance/d1/2026-10-09-农场空间总览-地图点击避让.png',fullPage:true});
   await page.getByRole('button',{name:'关闭对象详情'}).click();
   await page.setViewportSize({width:390,height:844});await page.getByRole('button',{name:'☰ 对象目录'}).click();
