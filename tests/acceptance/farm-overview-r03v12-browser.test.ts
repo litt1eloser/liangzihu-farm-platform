@@ -98,6 +98,21 @@ test('R03 V1.2 概要卡与按需展开：双态切换、目录协同、目标�
    await page.setViewportSize({width:1024,height:768});
    await page.waitForTimeout(500);
    const dirBox0=await directory.boundingBox();assert(dirBox0&&dirBox0.width>200,'详情未打开时目录应展开');
+   // 1024 导航：不横向截断文字，使用「更多导航」可发现入口
+   const navMore=page.locator('summary[aria-label="更多导航"]');
+   assert.equal(await navMore.isVisible(),true,'1024 应显示「更多导航」入口');
+   await navMore.click();
+   await page.locator('.navMoreMenu a, [class*=navMoreMenu] a').first().waitFor();
+   assert(await page.locator('[class*=navMoreMenu]').getByRole('link',{name:'地形分析'}).isVisible(),'更多导航菜单应包含全部导航项');
+   await settleMouse();await page.screenshot({path:'docs/acceptance/m2r03v12/1024-导航更多.png'});
+   await navMore.click();
+   // 900px 同样收敛
+   await page.setViewportSize({width:900,height:768});
+   await page.waitForTimeout(400);
+   assert.equal(await navMore.isVisible(),true,'900px 应显示「更多导航」入口');
+   await page.screenshot({path:'docs/acceptance/m2r03v12/900-导航更多.png'});
+   await page.setViewportSize({width:1024,height:768});
+   await page.waitForTimeout(400);
    await page.getByRole('button',{name:'东片田',exact:true}).click();
    await detail.getByRole('heading',{name:'东片田'}).waitFor();
    await page.waitForTimeout(600);
@@ -136,6 +151,7 @@ test('R03 V1.2 概要卡与按需展开：双态切换、目录协同、目标�
    // —— 390 手机端：底部卡、控件避让、定位入口 ——
    await page.setViewportSize({width:390,height:844});
    await page.waitForTimeout(500);
+   await page.getByRole('link',{name:'农场地图'}).first().waitFor();
    await page.getByRole('button',{name:'☰ 对象目录'}).click();
    await page.getByRole('button',{name:'东片田',exact:true}).click();
    await detail.getByRole('heading',{name:'东片田'}).waitFor();
@@ -150,6 +166,13 @@ test('R03 V1.2 概要卡与按需展开：双态切换、目录协同、目标�
    await page.waitForTimeout(300);
    const mFull=await detail.boundingBox();assert(mFull);
    assert(mFull.height<=mMap.height*0.66+2,'手机完整详情不得超过地图高度 66%');
+   // 完整态进入后无需滚动即可见三标签与至少一部分正文；操作区流式排布不遮挡正文
+   const tabsBox=await detail.getByRole('tablist').boundingBox();assert(tabsBox);
+   assert(tabsBox.y>=mFull.y-1&&tabsBox.y+tabsBox.height<=mFull.y+mFull.height+1,'手机完整态进入后三标签应无需滚动可见');
+   const bodyBox=await detail.getByText(/相关管理资料尚未登记/).boundingBox();
+   assert(bodyBox&&bodyBox.y<mFull.y+mFull.height,'手机完整态进入后应可见至少一部分正文');
+   const actionsPos=await detail.locator('[class*=drawerActions]').first().evaluate(el=>getComputedStyle(el).position);
+   assert.equal(actionsPos,'static','手机完整态操作区应流式排布，不得以吸附形式遮挡正文');
    // 展开不动视口；目标被遮住时使用「定位当前对象」按需重新定位
    await detail.getByRole('button',{name:'定位当前对象'}).click();
    await page.waitForTimeout(700);

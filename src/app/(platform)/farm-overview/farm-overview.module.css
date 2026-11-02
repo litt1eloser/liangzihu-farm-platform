@@ -333,3 +333,35 @@ button.pointRowButton:hover>span:first-child{color:#17513b}
 .drawerTopActions .collapseButton{min-height:28px;padding:3px 9px;border:1px solid #d7e1d0;border-radius:6px;background:#f4f7ee;color:#315a51;font-size:11px;font-weight:650;cursor:pointer;white-space:nowrap}
 /* V1.2 手机端：底部卡上限 66%（概要更矮），缩放控件移到顶部工具栏下方，避免被底部卡遮挡 */
 @media(max-width:760px){.drawer{max-height:66%;bottom:10px}.drawerSummary{max-height:58%}.mapShell:has(.drawer) :global(.ol-zoom),.mapShell:has(.managementDrawer) :global(.ol-zoom){top:64px;bottom:auto;right:12px}}
+
+/* R03 V1.2 收尾：手机完整态压缩——进入完整态无需滚动即可见三标签与正文起始；
+   底部操作区改为随内容流式排布，不再以吸附形式遮挡正文 */
+@media(max-width:760px){
+ .drawer:not(.drawerSummary){padding:12px 14px}
+ .drawer:not(.drawerSummary) .drawerTop{padding:8px 0 2px}
+ .drawer:not(.drawerSummary) h2{font-size:19px}
+ .drawer:not(.drawerSummary) .detailBadges{margin-top:4px}
+ .drawer:not(.drawerSummary) .detailContext{margin:4px 0 0;font-size:11px}
+ .drawer:not(.drawerSummary) .bizCards{margin:8px 0;gap:6px}
+ .drawer:not(.drawerSummary) .bizCard{padding:6px 8px;gap:2px}
+ .drawer:not(.drawerSummary) .bizCard>strong{font-size:12px;line-height:1.35}
+ .drawer:not(.drawerSummary) .bizCard>small{font-size:10px}
+ .drawer:not(.drawerSummary) .detailTabs{margin-top:10px;gap:14px}
+ .drawer:not(.drawerSummary) .detailTabs button{min-height:30px;padding:5px 0 6px}
+ .drawer:not(.drawerSummary) .drawerHint{margin:8px 0;padding:8px 10px;font-size:11px;line-height:1.55}
+ .drawer:not(.drawerSummary) .drawerActions{position:static;margin-top:10px;padding:10px 0 2px;gap:6px}
+ .drawer:not(.drawerSummary) .drawerActions>a,.drawer:not(.drawerSummary) .drawerActions>button{min-height:32px;padding:5px 9px;font-size:11px}
+}
+
+/* R03 V1.2 收尾：761–1100px 顶部导航收敛为「更多导航」下拉，不再横向截断文字 */
+.navMore{display:none;position:relative}
+.navMore>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px;padding:9px 0;color:#315a51;font-size:13px;white-space:nowrap}
+.navMore>summary::-webkit-details-marker{display:none}
+.navMoreMenu{position:absolute;top:100%;left:0;z-index:30;display:grid;gap:2px;min-width:160px;padding:8px;background:#fff;border:1px solid #e3eae3;border-radius:10px;box-shadow:0 10px 30px #17332625}
+.navMoreMenu a{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:7px;color:#315a51;font-size:13px;text-decoration:none;white-space:nowrap}
+.navMoreMenu a:hover{background:#f2f7ed;color:#17513b}
+.navMoreMenu a[aria-current='page']{color:#17513b;font-weight:650;background:#eef4e5}
+@media(min-width:761px) and (max-width:1100px){
+ .topNav .topLinks{display:none}
+ .topNav .navMore{display:block}
+}
