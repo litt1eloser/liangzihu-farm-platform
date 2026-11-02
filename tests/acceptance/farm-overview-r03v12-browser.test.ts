@@ -173,6 +173,7 @@ test('R03 V1.2 概要卡与按需展开：双态切换、目录协同、目标�
    assert(bodyBox&&bodyBox.y<mFull.y+mFull.height,'手机完整态进入后应可见至少一部分正文');
    const actionsPos=await detail.locator('[class*=drawerActions]').first().evaluate(el=>getComputedStyle(el).position);
    assert.equal(actionsPos,'static','手机完整态操作区应流式排布，不得以吸附形式遮挡正文');
+   await settleMouse();await page.screenshot({path:'docs/acceptance/m2r03v12/390-完整.png'});
    // 展开不动视口；目标被遮住时使用「定位当前对象」按需重新定位
    await detail.getByRole('button',{name:'定位当前对象'}).click();
    await page.waitForTimeout(700);
@@ -180,7 +181,6 @@ test('R03 V1.2 概要卡与按需展开：双态切换、目录协同、目标�
     const [x0,y0,x1,y1]=await selectionPx();
     assert(y1<=mFull.y-mMap.y+1&&y0>=0&&x0>=0&&x1<=mMap.width,'手机端定位后目标边界应在底部卡上方可视区');
    }
-   await settleMouse();await page.screenshot({path:'docs/acceptance/m2r03v12/390-完整.png'});
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false,'手机不得出现横向滚动');
    assert.deepEqual(errors,[],'页面不得出现脚本错误');
    await context.close();
