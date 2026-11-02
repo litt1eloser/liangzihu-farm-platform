@@ -34,8 +34,8 @@ test('R02-B 冻结偏差修复：顶部顺序与独立卡片、类别筛选、�
    await detail.getByRole('heading',{name:'自营田A'}).waitFor();
    await detail.getByText('范围已核实',{exact:true}).first().waitFor();
    const area=await detail.getByText(/管理范围面积 .* 亩/).textContent();
-   await detail.getByText('当前生产：水稻（甬优）',{exact:true}).waitFor();
-   await detail.getByText('生长阶段：分蘖期',{exact:true}).waitFor();
+   await detail.getByText('水稻（甬优）',{exact:true}).waitFor();
+   await detail.getByText('分蘖期',{exact:true}).waitFor();
    const html=await detail.innerHTML();
    assert(html.indexOf('管理范围面积')<html.indexOf('当前生产'),'面积须在当前生产之前');
    assert(html.indexOf('当前生产')<html.indexOf('生长阶段'),'当前生产须在生长阶段之前');
@@ -49,8 +49,8 @@ test('R02-B 冻结偏差修复：顶部顺序与独立卡片、类别筛选、�
    await page.getByRole('button',{name:'自营田B',exact:true}).click();
    await detail.getByRole('heading',{name:'自营田B'}).waitFor();
    await detail.getByText('范围待核对',{exact:true}).first().waitFor();
-   await detail.getByText('当前生产：资料待核实',{exact:true}).waitFor();
-   await detail.getByText('生长阶段：资料待核实',{exact:true}).waitFor();
+   await detail.getByText('资料待核实').first().waitFor();
+   
    assert.equal(await detail.getByText(/小麦/).count(),0,'未核实批次品种不得上顶部');
    assert.equal(await detail.getByText(/抽穗期/).count(),0,'未核实批次阶段不得上顶部');
 

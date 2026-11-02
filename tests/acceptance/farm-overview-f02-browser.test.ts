@@ -80,7 +80,7 @@ test('F02 同类/跨类切换标签规则、快速连击、返回上下文恢复
    await page.waitForTimeout(900);
    const map=page.getByRole('application');
    const zoomBefore=await map.getAttribute('data-view-zoom'),centerBefore=await map.getAttribute('data-view-center');
-   await detail.getByRole('link',{name:'查看完整档案 ↗'}).click();
+   await detail.getByRole('link',{name:'查看对象台账 ↗'}).click();
    await page.getByRole('heading',{name:'东片田'}).first().waitFor();
    await page.goto(app.origin+'/farm-overview');
    await detail.getByRole('heading',{name:'东片田'}).waitFor();

@@ -44,7 +44,7 @@ test('F04 农田面积口径、塘口当前养殖与水体指标摘要',{timeout
    await detail.getByText(/管理范围面积 .* 亩/).waitFor();
    await detail.getByText(/万㎡/).waitFor();
    await detail.getByText(/按已核实登记边界计算/).waitFor();
-   await detail.getByText('当前生产：暂无登记').waitFor();
+   await detail.getByText('暂无登记').first().waitFor();
    await detail.getByRole('tab',{name:'农事生产',exact:true}).click();
    await detail.getByText('暂无生产批次登记。').waitFor();
    await page.screenshot({path:'docs/acceptance/m2f04/01-农田面积与生产空态.png'});

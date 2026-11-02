@@ -85,28 +85,29 @@ export default function DetailPanel({mode,item,region,mobile,items,regions,summa
    const productionText=detail.batchState==='loading'?'正在读取生产批次…':detail.batchState==='denied'?'暂不可查看：没有生产批次的查看权限。':detail.batchState==='error'?'读取失败':batch.state==='trusted'&&batch.batch?`${batch.batch.species}${batch.batch.variety?`（${batch.batch.variety}）`:''}${cls==='pond'?` · ${batch.batch.stage}`:''}`:batch.state==='pending'?(cls==='field'?'资料待核实':'养殖资料待核实'):'暂无登记';
    const stageText=detail.batchState==='loading'?'正在读取…':detail.batchState==='denied'?'暂不可查看':detail.batchState==='error'?'读取失败':batch.state==='trusted'&&batch.batch?batch.batch.stage:batch.state==='pending'?'资料待核实':'暂无登记';
    return <>
-    {area&&areaText&&<p className={styles.metric}>{areaText.label} {area.mu}<small>（{area.sqm}）</small></p>}
+    <div className={styles.bizCards}>
+     <div className={styles.bizCard}><span>{areaText?areaText.label:(cls==='field'?'面积':'面积')}</span><strong>{area&&areaText?area.mu:(cls==='field'?'暂无参考面积':'暂无可信范围面积')}</strong>{area&&areaText&&<small>{area.sqm}</small>}</div>
+     <div className={styles.bizCard}><span>{cls==='field'?'当前生产':'当前养殖'}</span><strong>{productionText}</strong>{detail.batchState==='error'&&<button type="button" className={styles.cardRetry} onClick={detail.retry}>重试</button>}</div>
+     {cls==='field'&&<div className={styles.bizCard}><span>生长阶段</span><strong>{stageText}</strong></div>}
+    </div>
     {area&&areaText&&<p className={styles.detailContext}>{areaText.note}</p>}
-    {!area&&<p className={styles.drawerHint}>{cls==='field'?'暂无参考面积':'暂无可信范围面积'}</p>}
-    <p className={styles.businessLead}>{cls==='field'?'当前生产':'当前养殖'}：{productionText}{detail.batchState==='error'&&<button type="button" onClick={detail.retry}>重试</button>}</p>
-    {cls==='field'&&<p className={styles.businessLead}>生长阶段：{stageText}</p>}
     {cls==='pond'&&slots.map(slot=>slot.kind==='single'?<p key={slot.view.id} className={styles.metric}>{slot.view.name} {slot.view.value} {slot.view.valueUnit??slot.view.unit}{slot.view.sampledAt&&<><br/><small>采样 {time(slot.view.sampledAt)}</small></>}</p>:<p key={slot.metric} className={styles.drawerHint}>{slot.metric}：{slot.count} 个测点，未指定代表测点 <button type="button" onClick={()=>onTab('monitoring')}>查看详情</button></p>)}
     {alertSlot}
-    {summary&&<Facts rows={[{label:'农事记录',value:summary.record_count},{label:'关联测点',value:summary.point_count}]}/>}
    </>;
   }
   if(cls==='gate'){
    // F05 水闸摘要：实际开度只取可信 opening；多测点无代表不合成；set_opening 不出现在摘要。
    const opening=selectOpeningView(detail.pointViews);
    return <>
-    {detail.measurementState==='loading'?<p className={styles.drawerHint}>正在读取测点与当前值…</p>:opening.kind==='single'&&opening.view?<p className={styles.metric}>实际开度 {opening.view.value} {opening.view.valueUnit??'%'}{opening.view.sampledAt&&<><br/><small>采样 {time(opening.view.sampledAt)}</small></>}</p>:opening.kind==='multiple'?<p className={styles.drawerHint}>存在多个可信开度测点且未指定代表测点，请到「运行信息」逐项查看，此处不合成数值。</p>:<p className={styles.drawerHint}>实际开度：暂无已核实的代表开度测点。</p>}
-    <p className={styles.detailContext}>数据上报：待确认</p>
+    <div className={styles.bizCards}>
+     <div className={styles.bizCard}><span>实际开度</span><strong>{detail.measurementState==='loading'?'正在读取…':opening.kind==='single'&&opening.view?`${opening.view.value} ${opening.view.valueUnit??'%'}`:opening.kind==='multiple'?'多个测点，未指定代表':'暂无已核实测点'}</strong>{opening.kind==='single'&&opening.view?.sampledAt&&<small>采样 {time(opening.view.sampledAt)}</small>}</div>
+     <div className={styles.bizCard}><span>数据上报</span><strong>待确认</strong></div>
+    </div>
     {detail.alertState==='ready'?(openAlerts.length>0?alertSlot:<p className={styles.detailContext}>当前重要告警：暂无（仅表示本次可信查询无 open 事件，不代表设备正常）。</p>):alertSlot}
-    <Facts rows={[{label:'关联测点',value:summary?.point_count??0}]}/>
    </>;
   }
-  if(cls==='pump_station')return <><p className={styles.drawerHint}>泵组运行概况：机组档案尚未核实，暂不统计运行台数。</p><p className={styles.detailContext}>数据上报：待确认</p>{detail.alertState==='ready'?(openAlerts.length>0?alertSlot:<p className={styles.detailContext}>当前重要告警：暂无（仅表示本次可信查询无 open 事件，不代表设备正常）。</p>):alertSlot}<Facts rows={[{label:'关联测点',value:summary?.point_count??0}]}/></>;
-  return <Facts rows={[{label:'关联测点',value:summary?.point_count??0}]}/>;
+  if(cls==='pump_station')return <><div className={styles.bizCards}><div className={styles.bizCard}><span>泵组运行概况</span><strong>机组档案尚未核实</strong></div><div className={styles.bizCard}><span>数据上报</span><strong>待确认</strong></div></div>{detail.alertState==='ready'?(openAlerts.length>0?alertSlot:<p className={styles.detailContext}>当前重要告警：暂无（仅表示本次可信查询无 open 事件，不代表设备正常）。</p>):alertSlot}</>;
+  return null;
  })();
 
  // F03 测量分区：按「指标→测点」展示，局部失败隔离与重试，不重置地图。
@@ -164,9 +165,9 @@ export default function DetailPanel({mode,item,region,mobile,items,regions,summa
    {tabs.map(row=><button key={row.id} type="button" role="tab" aria-selected={activeTab===row.id} className={activeTab===row.id?styles.activeTab:''} onClick={()=>onTab(row.id)}>{row.label}</button>)}
   </div>
   {activeTab==='basic'&&<div className={styles.detailTabBody}>
-   {(item||region)&&<section className={styles.detailSection}><div className={styles.detailSectionHeader}><h3>基本信息</h3>{!demo&&item&&item.kind!=='farm'&&<Link href={`/objects/${item.id}`} onClick={onSaveReturn}>编辑</Link>}</div><dl className={styles.detailList}>{item&&<div><dt>对象编号</dt><dd>{item.code}</dd></div>}{ownerFarm&&<div><dt>所属农场</dt><dd>{ownerFarm.name}</dd></div>}{regionForItem&&<div><dt>所属村庄</dt><dd>{regionForItem.name}</dd></div>}<div><dt>对象名称</dt><dd>{title}</dd></div>{item&&cls&&<div><dt>{cls==='gate'||cls==='pump_station'||cls==='generic'?'位置状态':'范围状态'}</dt><dd>{demo?'演示区域（非测绘边界）':scopeBadge(cls,item).text}</dd></div>}</dl></section>}
+   {(item||region)&&<section className={styles.detailSection}><div className={styles.detailSectionHeader}><h3>基本信息</h3>{!demo&&item&&item.kind!=='farm'&&<Link href={`/objects/${item.id}`} onClick={onSaveReturn}>编辑</Link>}</div>{region&&<p className={styles.drawerHint}>经营分组详情请在村庄管理中维护。</p>}{item&&!demo&&<p className={styles.drawerHint}>相关管理资料尚未登记（负责人、主要用途、现场位置说明等登记后在此展示）。</p>}{item&&demo&&<p className={styles.drawerHint}>演示对象，无正式管理资料。</p>}</section>}
    {mobile&&<section className={styles.detailSection}><h3>绑定信息</h3><p className={styles.businessLead}>机具与定位终端：{mobile.terminal_name}</p><p className={styles.detailContext}>绑定有效期至 {time(mobile.valid_until)}；绑定归属不等于当前位置。</p></section>}
-   {item&&<details className={styles.moreActions}><summary>资料依据</summary><dl className={styles.detailList}><div><dt>登记依据</dt><dd>{item.boundary_source??item.object_source??'未提供'}</dd></div><div><dt>记录时间</dt><dd>{time(item.boundary_recorded_at??item.object_recorded_at)}</dd></div><div><dt>版本</dt><dd>{item.version}</dd></div></dl></details>}
+   {item&&<details className={styles.moreActions}><summary>资料依据</summary><dl className={styles.detailList}><div><dt>对象编号</dt><dd>{item.code}</dd></div>{ownerFarm&&<div><dt>所属农场</dt><dd>{ownerFarm.name}</dd></div>}{item&&cls&&<div><dt>{cls==='gate'||cls==='pump_station'||cls==='generic'?'位置状态':'范围状态'}</dt><dd>{demo?'演示区域（非测绘边界）':scopeBadge(cls,item).text}</dd></div>}<div><dt>登记依据</dt><dd>{item.boundary_source??item.object_source??'未提供'}</dd></div><div><dt>记录时间</dt><dd>{time(item.boundary_recorded_at??item.object_recorded_at)}</dd></div><div><dt>版本</dt><dd>{item.version}</dd></div></dl></details>}
   </div>}
   {middleTabBody}
   {activeTab==='records'&&<div className={styles.detailTabBody}>
@@ -176,14 +177,14 @@ export default function DetailPanel({mode,item,region,mobile,items,regions,summa
     if(alertState==='loading')return <p className={styles.drawerHint}>正在读取相关记录…</p>;
     if(alertState==='denied')return <p className={styles.drawerHint}>当前账号无权读取该对象的相关记录。</p>;
     if(alertState==='error')return <p className={styles.drawerHint}>相关记录读取失败。<button type="button" onClick={retry}>重试</button></p>;
-    if(recordFilter!=='all'&&recordFilter!=='alert')return <p className={styles.drawerHint}>该类别暂无相关记录。</p>;
-    if(!alertViews.length)return <p className={styles.drawerHint}>该类别暂无相关记录。</p>;
+    if(recordFilter!=='all'&&recordFilter!=='alert')return <p className={styles.drawerHint}>该类别记录暂未接入查询，接入后在此展示。</p>;
+    if(!alertViews.length)return <p className={styles.drawerHint}>{recordFilter==='alert'?'暂无告警记录。':'已接入的记录中暂无内容；其他类别暂未接入查询。'}</p>;
     return <>{alertViews.map(row=><div key={row.id} className={styles.recordItem}>
      <button type="button" className={styles.recordItemButton} aria-expanded={expandedRecordId===row.id} onClick={()=>setExpandedRecordId(expandedRecordId===row.id?null:row.id)}><strong>{row.title}</strong><span>{row.severity} · {row.current?'当前告警':'已恢复'}</span></button>
-     {expandedRecordId===row.id&&<div className={styles.recordDetail}><dl className={styles.detailList}><div><dt>类别</dt><dd>告警</dd></div><div><dt>业务状态</dt><dd>{row.current?'当前（open）':'已恢复（recovered）'}</dd></div><div><dt>严重程度</dt><dd>{row.severity}</dd></div></dl><Link href={`/alerts/${row.id}`}>查看完整告警 ↗</Link></div>}
-    </div>)}<p className={styles.drawerHint}>已恢复告警仅作历史展示；每条记录可展开查看详情，一次仅展开一条。</p></>;
+     {expandedRecordId===row.id&&<div className={styles.recordDetail}><dl className={styles.detailList}><div><dt>类别</dt><dd>告警</dd></div><div><dt>业务状态</dt><dd>{row.current?'当前':'已恢复'}</dd></div><div><dt>严重程度</dt><dd>{row.severity}</dd></div></dl><Link href={`/alerts/${row.id}`}>查看完整告警 ↗</Link></div>}
+    </div>)}<p className={styles.drawerHint}>已恢复告警仅作历史展示。</p></>;
    })()}
   </div>}
-  <div className={styles.drawerActions}>{demo?<button type="button" onClick={onExitDemo}>退出演示，管理真实资料 ↗</button>:<>{item?.kind==='farm'&&<Link href="/objects">查看全部对象 ↗</Link>}{region&&canConfigure&&<button type="button" onClick={onManageRegion}>管理村庄与关联 ↗</button>}{item&&item.kind!=='farm'&&<Link href={`/objects/${item.id}`} onClick={onSaveReturn}>查看完整档案 ↗</Link>}{item&&['field','pond'].includes(item.kind)&&<Link href={`/map-editor?object=${item.id}`} onClick={onSaveReturn}>{item.geometry?'编辑边界':'登记边界'}</Link>}{item&&item.kind!=='farm'&&item.kind!=='mobile'&&<details className={styles.moreActions}><summary>更多</summary><div className={styles.drawerLinks}>{canConfigure&&item&&onChangeRegion&&<button type="button" onClick={()=>onChangeRegion(item)}>更改所属村庄</button>}{item?.kind==='field'&&<Link href="/records">查看农事记录 ↗</Link>}{item?.kind==='pond'&&<Link href="/alerts">查看告警与测点 ↗</Link>}{item?.kind==='facility'&&<Link href="/devices">查看关联设备 ↗</Link>}{canConfigure&&item?.kind==='facility'&&<Link href="/devices#register">登记关联实体设备 ↗</Link>}</div></details>}{mobile&&<Link href="/machinery">打开农机业务 ↗</Link>}</>}</div>
+  <div className={styles.drawerActions}>{demo?<button type="button" onClick={onExitDemo}>退出演示，管理真实资料 ↗</button>:<>{item?.kind==='farm'&&<Link href="/objects">查看全部对象 ↗</Link>}{region&&canConfigure&&<button type="button" onClick={onManageRegion}>管理村庄与关联 ↗</button>}{item&&item.kind!=='farm'&&<Link href={`/objects/${item.id}`} onClick={onSaveReturn}>查看对象台账 ↗</Link>}{item&&item.kind!=='farm'&&item.kind!=='mobile'&&<details className={styles.moreActions}><summary>更多</summary><div className={styles.drawerLinks}>{canConfigure&&item&&['field','pond'].includes(item.kind)&&<Link href={`/map-editor?object=${item.id}`} onClick={onSaveReturn}>{item.geometry?'编辑边界':'登记边界'}</Link>}{canConfigure&&item&&onChangeRegion&&<button type="button" onClick={()=>onChangeRegion(item)}>更改所属村庄</button>}{item?.kind==='field'&&<Link href="/records">查看农事记录 ↗</Link>}{item?.kind==='pond'&&<Link href="/alerts">查看告警与测点 ↗</Link>}{item?.kind==='facility'&&<Link href="/devices">查看关联设备 ↗</Link>}{canConfigure&&item?.kind==='facility'&&<Link href="/devices#register">登记关联实体设备 ↗</Link>}</div></details>}{mobile&&<Link href="/machinery">打开农机业务 ↗</Link>}</>}</div>
  </aside>;
 }
