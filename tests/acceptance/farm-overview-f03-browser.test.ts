@@ -44,8 +44,8 @@ test('F03 测点当前值事实展示、局部状态与相关记录告警',{time
    await page.screenshot({path:'docs/acceptance/m2f03/01-水体监测当前值.png'});
    await detail.getByRole('tab',{name:'相关记录',exact:true}).click();
    await detail.getByText('溶氧偏低',{exact:true}).waitFor();
-   await detail.getByText('warning · 当前告警',{exact:true}).waitFor();
-   await detail.getByText('info · 已恢复',{exact:true}).waitFor();
+   await detail.getByText('警告 · 当前',{exact:true}).waitFor();
+   await detail.getByText('提示 · 已恢复',{exact:true}).waitFor();
    await detail.getByRole('button',{name:'养殖',exact:true}).click();
    await detail.getByText(/该类别记录暂未接入查询/).waitFor();
    await page.screenshot({path:'docs/acceptance/m2f03/02-相关记录告警.png'});
