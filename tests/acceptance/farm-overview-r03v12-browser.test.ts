@@ -182,6 +182,9 @@ test('R03 V1.2 概要卡与按需展开：双态切换、目录协同、目标�
    const mActWidths=await detail.locator('[class*=drawerActions] > *').evaluateAll(els=>els.map(e=>e.getBoundingClientRect().width));
    assert(mActWidths.every(w=>w<=mFull.width-20),'手机操作按钮不得超出卡片宽度');
    await settleMouse();await page.screenshot({path:'docs/acceptance/m2r03v12/390-完整.png'});
+   // 操作区证据：流式排布时滚动到内容末尾采集按钮行
+   await detail.locator('[class*=drawerActions]').first().scrollIntoViewIfNeeded();
+   await settleMouse();await page.screenshot({path:'docs/acceptance/m2r03v12/390-完整-底部按钮.png'});
    // 展开不动视口；目标被遮住时使用「定位当前对象」按需重新定位
    await detail.getByRole('button',{name:'定位当前对象'}).click();
    await page.waitForTimeout(700);
