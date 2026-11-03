@@ -115,7 +115,7 @@ test('M2-B 农业对象新增与管理体验重构',{timeout:300000},()=>withDb(
    await page.getByRole('button',{name:'定位村庄 测试二村'}).waitFor();
    await page.getByRole('button',{name:'M2B 测试农田',exact:true}).click();
    await page.getByRole('complementary',{name:'对象详情'}).getByRole('button',{name:'查看详细资料'}).click();
-   await page.getByRole('complementary',{name:'对象详情'}).getByText('更多',{exact:true}).click();
+   await page.getByRole('complementary',{name:'对象详情'}).getByRole('button',{name:'更多',exact:true}).click();
    await page.getByRole('complementary',{name:'对象详情'}).getByRole('button',{name:'更改所属村庄'}).click();
    await page.getByLabel('新归属村庄').selectOption('测试二村');
    await page.getByLabel('变更依据').fill('M2-B 归属调整');

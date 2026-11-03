@@ -365,3 +365,14 @@ button.pointRowButton:hover>span:first-child{color:#17513b}
  .topNav .topLinks{display:none}
  .topNav .navMore{display:block}
 }
+
+/* R03 V1.2 操作区按钮补丁：主/次/省略号三级按钮统一行高、禁止 Flex 拉伸 */
+.drawerActions{align-items:center}
+.drawerActions>a,.drawerActions>button{flex:0 0 auto;height:40px;min-height:40px;padding:8px 14px;white-space:nowrap}
+.moreActions{flex:0 0 auto;align-self:center;margin:0}
+.moreActions>summary{height:40px;min-height:40px;width:40px;padding:0;justify-content:center;font-size:16px;line-height:1}
+/* 手机：触控目标高度 44px */
+@media(max-width:760px){
+ .drawerActions>a,.drawerActions>button,.drawer:not(.drawerSummary) .drawerActions>button{height:44px;min-height:44px;padding:8px 14px;font-size:12px;white-space:nowrap}
+ .moreActions>summary{height:44px;min-height:44px;width:44px}
+}

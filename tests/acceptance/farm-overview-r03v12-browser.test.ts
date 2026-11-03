@@ -63,6 +63,10 @@ test('R03 V1.2 概要卡与按需展开：双态切换、目录协同、目标�
    assert.equal(await basis.getAttribute('open'),null,'资料依据须默认折叠');
    assert.equal(await map.getAttribute('data-view-zoom'),zoom0,'展开不得改变缩放');
    assert.equal(await map.getAttribute('data-view-center'),center0,'展开不得改变中心');
+   // 操作区按钮：同行高度一致、桌面 38–40px、不被拉伸
+   const actHeights=await detail.locator('[class*=drawerActions] > *').evaluateAll(els=>els.map(e=>e.getBoundingClientRect().height));
+   assert(actHeights.length>=3&&actHeights.every(h=>Math.abs(h-actHeights[0])<2),'操作区按钮同行高度应一致');
+   assert(actHeights[0]>=37&&actHeights[0]<=41,'桌面操作按钮高度应在 38–40px，实际 '+actHeights[0]);
    await settleMouse();await page.screenshot({path:'docs/acceptance/m2r03v12/1440-完整.png'});
 
    // 标签切换与收回概要均不动视口
@@ -173,6 +177,10 @@ test('R03 V1.2 概要卡与按需展开：双态切换、目录协同、目标�
    assert(bodyBox&&bodyBox.y<mFull.y+mFull.height,'手机完整态进入后应可见至少一部分正文');
    const actionsPos=await detail.locator('[class*=drawerActions]').first().evaluate(el=>getComputedStyle(el).position);
    assert.equal(actionsPos,'static','手机完整态操作区应流式排布，不得以吸附形式遮挡正文');
+   const mActHeights=await detail.locator('[class*=drawerActions] > *').evaluateAll(els=>els.map(e=>e.getBoundingClientRect().height));
+   assert(mActHeights.length>=3&&mActHeights.every(h=>h>=43),'手机操作按钮触控高度应不小于 44px');
+   const mActWidths=await detail.locator('[class*=drawerActions] > *').evaluateAll(els=>els.map(e=>e.getBoundingClientRect().width));
+   assert(mActWidths.every(w=>w<=mFull.width-20),'手机操作按钮不得超出卡片宽度');
    await settleMouse();await page.screenshot({path:'docs/acceptance/m2r03v12/390-完整.png'});
    // 展开不动视口；目标被遮住时使用「定位当前对象」按需重新定位
    await detail.getByRole('button',{name:'定位当前对象'}).click();
