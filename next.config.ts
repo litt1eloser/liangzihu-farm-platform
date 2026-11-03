@@ -10,7 +10,10 @@ const config: NextConfig = {
   // This workspace reproduced numbered duplicate files in the persistent build cache.
   experimental: { turbopackFileSystemCacheForBuild: false, turbopackFileSystemCacheForDev: false },
   async headers() {
-    return [{ source: '/:path*', headers: [
+    return [{ source: '/imagery', headers: [
+      { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
+      { key: 'Cross-Origin-Embedder-Policy', value: 'credentialless' },
+    ] }, { source: '/:path*', headers: [
       { key: 'X-Content-Type-Options', value: 'nosniff' },
       { key: 'X-Frame-Options', value: 'DENY' },
       { key: 'Referrer-Policy', value: 'no-referrer' },

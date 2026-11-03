@@ -8,6 +8,8 @@ import {groupByMetric,factLabels,currentBatch,buildTopIndicators,selectOpeningVi
 import {boundaryAreaSqm,formatArea,areaPresentation} from './detail-area';
 import {useObjectDetail} from './use-object-detail';
 import {usePointHistory,type TrendWindow} from './use-point-history';
+import CameraSection,{type LiveChannel} from './camera-section';
+import CameraLiveModal from './camera-live-modal';
 import TimeSeries from '@/components/platform/time-series';
 import styles from './farm-overview.module.css';
 
@@ -48,7 +50,9 @@ export default function DetailPanel({mode,item,region,mobile,items,regions,summa
  // F06：记录展开属业务局部交互，一次一条，切换对象即清空（同类保留标签的规则在 F02 已落实）。
  const [expandedRecordId,setExpandedRecordId]=useState<string|null>(null);
  const [expandedPointId,setExpandedPointId]=useState<string|null>(null);
- useEffect(()=>{setExpandedRecordId(null);setExpandedPointId(null);},[item?.id]);
+ // 关联监控：直播弹窗通道；切换/关闭对象即清理播放（弹窗内播放器随卸载断开连接）。
+ const [liveChannel,setLiveChannel]=useState<LiveChannel|null>(null);
+ useEffect(()=>{setExpandedRecordId(null);setExpandedPointId(null);setLiveChannel(null);},[item?.id]);
  const openAlerts=currentAlerts(detail.alertViews);
  const locateAlert=(id:string)=>{onDensity('full');onTab('records');onRecordFilter('alert');setExpandedRecordId(id);};
  // F06 顶部当前告警条：仅在可信查询成功且确有 open 事件时出现；读取失败明确「无法确认」，不冒充无告警。
@@ -156,7 +160,7 @@ export default function DetailPanel({mode,item,region,mobile,items,regions,summa
   return null;
  })();
 
- return <aside className={density==='summary'?`${styles.drawer} ${styles.drawerSummary}`:styles.drawer} data-density={density} aria-label="对象详情" aria-live="polite">
+ return <><aside className={density==='summary'?`${styles.drawer} ${styles.drawerSummary}`:styles.drawer} data-density={density} aria-label="对象详情" aria-live="polite">
   <div className={styles.drawerTop}><div className={styles.detailHeading}><KindIcon kind={cls==='gate'||cls==='pump_station'?'facility':item?.kind??(region?'region':undefined)} className={styles.detailKindIcon}/><h2>{title}</h2></div><div className={styles.drawerTopActions}>{density==='full'&&<button type="button" className={styles.collapseButton} onClick={()=>onDensity('summary')}>收回概要</button>}<button type="button" onClick={onClose} aria-label="关闭对象详情" title="收起右侧详情栏">×</button></div></div>
   <div className={styles.detailBadges}><span className={styles.kind}>{kindLabel}{demo?' · 演示':''}</span>{item&&cls&&<span className={styles.statusBadge} data-status={demo?(item.geometry?(item.boundary_status==='verified'?'已核实':'草稿'):'待登记'):scopeBadge(cls,item).status}>{demo?(item.geometry?(item.boundary_status==='verified'?'已核实':'草稿'):'待登记'):scopeBadge(cls,item).text}</span>}{cls==='generic'&&item?.kind==='facility'&&!demo&&<span className={styles.statusBadge} data-status="待登记">子类未核实</span>}</div>
   <p className={styles.detailContext}>{demo?'合成示例 · 非真实现场':region?'经营分组，不代表行政村边界':item&&regionForItem?`所属 ${regionForItem.name}`:mobile?'绑定归属来自原农机业务':cls==='generic'&&item?.kind==='facility'?'设施类型尚未核实，按通用设施显示':'仅当前账号获授权资料'}</p>
@@ -167,6 +171,7 @@ export default function DetailPanel({mode,item,region,mobile,items,regions,summa
   </div>
   {activeTab==='basic'&&<div className={styles.detailTabBody}>
    {(item||region)&&<section className={styles.detailSection}><div className={styles.detailSectionHeader}><h3>基本信息</h3>{!demo&&item&&item.kind!=='farm'&&<Link href={`/objects/${item.id}`} onClick={onSaveReturn}>编辑</Link>}</div>{region&&<p className={styles.drawerHint}>经营分组详情请在村庄管理中维护。</p>}{item&&!demo&&<p className={styles.drawerHint}>相关管理资料尚未登记（负责人、主要用途、现场位置说明等登记后在此展示）。</p>}{item&&demo&&<p className={styles.drawerHint}>演示对象，无正式管理资料。</p>}</section>}
+   {item&&(demo?<section className={styles.detailSection} aria-label="关联监控"><div className={styles.detailSectionHeader}><h3>关联监控</h3></div><p className={styles.drawerHint}>演示对象无真实监控关联。</p></section>:<CameraSection objectId={item.id} onOpenLive={setLiveChannel}/>)}
    {mobile&&<section className={styles.detailSection}><h3>绑定信息</h3><p className={styles.businessLead}>机具与定位终端：{mobile.terminal_name}</p><p className={styles.detailContext}>绑定有效期至 {time(mobile.valid_until)}；绑定归属不等于当前位置。</p></section>}
    {item&&<details className={styles.moreActions}><summary>资料依据</summary><dl className={styles.detailList}><div><dt>对象编号</dt><dd>{item.code}</dd></div>{ownerFarm&&<div><dt>所属农场</dt><dd>{ownerFarm.name}</dd></div>}{item&&cls&&<div><dt>{cls==='gate'||cls==='pump_station'||cls==='generic'?'位置状态':'范围状态'}</dt><dd>{demo?'演示区域（非测绘边界）':scopeBadge(cls,item).text}</dd></div>}<div><dt>登记依据</dt><dd>{item.boundary_source??item.object_source??'未提供'}</dd></div><div><dt>记录时间</dt><dd>{time(item.boundary_recorded_at??item.object_recorded_at)}</dd></div><div><dt>版本</dt><dd>{item.version}</dd></div></dl></details>}
   </div>}
@@ -188,5 +193,7 @@ export default function DetailPanel({mode,item,region,mobile,items,regions,summa
   </div>}
   <div className={styles.drawerActions}>{demo?<button type="button" onClick={onExitDemo}>退出演示，管理真实资料 ↗</button>:<>{item?.kind==='farm'&&<Link href="/objects">查看全部对象 ↗</Link>}{region&&canConfigure&&<button type="button" onClick={onManageRegion}>管理村庄与关联 ↗</button>}{item&&item.kind!=='farm'&&<Link href={`/objects/${item.id}`} onClick={onSaveReturn}>查看对象台账 ↗</Link>}{item&&item.kind!=='farm'&&item.kind!=='mobile'&&<details className={styles.moreActions}><summary aria-label="更多">⋯</summary><div className={styles.drawerLinks}>{canConfigure&&item&&['field','pond'].includes(item.kind)&&<Link href={`/map-editor?object=${item.id}`} onClick={onSaveReturn}>{item.geometry?'编辑边界':'登记边界'}</Link>}{canConfigure&&item&&onChangeRegion&&<button type="button" onClick={()=>onChangeRegion(item)}>更改所属村庄</button>}{item?.kind==='field'&&<Link href="/records">查看农事记录 ↗</Link>}{item?.kind==='pond'&&<Link href="/alerts">查看告警与测点 ↗</Link>}{item?.kind==='facility'&&<Link href="/devices">查看关联设备 ↗</Link>}{canConfigure&&item?.kind==='facility'&&<Link href="/devices#register">登记关联实体设备 ↗</Link>}</div></details>}{mobile&&<Link href="/machinery">打开农机业务 ↗</Link>}</>}{onLocate&&<button type="button" className={styles.locateButton} onClick={onLocate}>定位当前对象</button>}</div>
   </>}
- </aside>;
+ </aside>
+ <CameraLiveModal channel={liveChannel} onClose={()=>setLiveChannel(null)}/>
+ </>;
 }

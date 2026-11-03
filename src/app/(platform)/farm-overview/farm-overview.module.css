@@ -376,3 +376,26 @@ button.pointRowButton:hover>span:first-child{color:#17513b}
  .drawerActions>a,.drawerActions>button,.drawer:not(.drawerSummary) .drawerActions>button{height:44px;min-height:44px;padding:8px 14px;font-size:12px;white-space:nowrap}
  .drawerActions .moreActions>summary{height:44px;min-height:44px;width:44px}
 }
+
+/* 关联监控区与直播弹窗（摄像头关联接入第一轮） */
+.cameraChannel{border:1px solid #e3ebde;border-radius:9px;padding:10px 12px;margin:8px 0;background:#fbfdf7}
+.cameraChannelName{margin:0;font-size:13px;font-weight:700;color:var(--forest)}
+.cameraImage{margin:8px 0 4px}
+.cameraImage img{max-width:100%;max-height:170px;object-fit:contain;border-radius:8px;border:1px solid #e3ebde;background:#f4f7ee}
+.cameraImage figcaption{font-size:11px;color:#6e806e;margin-top:4px;line-height:1.6}
+.liveButton{margin-top:6px;min-height:34px;padding:7px 13px;border:0;border-radius:7px;background:var(--forest);color:#fff;font-size:12px;font-weight:650;cursor:pointer}
+.liveButton:hover{background:#1f4a3a}
+.liveOverlay{position:fixed;inset:0;z-index:30;background:rgba(18,38,29,.48);display:grid;place-items:center;padding:18px}
+.liveModal{width:min(760px,100%);max-height:calc(100vh - 36px);overflow:auto;background:#fff;border-radius:14px;box-shadow:0 24px 70px rgba(18,38,29,.4);padding:16px 18px}
+.liveHeader{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #e4ebdf;padding-bottom:10px}
+.liveHeader strong{font-size:16px;color:var(--forest)}
+.liveHeader button{font-size:24px;line-height:1;border:0;background:transparent;color:#536a51;padding:2px 7px;cursor:pointer}
+.liveSub{display:block;font-size:11px;color:#788576;margin-top:2px}
+.liveBody{padding-top:12px}
+.liveBody video{max-height:55vh}
+.liveNote{font-size:11px;color:#6e806e;line-height:1.6;margin-top:8px}
+@media(max-width:760px){
+ .liveOverlay{padding:10px;place-items:end center}
+ .liveModal{width:100%;max-height:82vh;border-radius:12px 12px 0 0;padding:14px}
+ .liveHeader button{min-height:44px;min-width:44px;font-size:26px}
+}
