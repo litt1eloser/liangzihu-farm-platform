@@ -15,10 +15,17 @@ const REALTIME_MS=30*60*1000;
 function onlineState(gate:GateDevice){if(!gate.lastReadingAt)return'offline';return Date.now()-new Date(gate.lastReadingAt).getTime()<=REALTIME_MS?'realtime':'historical';}
 
 export default function GateDetail({gate,onClose}:{gate:GateDevice|null;onClose:()=>void}){
- const [busy,setBusy]=useState<string|null>(null),[result,setResult]=useState(''),[error,setError]=useState('');
+ const [busy,setBusy]=useState<string|null>(null),[result,setResult]=useState(''),[error,setError]=useState(''),[collapsed,setCollapsed]=useState(false);
  if(!gate)return null;
  const broken=gate.deployment.installationRef?.includes('已坏')??false;
  const online=onlineState(gate),onlineText=online==='realtime'?'实时在线':online==='historical'?'有历史数据':'离线';
+ const dotColor=broken?'#b3402f':online==='realtime'?'#2e8b3d':online==='historical'?'#ae632a':'#8d9186';
+ if(collapsed)return <div className={styles.drawerMini} aria-label="闸门详情(已收起)">
+  <span className={styles.drawerMiniDot} style={{background:dotColor}} aria-hidden/>
+  <strong>{gate.name}</strong>
+  <button type="button" onClick={()=>setCollapsed(false)}>展开</button>
+  <button type="button" onClick={onClose} aria-label="关闭闸门详情">×</button>
+ </div>;
  const apply=async(label:string,word:string)=>{
   setBusy(label);setError('');setResult('');
   try{
@@ -37,7 +44,7 @@ export default function GateDetail({gate,onClose}:{gate:GateDevice|null;onClose:
   finally{setBusy(null);}
  };
  return <aside className={styles.drawer} aria-label="闸门详情" aria-live="polite">
-  <div className={styles.drawerTop}><span className={styles.eyebrow}>GATE · REGISTERED DEVICE</span><button type="button" onClick={onClose} aria-label="关闭闸门详情">×</button></div>
+  <div className={styles.drawerTop}><span className={styles.eyebrow}>GATE · REGISTERED DEVICE</span><span><button type="button" onClick={()=>setCollapsed(true)} aria-label="收起闸门详情">收起</button><button type="button" onClick={onClose} aria-label="关闭闸门详情">×</button></span></div>
   <span className={styles.kind}>智能闸门{broken?' · 登记已坏':''}</span><h2>{gate.name}</h2>
   <p className={styles.detailContext}>设备编号 {gate.externalId} · 仅当前账号获授权资料</p>
   <Facts rows={[
