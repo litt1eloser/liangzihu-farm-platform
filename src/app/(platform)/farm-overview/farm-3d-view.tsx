@@ -2,6 +2,7 @@
 
 import {useEffect,useRef,useState} from 'react';
 import {tiandituWmtsUrls,validBrowserKey} from '@/modules/map-prototype/tianditu';
+import styles from './farm-3d-view.module.css';
 
 type Geometry={type:string;coordinates:unknown};
 export type SpatialItem={id:string;name:string;kind:string;geometry:Geometry|null};
@@ -81,7 +82,7 @@ export default function Farm3DView(props:Props){
    viewer.screenSpaceEventHandler.setInputAction((event:{position:import('cesium').Cartesian2})=>{
     const picked=viewer.scene.pick(event.position);
     const id=picked?.id?.id as string|undefined;
-    if(id?.startsWith('farm-object:'))current.current.onSelect(id.slice('farm-object:'.length));
+    if(id?.startsWith('farm-object:'))current.current.onSelect(id.slice('farm-object:'.length).split(':')[0]);
    },C.ScreenSpaceEventType.LEFT_CLICK);
    viewer.scene.renderError.addEventListener(()=>{
     if(!disposed){setPhase('failed');setNote('当前设备无法绘制三维，请切回二维地图。');}
@@ -103,10 +104,10 @@ export default function Farm3DView(props:Props){
     const path=p[i];if(!validPath(path))continue;
     const coords=C.Cartesian3.fromDegreesArray(path.flatMap(x=>[x[0],x[1]]));
     if(path.length>=3&&(geometry?.type==='Polygon'||geometry?.type==='MultiPolygon')&&i===0){
-     viewer.entities.add({id:id+':surface:'+i,name,polygon:{hierarchy:coords,material:color.withAlpha(selected?.36:cad?.12:.19),height:0}});
+     viewer.entities.add({id:id+':surface:'+i,name,polygon:{hierarchy:coords,material:color.withAlpha(selected ? 0.36 : cad ? 0.12 : 0.19),height:0}});
     }
-    if(path.length>=2)viewer.entities.add({id,name,polyline:{positions:coords,width:selected?4:cad?2:2.5,material:lineColor,clampToGround:true}});
-    if(path.length===1&&!cad)viewer.entities.add({id,name,position:coords[0],point:{pixelSize:selected?13:9,color,outlineColor:C.Color.WHITE,outlineWidth:1,heightReference:C.HeightReference.CLAMP_TO_GROUND}});
+    if(path.length>=2)viewer.entities.add({id:id+':line:'+i,name,polyline:{positions:coords,width:selected?4:cad?2:2.5,material:lineColor,clampToGround:true}});
+    if(path.length===1&&!cad)viewer.entities.add({id:id+':point:'+i,name,position:coords[0],point:{pixelSize:selected?13:9,color,outlineColor:C.Color.WHITE,outlineWidth:1,heightReference:C.HeightReference.CLAMP_TO_GROUND}});
    }
   };
   for(const item of props.items){
@@ -155,13 +156,13 @@ export default function Farm3DView(props:Props){
    orientation:{heading:0,pitch:C.Math.toRadians(-62),roll:0},duration:.7});
  },[resetCounter,phase]);
  useEffect(()=>{first.current=false;},[]);
- return <div className="farm-3d-root" aria-label="三维农业地图" role="application">
-  <div ref={host} className="farm-3d-canvas"/>
-  <div className="farm-3d-actions">
+ return <div className={styles.root} aria-label="三维农业地图" role="application">
+  <div ref={host} className={styles.canvas}/>
+  <div className={styles.actions}>
    <button type="button" onClick={()=>setResetCounter(n=>n+1)} disabled={phase!=='ready'}>复位视角</button>
    <button type="button" onClick={props.onFallback}>返回 2D</button>
   </div>
-  <div className="farm-3d-notice" role="status">
+  <div className={styles.notice} role="status">
    {phase==='loading'?'正在加载 Cesium 三维引擎…':note}
    {phase==='ready'&&<small> · 卫星影像位于参考椭球表面，不代表实测地面起伏</small>}
   </div>
