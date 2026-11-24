@@ -13,3 +13,6 @@ next-env.d.ts
 # Generated from the pinned Cesium dependency; private models never go here.
 /public/vendor/cesium/
 /public/vendor/ezuikit/
+
+# M3-P0 公开 3D Tiles 测试样例（只登记来源，数据不进 Git）
+/.m3-samples/
