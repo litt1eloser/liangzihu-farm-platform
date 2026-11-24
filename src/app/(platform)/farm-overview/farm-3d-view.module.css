@@ -1,0 +1,8 @@
+.root{position:absolute;inset:0;overflow:hidden;background:#dce7dd}
+.canvas{position:absolute;inset:0}
+.canvas :global(.cesium-widget),.canvas :global(.cesium-widget canvas){width:100%;height:100%}
+.actions{position:absolute;z-index:2;right:18px;bottom:62px;display:flex;gap:8px;flex-wrap:wrap}
+.actions button{border:1px solid #cbd9c4!important;background:#fff!important;color:#163a2d!important;border-radius:8px;padding:9px 13px!important;font-size:12px;font-weight:700;box-shadow:0 4px 18px #17332620;cursor:pointer}
+.notice{position:absolute;z-index:2;left:16px;bottom:14px;max-width:min(580px,calc(100% - 32px));background:rgba(255,255,255,.94);border-radius:8px;padding:9px 12px;font-size:12px;line-height:1.45;color:#3a5541;pointer-events:none}
+.notice small{font-size:11px;color:#6b7c70}
+@media(max-width:760px){.actions{right:12px;bottom:auto;top:64px;gap:5px}.actions button{padding:8px!important;font-size:11px}.notice{left:12px;bottom:8px;right:12px;font-size:11px}}
