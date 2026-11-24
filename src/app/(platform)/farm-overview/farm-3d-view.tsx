@@ -11,7 +11,7 @@ type Props={
  items:SpatialItem[];cadFeatures:CadItem[];selectedId:string|null;focusVersion:number;
  visibility:Record<string,boolean>;cadVisibility:Record<string,boolean>;
  basemap:'vector'|'satellite';annotationsVisible:boolean;
- center:[number,number];zoom:number;
+ center:[number,number];zoom:number;homeVersion:number;
  onSelect:(id:string)=>void;onMessage:(text:string)=>void;onFallback:()=>void;
 };
 
@@ -156,6 +156,12 @@ export default function Farm3DView(props:Props){
    orientation:{heading:0,pitch:C.Math.toRadians(-62),roll:0},duration:.7});
  },[resetCounter,phase]);
  useEffect(()=>{first.current=false;},[]);
+ useEffect(()=>{const C=engineRef.current,viewer=viewerRef.current;if(!C||!viewer||phase!=='ready'||props.homeVersion===0)return;
+  const bounds=props.items.map(i=>extentOf(i.geometry)).filter((e):e is [number,number,number,number]=>e!==null);
+  if(!bounds.length)return;
+  const west=Math.min(...bounds.map(e=>e[0])),south=Math.min(...bounds.map(e=>e[1])),east=Math.max(...bounds.map(e=>e[2])),north=Math.max(...bounds.map(e=>e[3]));
+  viewer.camera.flyTo({destination:C.Rectangle.fromDegrees(west,south,east,north),orientation:{heading:0,pitch:C.Math.toRadians(-65),roll:0},duration:.7});
+ },[phase,props.homeVersion]);
  return <div className={styles.root} aria-label="三维农业地图" role="application">
   <div ref={host} className={styles.canvas}/>
   <div className={styles.actions}>
