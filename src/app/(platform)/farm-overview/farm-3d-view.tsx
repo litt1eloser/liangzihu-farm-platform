@@ -8,7 +8,7 @@ type Geometry={type:string;coordinates:unknown};
 export type SpatialItem={id:string;name:string;kind:string;geometry:Geometry|null};
 type CadItem={id?:string;geometry:Geometry|null;properties:{category:string}};
 type Props={
- items:SpatialItem[];cadFeatures:CadItem[];selectedId:string|null;focusVersion:number;
+ items:SpatialItem[];cadFeatures:CadItem[];selectedId:string|null;regionObjectIds:string[];focusVersion:number;
  visibility:Record<string,boolean>;cadVisibility:Record<string,boolean>;
  basemap:'vector'|'satellite';annotationsVisible:boolean;
  center:[number,number];zoom:number;homeVersion:number;
@@ -142,13 +142,15 @@ export default function Farm3DView(props:Props){
 
  // Selection changes in the existing directory should focus the same 3D object, without opening a second details system.
  useEffect(()=>{
-  const C=engineRef.current,viewer=viewerRef.current;if(!C||!viewer||phase!=='ready'||!props.selectedId)return;
-  const item=props.items.find(i=>i.id===props.selectedId),ext=extentOf(item?.geometry??null);
-  if(!ext){setNote('该对象尚无有效地图位置，业务详情仍可查看。');return;}
-  const points=[C.Cartesian3.fromDegrees(ext[0],ext[1],0),C.Cartesian3.fromDegrees(ext[2],ext[3],0)];
-  const sphere=C.BoundingSphere.fromPoints(points);
+  const C=engineRef.current,viewer=viewerRef.current;if(!C||!viewer||phase!=='ready')return;
+  const focused=props.selectedId?props.items.filter(i=>i.id===props.selectedId):props.items.filter(i=>props.regionObjectIds.includes(i.id));
+  if(!focused.length)return;
+  const bounds=focused.map(i=>extentOf(i.geometry)).filter((e):e is [number,number,number,number]=>e!==null);
+  if(!bounds.length){setNote('该对象或片区尚无有效地图位置，业务详情仍可查看。');return;}
+  const west=Math.min(...bounds.map(e=>e[0])),south=Math.min(...bounds.map(e=>e[1])),east=Math.max(...bounds.map(e=>e[2])),north=Math.max(...bounds.map(e=>e[3]));
+  const sphere=C.BoundingSphere.fromPoints([C.Cartesian3.fromDegrees(west,south,0),C.Cartesian3.fromDegrees(east,north,0)]);
   viewer.camera.flyToBoundingSphere(sphere,{duration:.7,offset:new C.HeadingPitchRange(0,C.Math.toRadians(-58),Math.max(sphere.radius*3.5,350))});
- },[phase,props.selectedId,props.focusVersion,props.items]);
+ },[phase,props.selectedId,props.focusVersion,props.items,props.regionObjectIds]);
 
  useEffect(()=>{
   const C=engineRef.current,viewer=viewerRef.current;if(!C||!viewer||phase!=='ready'||first.current)return;
