@@ -4,6 +4,13 @@
 
 从 2026-10-04 起，每次代码、配置、依赖、数据库或文档调整均须随交付更新本文件。同一任务的连续修改合为一条，同日不同任务另起条目；历史补记注明来源。日期采用北京时间，序号只区分当天记录，不是软件版本号。
 
+## 2026-11-24 · 02 · M3-P1 展示版：手机端三维容器修复与 luminous 浏览器验收
+
+- **改动与原因**：对 `m3-p1-3d-demo`（同门提交的 /farm-overview 2D/3D 只读切换）执行 luminous 隔离环境验收。联调发现两个展示阻塞问题并修复：① 手机端（≤760px）切 3D 后整区空白——`farm-3d-view` 根容器原为 `absolute inset:0`，移动端地图外壳高度由二维 `.map` 撑开，3D 下 `.map` 隐藏致父容器塌陷为 0；改为文档流 `height:100%` 并沿用移动端高度规则。② ≤1024px 地图工具栏按钮文字竖排——工具栏增加 `flex-wrap:wrap`、按钮 `white-space:nowrap`（二维模式同样受益）。
+- **影响范围**：仅 `farm-3d-view.module.css`、`farm-overview.module.css` 两个样式文件与验收文档；无业务逻辑、数据库、API 变更。
+- **验证**：luminous 独立预览（3400 端口，不动 3200/3300/3100/3105）：`pnpm typecheck`、`pnpm build` 通过；真实浏览器（Chromium+SwiftShader，farm-admin，真实授权数据）：3D 切换、天地图 img/cia 瓦片加载、授权边界绘制、资源树选中「庙下流农田01」相机定位与原 V1.2 概要卡、定位/全场视图/复位/图层开关、两轮 2D↔3D 往返、断椭球回退与无 WebGL 回退、1440/1024/390 三视口无横向滚动；pageerror 与 console 错误均为 0。
+- **详细记录**:[M3-P1 今晚展示版验收记录](docs/acceptance/m3p1/今晚展示版-验收记录.md)（对照同门验收清单逐项核验，含截图证据）。仅推 origin 独立分支，未合并、未部署。
+
 ## 2026-11-24 · 01 · M3-P0 三维模型加载原型：公开样例全链路浏览器验收
 
 - **改动与原因**：按《梁子湖智慧农业平台 M3-P0：三维 GIS 模型加载原型》任务，在独立分支验证现有 `/terrain` 三维模块对真实世界规模 3D Tiles 的承载能力。`cesium-view.tsx` 新增「重置视角」（回到模型包围球视角，销毁时清理）；新增双样例浏览器验收 `m3-p0-terrain-samples-browser.test.ts`（上传→登记→校验→私有鉴权加载→LOD/多瓦片→资源释放→三视口）；新增样例来源与许可登记 `tests/fixtures/terrain-samples/README.md`（dragon 样例 CC0、obj2tiles 样例 MIT，数据不进 Git，`.gitignore` 增加 `/.m3-samples/`）。样例均为公开测试模型，页面明确标注，非梁子湖实景。

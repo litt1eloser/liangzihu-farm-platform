@@ -1,0 +1,30 @@
+{
+  "checkedAt": "2026-11-24T11:58:24.908Z",
+  "origin": "http://127.0.0.1:3400",
+  "checks": {
+    "login": true,
+    "map2dCanvas": true,
+    "cesiumCanvas": true,
+    "tiandituImgRequests": 4,
+    "tiandituCiaRequests": 4,
+    "treeLeaves": 120,
+    "pickedObject": "庙下流农田01",
+    "summaryCardAfterSelect": true,
+    "locateIn3d": true,
+    "layerPanelIn3d": true,
+    "roundTrips": [
+      "ok",
+      "ok"
+    ],
+    "backTo2dButton": true,
+    "noHScroll1024": true,
+    "noHScroll390": true,
+    "offlineNote": "当前为参考椭球，尚无梁子湖实测三维地形。 · 卫星影像位于参考椭球表面，不代表实测地面起伏",
+    "offlinePageErrors": [],
+    "noWebglNote": "正在加载 Cesium 三维引擎…",
+    "noWebglFallback": false,
+    "pageErrors": [],
+    "consoleErrors": [],
+    "ok": true
+  }
+}
