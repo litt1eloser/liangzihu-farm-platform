@@ -1,0 +1,16 @@
+{
+  "sample": "dragon",
+  "name": "公开测试模型A：CesiumGS离散LOD龙",
+  "checkedAt": "2026-11-24T08:28:28.201Z",
+  "fileCount": 4,
+  "totalBytes": 4791036,
+  "loadMs": 2845,
+  "resourceRequests": 6,
+  "distinctResources": [
+    "tileset.json",
+    "dragon_low.b3dm",
+    "dragon_medium.b3dm"
+  ],
+  "externalRequests": [],
+  "scriptErrors": []
+}
