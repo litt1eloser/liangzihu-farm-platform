@@ -4,6 +4,18 @@
 
 从 2026-10-04 起，每次代码、配置、依赖、数据库或文档调整均须随交付更新本文件。同一任务的连续修改合为一条，同日不同任务另起条目；历史补记注明来源。日期采用北京时间，序号只区分当天记录，不是软件版本号。
 
+## 2026-11-24 · 01 · 闸门"控制执行"链路平台侧实现（默认关闭，待联合签验）
+
+- **改动与原因**：为后续联合签验后开通真实控制铺路，实现闸门下行执行链路并保持默认关闭——
+  - 新增 `src/adapters/gate/command.ts`（纯函数）：`buildGateCommand` 按厂家 rw_prot 格式构造下行命令（`params` 包装、`Ver:"1.0.1"`、`dir="down"`、`id`=指令ID、`w_data` 写 `setOpening`，开=100/关=0；停止指令语义厂家未确认，未实现），下行主题取上行 `publish/` 前缀换 `sub/`（或契约显式 `downTopicPrefix`，契约类型新增该可选字段）；`parseGateResponse` 识别 `dir="rsp"` 回执并汇总 err 非 0 字段，非 rsp 报文返回 null。
+  - 新增 `src/modules/control/dispatch.ts`：`dispatchGateControl` 复核对象 act 权限、最新控制资料（permission=allowed、mode=remote、protection=clear、valid_until 未过期）、已批准专业规则与已核实测点绑定；**`GATE_DISPATCH_ENABLED==='1'` 才允许真正发布**，否则全部条件复核照常执行并以 503 `GATE_DISPATCH_DISABLED` 拒绝（错误信息附完整阻断原因清单），条件不满足为 409 `GATE_DISPATCH_BLOCKED`；允许时经注入的 publish 函数发布到本地 broker 下行主题（默认实现按 `GATE_MQTT_URL` 连接本地 broker，桥接转发由部署侧另行处理），回填 `control_requests.dispatched_at/command_id`；同一申请重复 dispatch 幂等返回首个 commandId。API 在 `/api/v1/control-records/dispatch` 挂载（writeApi）。
+  - 回执跟踪（`src/modules/telemetry/gate-mqtt.ts`）：采集 worker 收到 `dir="rsp"` 包时不再走上报解析（不进隔离区），按指令ID匹配 `control_requests.command_id` 写入 `control_feedback`（layer=device_received、source=vendor_receipt、err 字段非 0 记 not_observed），仅表示"设备收到命令"，不伪造到位结论；匹配不到待回执指令的回执丢弃并记日志行。上行采集解析行为不变。
+  - 迁移 `048_gate_dispatch.sql`：`control_requests` 新增 `dispatched_at`、`command_id`（唯一部分索引）两列；原全表不可变触发器收窄为按旧列保护（含 `state`/`dispatched` 布尔位仍不可改不可删），仅允许回填新列。`requestControl` 登记时的阻断说明文字同步更新为"执行链路已实现但默认关闭"。
+  - 文档：`docs/contracts/gate-sdsc.md` 更新只读边界段（启用前提=厂家确认执行反馈语义+联合签验授权），README 控制准备与设备接入表同步。
+- **影响范围**：默认配置下行为与之前一致（下发拒绝、不产生任何下行报文）；升级须执行第048号迁移；启用下发还需 `GATE_DISPATCH_ENABLED=1` 及私有契约文件。
+- **验证**：TypeScript 类型检查通过；`next build` 生产构建通过；单元测试 97/101 通过，其中新增 `gate-command` 2/2 通过，4 项失败均为与本改动无关的既有 Windows 环境性失败（`.local/验证记录` 符号链接/临时文件 rename EPERM，涉及 tests/unit/verification-artifacts、check-suites 等，本次改动文件未涉及这些路径）。
+- **未验证**：集成测试 `tests/integration/gate-dispatch.test.ts`（下发各阻断分支、开关关闭拒绝、假 publish 下发回写、rsp 回包写 control_feedback、幂等重复 dispatch）与既有 `gate-mqtt`、`phase3-control` 回归**未在本机执行**——本机无 Docker、无运行中的 PostgreSQL、无 `.env.test.local`（TEST_DATABASE_URL），无法启动 agri_test 隔离库；须在有测试库的环境执行 `pnpm test:db` 补验。未连真实厂家服务器、未做真机下发。
+
 ## 2026-11-20 · 01 · 农场总览地图显示优化与闸门数据链路全量打通
 
 - **数据链路（运维变更，不含代码）**：29 台闸门 2026-11-20 通电当日，平台侧修复四层配置后全量上线——采集订阅由试点 1 台扩至全部 29 台主题；契约设备映射由 3 条补齐至 87 条；新增最小权限采集服务账号 `svc-gate-collector`（worker 角色 + record 授权，原管理员角色按平台权限模型不具备 record 动作，10-14 试点数据实为回放导入）；84 个测点补齐时效参数（max_age 30 分钟）并回填当前值缓存。84 条测点绑定已于 11-19 置真。至当日 17:00 共 24 台稳定上报（约 10 分钟一轮），现场 1~5 号未上报（北侧片区，已交现场排查，4 号为已坏设备）。

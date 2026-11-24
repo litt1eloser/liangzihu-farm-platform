@@ -30,7 +30,7 @@ export async function requestControl(c:PoolClient,a:Actor,b:Body){
  return request(c,a,b,'control.request',d.object_id,async()=>{
  const profile=(await c.query('SELECT * FROM control_profiles WHERE device_id=$1 ORDER BY version DESC LIMIT 1',[d.id])).rows[0];
  let rule:any=null;if(b.ruleId){uuid(b.ruleId);rule=(await c.query('SELECT * FROM control_rules WHERE id=$1 AND device_id=$2',[b.ruleId,d.id])).rows[0];if(!rule)throw new AppError(422,'CONTROL_RULE_SCOPE','规则不属于当前设备');}
- const reasons=['缺少该设备已联合签验的执行适配器，平台未下发任何命令'];
+ const reasons=['下行执行链路已实现但默认关闭（GATE_DISPATCH_ENABLED 未启用，待联合签验授权），申请登记本身不下发任何命令'];
  if(!profile||+profile.valid_until<=Date.now())reasons.push('控制资料缺失或已到复核期限');
  if(profile?.permission!=='allowed')reasons.push('设备操作许可未确认');if(profile?.mode!=='remote')reasons.push('未确认处于远程模式');if(profile?.protection!=='clear')reasons.push('现场保护状态未知或生效');
  if(!rule||rule.state!=='approved')reasons.push('专业规则尚未批准');

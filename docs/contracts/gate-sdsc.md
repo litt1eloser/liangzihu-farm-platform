@@ -21,7 +21,10 @@
 
 - 依据：厂家协议文件《闸门设备通过mqtt对接协议》（PDF），设备品牌三诚、型号 SCZM-LG、固件 VER:V2.4.05.000000.0000，首台接入设备编号 hbdxscz001。
 - 上行主题每台一个：`/sdscdevice/gate/hbdxscz260302/publish/hbdxsczXXX`（XXX=001..029），设备编号取主题最后一段；下行主题为同路径 `publish` 换 `sub`。
-- 本阶段只读边界：只订阅上行 `publish` 主题。协议中的下行 rw_prot 查询/控制 JSON（dir=down/rsp、带指令 ID）与 Modbus RTU 透传备用通道（9600/8/N/1，从站1，0x03/0x06）均属于后续工作项，代码中没有任何下行 publish 路径或开关闸命令构造；控制请求在数据库层仍保持未下发。
+- 只读边界更新（2026-11-24）：下行执行链路已在平台侧实现但**默认关闭**。`dispatchGateControl`（`src/modules/control/dispatch.ts`）复核操作权限、最新控制资料（许可/远程模式/现场保护/有效期）、已批准专业规则与已核实测点绑定后，按厂家 rw_prot 格式构造下行命令（`params` 包装、`Ver:"1.0.1"`、`dir="down"`、`id`=平台生成的指令ID、`w_data` 写 `setOpening`（开=100、关=0，停止指令语义厂家未确认，暂不实现）），发布到本地 broker 的下行主题（上行 `publish/` 前缀换 `sub/`，或契约显式登记的 `downTopicPrefix`），并把下发时间与指令ID回填 `control_requests.dispatched_at/command_id`（第048号迁移新增列；旧列含 `state`/`dispatched` 仍不可改）。
+- **启用前提（缺一不可）**：厂家书面确认执行中/到位/失败的过程反馈语义 + 联合签验授权，然后才设 `GATE_DISPATCH_ENABLED=1`。未启用时接口照常执行全部条件复核并以 503 `GATE_DISPATCH_DISABLED` 拒绝（错误信息附带完整阻断原因清单），不发布任何下行报文。
+- 设备回执跟踪：上行主题上 `dir="rsp"` 的包由采集 worker 识别（`parseGateResponse`），不进上行解析与隔离区；按指令ID匹配 `control_requests.command_id` 后写入 `control_feedback`（layer=`device_received`、source=`vendor_receipt`、err 字段非 0 记 `not_observed`），仅表示"设备收到命令"，不伪造到位结论；匹配不到待回执指令的回执丢弃并记日志行。
+- Modbus RTU 透传备用通道（9600/8/N/1，从站1，0x03/0x06）仍属于后续工作项，代码中没有实现。
 
 ## 上行报文与字段处理
 

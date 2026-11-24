@@ -3,6 +3,7 @@ import mqtt from 'mqtt';
 import {AppError} from '../../platform/error';
 import {database,transaction} from '../../db/pool';
 import {normalizeGate,gateDeviceFromTopic} from '../../adapters/gate/adapter';
+import {parseGateResponse,type GateResponse} from '../../adapters/gate/command';
 import type {GateContract} from '../../adapters/gate/contract';
 import type {ReadingInput} from './types';
 import {assertAccess} from '../identity/access';
@@ -27,11 +28,26 @@ async function guard(c:PoolClient,config:GateMqttConfiguration){
   await assertAccess(c,actor,{objectId:source.object_id,action:'record',at:new Date().toISOString()});
   for(const mapping of config.fields.mappings){const objs=(await c.query('SELECT DISTINCT object_id FROM point_bindings WHERE point_id=$1 AND verified',[mapping.pointId])).rows;for(const o of objs)await assertAccess(c,actor,{objectId:o.object_id,action:'record',at:new Date().toISOString()});}
 }
+export interface GateReceiptOutcome{receipt:'recorded'|'unmatched';commandId:string}
+// 设备回执（dir="rsp"）只证明设备收到命令；到位/失败语义厂家未确认，不在这里下结论。
+// 按 commandId 匹配待回执申请，匹配不到（含设备编号不一致）丢弃并记日志行，不进隔离区也不入观测。
+async function recordGateReceipt(pool:Pool,config:GateMqttConfiguration,externalDeviceId:string,receipt:GateResponse):Promise<GateReceiptOutcome>{
+  return transaction(async c=>{
+    const req=(await c.query('SELECT r.id,r.object_id,d.external_id FROM control_requests r JOIN devices d ON d.id=r.device_id WHERE r.command_id=$1 AND r.dispatched_at IS NOT NULL',[receipt.commandId])).rows[0];
+    if(!req||req.external_id!==externalDeviceId){console.warn(JSON.stringify({event:'gate_receipt_unmatched',commandId:receipt.commandId,device:externalDeviceId}));return {receipt:'unmatched' as const,commandId:receipt.commandId};}
+    const value=receipt.ok?`设备回执已收到指令（commandId=${receipt.commandId}）`:`设备回执字段错误（commandId=${receipt.commandId}）：${receipt.errFields.join(',')}`;
+    await c.query("INSERT INTO control_feedback(object_id,request_id,layer,result,value,source,observed_at,evidence,created_by) VALUES($1,$2,'device_received',$3,$4,'vendor_receipt',now(),$5,$6)",[req.object_id,req.id,receipt.ok?'observed':'not_observed',value,req.id,config.actorId]);
+    return {receipt:'recorded' as const,commandId:receipt.commandId};
+  },pool);
+}
 export async function persistGateMessage(pool:Pool,config:GateMqttConfiguration,topic:string,payload:Buffer,options:{synthetic?:boolean}={}){
   const synthetic=options.synthetic===true;
   if(synthetic&&(await pool.query('SELECT current_database() AS name')).rows[0].name!=='agri_test')throw new AppError(403,'GATE_TEST_ONLY','合成传输仅允许测试库');
   if(!synthetic&&process.env.GATE_MQTT_ENABLED!=='1')throw new AppError(503,'GATE_MQTT_DISABLED','三诚闸门MQTT采集尚未启用');
-  const externalDeviceId=gateDeviceFromTopic(topic,config.fields),receivedAt=new Date().toISOString();
+  const externalDeviceId=gateDeviceFromTopic(topic,config.fields);
+  const receipt=parseGateResponse(config.fields,topic,payload);
+  if(receipt)return recordGateReceipt(pool,config,externalDeviceId,receipt);
+  const receivedAt=new Date().toISOString();
   let body:unknown;try{body=JSON.parse(payload.toString('utf8'));}catch{body=null;}
   let readings:ReadingInput[];
   try{readings=normalizeGate(body,config.fields,externalDeviceId,receivedAt,synthetic?'synthetic':'real');}
