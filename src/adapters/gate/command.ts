@@ -1,6 +1,6 @@
 import {AppError} from '../../platform/error';
 import type {GateContract} from './contract';
-export type GateCommandAction='open'|'close';
+export type GateCommandAction='open'|'close'|'stop';
 export interface GateCommand{topic:string;payload:Buffer}
 export interface GateResponse{commandId:string;ok:boolean;errFields:string[]}
 // 下行主题为上行 publish 前缀换成 sub；私有契约文件可用 downTopicPrefix 显式登记。
@@ -13,8 +13,8 @@ export function gateDownTopicPrefix(contract:GateContract):string{
 export function buildGateCommand(contract:GateContract,deviceId:string,action:GateCommandAction,commandId:string):GateCommand{
   if(!/^[A-Za-z0-9_-]{1,64}$/.test(deviceId))throw new AppError(422,'GATE_TOPIC','设备编号不符已登记契约');
   if(!/^[A-Za-z0-9-]{1,64}$/.test(commandId))throw new AppError(422,'GATE_COMMAND','指令编号无效');
-  const value=action==='open'?100:0;
-  const body={[contract.wrapperKey]:{Ver:'1.0.1',[contract.directionKey]:'down',id:commandId,w_data:[{name:'setOpening',value}]}};
+  const row=action==='stop'?{name:'stop',value:'0'}:{name:'setOpening',value:action==='open'?'100':'0'};
+  const body={[contract.wrapperKey]:{Ver:'1.0.1',[contract.directionKey]:'down',id:commandId,w_data:[row]}};
   return {topic:gateDownTopicPrefix(contract)+deviceId,payload:Buffer.from(JSON.stringify(body),'utf8')};
 }
 // 仅识别设备回执（dir="rsp"）：其余报文返回 null，交由上行采集路径处理。

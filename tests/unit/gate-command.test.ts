@@ -6,9 +6,11 @@ const contract:GateContract={version:'synthetic-v1',reference:'合成协议，�
 test('开闸命令：sub主题与setOpening=100，关闸=0，显式下行前缀优先',()=>{
   const open=buildGateCommand(contract,'D1','open','cmd-1');
   assert.equal(open.topic,'/synthetic/gate/sub/D1');
-  assert.deepEqual(JSON.parse(open.payload.toString('utf8')),{params:{Ver:'1.0.1',dir:'down',id:'cmd-1',w_data:[{name:'setOpening',value:100}]}});
+  assert.deepEqual(JSON.parse(open.payload.toString('utf8')),{params:{Ver:'1.0.1',dir:'down',id:'cmd-1',w_data:[{name:'setOpening',value:'100'}]}});
   const close=buildGateCommand(contract,'hbdxscz012','close','cmd-2');
-  assert.equal(JSON.parse(close.payload.toString('utf8')).params.w_data[0].value,0);
+  assert.equal(JSON.parse(close.payload.toString('utf8')).params.w_data[0].value,'0');
+  const stop=buildGateCommand(contract,'D1','stop','cmd-3');
+  assert.deepEqual(JSON.parse(stop.payload.toString('utf8')).params.w_data[0],{name:'stop',value:'0'});
   assert.equal(buildGateCommand({...contract,downTopicPrefix:'/explicit/sub/'},'D1','open','c').topic,'/explicit/sub/D1');
   assert.throws(()=>gateDownTopicPrefix({...contract,topicPrefix:'/no-publish-marker/'}),{code:'GATE_TOPIC'});
   assert.throws(()=>buildGateCommand(contract,'bad id','open','c'),{code:'GATE_TOPIC'});

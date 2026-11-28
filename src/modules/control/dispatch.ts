@@ -46,7 +46,7 @@ export async function dispatchGateControl(c:PoolClient,a:Actor,b:Record<string,u
   if(!bound.rowCount)reasons.push('设备测点缺少已核实的对象绑定');
   if(process.env.GATE_DISPATCH_ENABLED!=='1')throw new AppError(503,'GATE_DISPATCH_DISABLED','控制下发未启用（待联合签验）；本次条件复核阻断项：'+(reasons.length?reasons.join('；'):'无'));
   if(reasons.length)throw new AppError(409,'GATE_DISPATCH_BLOCKED','控制条件复核未通过：'+reasons.join('；'));
-  const action=choice(b.action,['open','close'] as const,'控制动作');
+  const action=choice(b.action,['open','close','stop'] as const,'控制动作');
   const contract=options.contract??await loadContract();
   const commandId=randomUUID(),command=buildGateCommand(contract,d.external_id,action,commandId);
   await (options.publish??defaultPublish)(command.topic,command.payload);
